@@ -27,6 +27,10 @@
 - Ledger MCP records claim lifecycle.
 - Human verdict changes record status.
 - Second run improves after trace inspection.
+- Live improve response shows `inspection_source: phoenix_mcp`.
+- Live improve response shows `fallback_used: false`.
+- Public proof links include either an accessible Phoenix trace or a video segment
+  showing the Phoenix trace, plus the GitHub audit artifact.
 
 ## Product Proof
 
@@ -45,11 +49,26 @@
 - Show extracted claim.
 - Show candidate market fit.
 - Show eval failure.
-- Show human verdict.
-- Show ledger event.
 - Open Phoenix trace.
+- Show `fit_eval_run` span and eval annotations.
 - Trigger self-improvement.
+- Show `inspection_source: phoenix_mcp` and `fallback_used: false`.
 - Show improved second run.
+- Show human verdict or ledger lifecycle event.
+
+## Final Proof Gate
+
+- Hosted app URL works.
+- Public video URL works and is under 3 minutes.
+- Public repository URL works and license is visible.
+- Phoenix trace link works publicly, or the video clearly shows the trace and the
+  GitHub audit artifact is linked.
+- Video shows Phoenix before the final minute.
+- Video shows the improve response or UI evidence for
+  `inspection_source: phoenix_mcp`.
+- Video or proof docs show `fallback_used: false` for the live proof.
+- `docs/phoenix-value-proof.md` has no unfilled public TODO section.
+- Devpost text does not include internal checklist or script sections.
 
 ## Recommended Submission Category
 

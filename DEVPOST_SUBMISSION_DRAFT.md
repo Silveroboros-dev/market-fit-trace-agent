@@ -13,7 +13,7 @@ Market Fit Trace Agent
 Elevator pitch:
 
 ```text
-A Gemini + Phoenix agent that audits whether a thesis has a clean prediction-market expression, and uses Phoenix MCP trace context to correct tempting weak-proxy recommendations before users trust them.
+A Gemini + Phoenix agent that audits whether a thesis has a clean prediction-market expression - and uses Phoenix MCP trace context to correct tempting weak-proxy recommendations before users trust them.
 ```
 
 Thumbnail:
@@ -82,7 +82,7 @@ This project was built to make that failure visible, auditable, and correctable 
 ```text
 The app accepts a pasted thesis or source, extracts a normalized claim, identifies entities, horizon, and stance, compares the claim to frozen candidate prediction-market snapshots, and classifies fit as direct, indirect, weak_proxy, or no_clean_expression.
 
-The demo intentionally starts with a tempting market match that looks relevant but is too weak to trust. The first run overstates the fit. A trace-linked eval flags the false strong recommendation. Phoenix/OpenInference traces make the failure inspectable, Phoenix MCP supplies trace context for the improve step, and the second run downgrades the market to weak_proxy.
+The demo intentionally starts with a tempting market match that looks relevant but is too weak to trust. The first run overstates the fit by treating an adjacent market as stronger evidence than it deserves. A trace-linked eval flags the false strong recommendation. Phoenix/OpenInference traces make the failure inspectable, Phoenix MCP supplies trace context for the improve step, and the second run downgrades the market to weak_proxy.
 
 The practical value is not finding "a related market"; it is preventing a user from mistaking a correlated or adjacent market for a clean expression of their thesis. The result is not open-ended chat. It is a supervised audit workflow with state, tools, evals, human review, and trace-backed correction.
 ```
@@ -130,9 +130,9 @@ The second challenge was maintaining a strict trust boundary: Gemini may draft, 
 ## Accomplishments
 
 ```text
-The project demonstrates a full thesis-to-audit lifecycle: pasted thesis, Gemini-assisted claim extraction, candidate market-fit classification, weak-proxy detection, rejected-market explanations, Phoenix trace/eval visibility, Phoenix MCP-backed improve path, human verdict, and Ledger MCP lifecycle record.
+The project demonstrates a full thesis-to-audit lifecycle: pasted thesis, Gemini-assisted claim extraction, candidate market-fit classification, weak-proxy detection, rejected-market explanations, Phoenix trace/eval visibility, Phoenix MCP-backed improve path in live mode, deterministic local fallback only for offline reproduction, human verdict, and Ledger MCP lifecycle record.
 
-The original 10 baseline goldens were replayed through live ADK/Gemini and Phoenix, passing 10/10 with trace URLs and eval annotations. The observed replay is documented in evals/market_fit_v1/v1_trace_audit.md and linked from the README, alongside a Phoenix value-proof document that defines the live improve pass conditions.
+The original 10 baseline goldens were replayed through live ADK/Gemini and Phoenix, passing 10/10 with trace URLs and eval annotations. The observed replay is documented in evals/market_fit_v1/v1_trace_audit.md and linked from the README. The Phoenix value-proof document defines the live improve pass conditions, including inspection_source: phoenix_mcp and fallback_used: false.
 ```
 
 ## What We Learned
@@ -163,26 +163,3 @@ python
 evals
 agents
 ```
-
-## Video Script Skeleton
-
-```text
-0:00-0:20 Problem: a related prediction market is not always a correct expression of a thesis.
-0:20-0:40 Product: Market Fit Trace Agent audits thesis-to-market fit and catches weak proxies.
-0:40-1:15 First run: thesis -> Gemini extraction -> candidate market -> over-strong fit.
-1:15-1:45 Phoenix proof: OpenInference trace + fit_eval_run span show the false strong recommendation / weak-proxy risk.
-1:45-2:15 Phoenix MCP improve step: inspect failed trace context and rerun.
-2:15-2:40 Second run: classification downgrades to weak_proxy; eval clears; ledger records lifecycle.
-2:40-3:00 Close: trace-backed market-fit audit, not trading advice and not generic claim checking.
-```
-
-## Final Proof Gate Before Paste
-
-- Hosted app URL inserted.
-- Public video URL inserted.
-- Phoenix trace proof link or screenshot inserted.
-- README has the same story as Devpost.
-- The video shows the improve response with `inspection_source: phoenix_mcp` and `fallback_used: false` before claiming observed Phoenix MCP correction.
-- No claim says "10/10 live" unless the trace audit artifact remains linked.
-- "What's Next" does not include basic final verification.
-- Video shows Phoenix before the final minute.

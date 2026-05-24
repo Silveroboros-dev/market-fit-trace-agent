@@ -23,22 +23,6 @@ as artifacts.
 - Public trace link for submission:
   `https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507`
 
-## Observed Submission Run
-
-Fill this section from the final live demo run before Devpost submission:
-
-- Commit SHA: TODO
-- Date/time: TODO
-- Phoenix project: `market_fit_trace_agent`
-- Run ID: TODO
-- Case ID: TODO for eval replay, or `manual_demo_seed` for the UI demo
-- Trace ID: TODO
-- Phoenix trace URL: TODO
-- Eval pack: `market_fit_v1`
-- Eval result: TODO
-- Improve source: TODO, must be `phoenix_mcp`
-- Fallback used: TODO, must be `false`
-
 ## Product Flow
 
 ```text
