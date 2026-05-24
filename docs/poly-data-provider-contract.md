@@ -41,6 +41,89 @@ Start with one simple universe filter:
 The exact liquidity metric can be provider-defined, but it must be named in the
 response as `liquidity_metric`.
 
+## Observed PolyData Surface As Of 2026-05-24
+
+The current `poly-data-explorer` client already supports the bounded discovery
+part of this contract through:
+
+- `poly.taxonomy()`
+- `poly.markets()`
+
+Observed `poly.taxonomy()` shape:
+
+- rows: `133305`
+- `market_id`
+- `as_of_date`
+- `l1`
+- `l2_id`
+- `l2_name`
+- `confidence`
+- `is_low_confidence`
+- `is_unmapped`
+- `taxonomy_version`
+- `model`
+- `classified_at`
+- `agent_rationale`
+- `classified_by`
+
+Observed `poly.markets()` shape:
+
+- rows: `1160823`
+- `id`
+- `question`
+- `answer1`
+- `answer2`
+- `token1`
+- `token2`
+- `condition_id`
+- `market_slug`
+- `neg_risk`
+- `volume`
+- `ticker`
+- `tags`
+- `created_at`
+- `closed_time`
+- `end_date`
+
+The current join key is:
+
+```text
+taxonomy.market_id == markets.id
+```
+
+This is enough for an MVP bounded market provider:
+
+1. choose product-controlled L1 buckets from the normalized thesis;
+2. fetch live L2 buckets from taxonomy;
+3. join taxonomy to markets;
+4. filter `closed_time IS NULL`;
+5. filter `is_low_confidence = false` and `is_unmapped = false`;
+6. filter `confidence >= 0.85`;
+7. cast `volume` to USD float and filter `volume >= 10000`;
+8. rank within L1/L2 by a simple retrieval score plus volume;
+9. return top `20`, hard max `50`.
+
+The current client does **not** expose full market-resolution rules,
+descriptions, current prices, `open_interest`, or a separate `liquidity` field
+through `poly.markets()`. Therefore the first integration should treat PolyData
+as a bounded discovery provider, not yet a complete rules provider.
+
+For now:
+
+- use `volume` as `liquidity_metric = "volume_usd"`;
+- map `answer1` / `answer2` to outcomes;
+- map `question` to `title`;
+- derive `source_url` from `market_slug`;
+- set `resolution_rules = ""` and `rules_status = "missing"` unless another
+  provider method is added;
+- treat missing rules as a conservative fit-risk signal.
+
+This preserves the product boundary:
+
+> PolyData retrieves a bounded real-market set. Market Fit Trace Agent decides
+> whether any returned market is direct, indirect, weak proxy, or no clean
+> expression.
+
 ## Required Provider Surface
 
 The provider may expose these as Python client methods or HTTP endpoints. The

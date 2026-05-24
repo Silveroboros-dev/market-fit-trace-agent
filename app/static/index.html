@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Market Fit Trace Agent</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260524-ui2" />
   </head>
   <body>
     <main class="shell">
@@ -18,7 +18,7 @@
 
       <section class="workspace">
         <form class="panel input-panel" id="run-form">
-          <label for="thesis">Thesis / source</label>
+          <label for="thesis">Source text</label>
           <textarea id="thesis" name="thesis" rows="14">Google TPU claims mean Gemini will close the gap with frontier models this year. Find the best prediction-market expression and tell me whether the market is a clean fit.</textarea>
           <div class="toolbar">
             <select id="prompt-version" name="prompt-version" aria-label="Prompt version">
@@ -31,7 +31,7 @@
 
         <section class="panel result-panel" aria-live="polite">
           <div class="panel-head">
-            <p class="eyebrow">Claim lifecycle</p>
+            <p class="eyebrow">Thesis lifecycle</p>
             <button type="button" id="improve-button" disabled>Inspect trace and rerun</button>
           </div>
           <div id="result">
@@ -48,6 +48,6 @@
         </aside>
       </section>
     </main>
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=20260524-ui2"></script>
   </body>
 </html>
