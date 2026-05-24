@@ -33,7 +33,7 @@ TODO: paste Cloud Run URL
 Code repository:
 
 ```text
-TODO: paste public GitHub repository URL
+https://github.com/Silveroboros-dev/market-fit-trace-agent
 ```
 
 Demo video:

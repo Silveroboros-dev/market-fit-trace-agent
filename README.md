@@ -24,7 +24,7 @@ Selected Rapid track: **Arize**.
 
 - Hosted demo: TODO before Devpost submission
 - Demo video: TODO before Devpost submission
-- Public repository: TODO before Devpost submission
+- Public repository: [github.com/Silveroboros-dev/market-fit-trace-agent](https://github.com/Silveroboros-dev/market-fit-trace-agent)
 - Devpost submission: TODO before Devpost submission
 - Phoenix trace proof: [v1 trace audit](evals/market_fit_v1/v1_trace_audit.md)
 - Phoenix live trace:
