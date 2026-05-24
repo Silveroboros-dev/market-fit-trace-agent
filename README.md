@@ -28,7 +28,7 @@ Selected Rapid track: **Arize**.
 - Devpost submission: TODO before Devpost submission
 - Phoenix trace proof: [v1 trace audit](evals/market_fit_v1/v1_trace_audit.md)
 - Phoenix live trace:
-  [latest checked trace](https://app.phoenix.arize.com/s/rukar570/traces/1a2a1f19950a125bbcce023b9a613e62)
+  [latest checked trace](https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507)
 - License: Apache-2.0
 
 ## Partner Integration
@@ -55,11 +55,15 @@ The Arize/Phoenix proof passes if:
 2. Phoenix receives traces for the run.
 3. The trace contains ADK/Gemini spans and product-level market-fit spans.
 4. A `fit_eval_run` span or equivalent eval span is visible.
-5. The trace includes annotations such as `false_strong_recommendation` and
-   `weak_proxy_detected`.
+5. The trace includes `schema_valid`, `false_strong_recommendation`,
+   `weak_proxy_detected`, and `unsupported_implication` annotations or verified
+   trace-linked eval fields.
 6. The improve step uses Phoenix MCP trace context in live mode.
-7. The second run downgrades the tempting market to `weak_proxy`.
-8. The ledger records both the initial run and the trace-informed rerun.
+7. The improve response reports `inspection_source: phoenix_mcp` and
+   `fallback_used: false`.
+8. The second run downgrades the tempting market to `weak_proxy` and clears the
+   false-strong eval.
+9. The ledger records both the initial run and the trace-informed rerun.
 
 ## Demo Story
 

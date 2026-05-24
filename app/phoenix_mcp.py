@@ -26,6 +26,7 @@ class PhoenixMCPInspector:
                     run_id=run_id,
                     phoenix_trace_id=phoenix_trace_id,
                     source="phoenix_mcp",
+                    fallback_used=False,
                     summary=mcp_summary,
                     recommended_prompt_version="v2_trace_inspected",
                     mcp_configured=True,
@@ -35,6 +36,7 @@ class PhoenixMCPInspector:
             run_id=run_id,
             phoenix_trace_id=phoenix_trace_id,
             source="local_eval_fallback",
+            fallback_used=True,
             summary=(
                 f"Trace-linked eval found an overclaim: {failure_summary} "
                 "Revise the second run to treat adjacent leaderboard or hardware markets as weak "

@@ -31,7 +31,15 @@ async def _weak_proxy_first_run_then_improves(tmp_path):
     assert first.eval.metrics.false_strong_recommendation is True
 
     improved = await agent.improve_from_trace(first.run_id)
+    assert improved.inspection_source == "local_eval_fallback"
+    assert improved.fallback_used is True
+    assert improved.before_run_id == first.run_id
+    assert improved.before_trace_id == first.phoenix_trace_id
+    assert improved.before_fit == FitClass.INDIRECT
     assert improved.after.fit.semantic_fit_class == FitClass.WEAK_PROXY
+    assert improved.after_fit == FitClass.WEAK_PROXY
+    assert improved.false_strong_recommendation_before is True
+    assert improved.false_strong_recommendation_after is False
     assert improved.after.eval.metrics.false_strong_recommendation is False
     assert improved.after.eval.metrics.weak_proxy_detected is True
     assert improved.after.eval.metrics.second_run_improvement is True

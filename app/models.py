@@ -129,6 +129,7 @@ class PhoenixInspection(BaseModel):
     run_id: str
     phoenix_trace_id: str
     source: str
+    fallback_used: bool
     summary: str
     recommended_prompt_version: str
     mcp_configured: bool
@@ -137,6 +138,14 @@ class PhoenixInspection(BaseModel):
 class ImprovementResult(BaseModel):
     before_run_id: str
     after_run_id: str
+    before_trace_id: str
+    after_trace_id: str
+    inspection_source: str
+    fallback_used: bool
+    before_fit: FitClass
+    after_fit: FitClass
+    false_strong_recommendation_before: bool
+    false_strong_recommendation_after: bool
     inspection: PhoenixInspection
     before: RunResult
     after: RunResult

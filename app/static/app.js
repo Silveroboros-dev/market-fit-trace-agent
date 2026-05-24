@@ -107,7 +107,7 @@ function renderImprovement(improved) {
     <div class="inspection">
       <span class="label">Phoenix MCP inspection</span>
       <p>${escapeHtml(improved.inspection.summary)}</p>
-      <p class="trace">source=${escapeHtml(improved.inspection.source)} trace=${escapeHtml(improved.inspection.phoenix_trace_id)}</p>
+      <p class="trace">source=${escapeHtml(improved.inspection_source)} fallback=${escapeHtml(improved.fallback_used)} trace=${escapeHtml(improved.before_trace_id)}</p>
     </div>
     <div class="meta-grid">
       ${meta("Before", `${before.fit.semantic_fit_class} / false strong: ${before.eval.metrics.false_strong_recommendation}`)}

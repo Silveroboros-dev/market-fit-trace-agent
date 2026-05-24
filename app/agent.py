@@ -192,6 +192,18 @@ class MarketFitTraceAgent:
         return ImprovementResult(
             before_run_id=before.run_id,
             after_run_id=after.run_id,
+            before_trace_id=before.phoenix_trace_id,
+            after_trace_id=after.phoenix_trace_id,
+            inspection_source=inspection.source,
+            fallback_used=inspection.fallback_used,
+            before_fit=before.fit.semantic_fit_class,
+            after_fit=after.fit.semantic_fit_class,
+            false_strong_recommendation_before=(
+                before.eval.metrics.false_strong_recommendation
+            ),
+            false_strong_recommendation_after=(
+                after.eval.metrics.false_strong_recommendation
+            ),
             inspection=inspection,
             before=before,
             after=after,

@@ -20,8 +20,24 @@ as artifacts.
 - Captured audit artifact: `evals/market_fit_v1/v1_trace_audit.md`
 - Phoenix MCP config example: `mcp/phoenix_mcp_config.example.json`
 - Demo run path: `POST /api/runs` -> `POST /api/runs/{run_id}/improve`
-- Public trace link for submission: add the chosen Phoenix trace URL to the
-  README/Devpost links before final submission.
+- Public trace link for submission:
+  `https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507`
+
+## Observed Submission Run
+
+Fill this section from the final live demo run before Devpost submission:
+
+- Commit SHA: TODO
+- Date/time: TODO
+- Phoenix project: `market_fit_trace_agent`
+- Run ID: TODO
+- Case ID: TODO for eval replay, or `manual_demo_seed` for the UI demo
+- Trace ID: TODO
+- Phoenix trace URL: TODO
+- Eval pack: `market_fit_v1`
+- Eval result: TODO
+- Improve source: TODO, must be `phoenix_mcp`
+- Fallback used: TODO, must be `false`
 
 ## Product Flow
 
@@ -56,12 +72,33 @@ The Phoenix value proof passes only if all are true:
 2. A Phoenix trace is created for at least one demo or eval run.
 3. The trace has a visible `fit_eval_run` span or equivalent product-level eval
    span.
-4. The trace includes annotations for schema validity and fit-quality failure
-   modes.
+4. The trace includes `schema_valid`, `false_strong_recommendation`,
+   `weak_proxy_detected`, and `unsupported_implication` annotations or verified
+   trace-linked eval fields.
 5. The improve step reads trace/eval context through Phoenix MCP in live mode.
-6. The second run changes an over-strong recommendation into `weak_proxy` on
+6. The improve response reports `inspection_source: phoenix_mcp`.
+7. The improve response reports `fallback_used: false`.
+8. The second run changes an over-strong recommendation into `weak_proxy` on
    the seed demo.
-7. The ledger records both the initial run and the trace-informed rerun.
+9. The false-strong eval clears after the second run.
+10. The ledger records both the initial run and the trace-informed rerun.
+11. The same `run_id`, `trace_id`, and `case_id` are visible across the app
+    response, Phoenix trace, `fit_eval_run` span, eval annotation record, ledger
+    event, and `/api/runs/{run_id}/improve` response. For manual UI demos, use
+    `manual_demo_seed` as the case identity.
+
+## Fail Conditions
+
+The Phoenix value proof fails if any of the following are true:
+
+- No Phoenix trace is created for the live run.
+- The Phoenix trace is stale or does not match the current `run_id` / `trace_id`.
+- The live improve step uses `local_eval_fallback`.
+- Phoenix contains generic ADK/Gemini spans but no product-level eval span.
+- Required eval annotations are only present in local files and not visible
+  through Phoenix or `make phoenix-check`.
+- The second run changes text but does not change the fit classification or
+  clear the false-strong eval.
 
 ## Prerequisites
 
@@ -109,13 +146,16 @@ mcp/phoenix_mcp_config.example.json
 ```
 
 It configures the Phoenix MCP server with `PHOENIX_BASE_URL` and
-`PHOENIX_API_KEY`. The app enables this path with:
+`PHOENIX_API_KEY`. The app-level subprocess mode enables this path with:
 
 ```bash
 PHOENIX_MCP_ENABLED=true
 PHOENIX_MCP_COMMAND=npx
-PHOENIX_MCP_ARGS=-y,@arizeai/phoenix-mcp@latest
+PHOENIX_MCP_ARGS="-y,@arizeai/phoenix-mcp@latest"
 ```
+
+`PHOENIX_MCP_ARGS` is comma-separated because `app/config.py` parses it into an
+argv list for the subprocess call.
 
 ## Baseline Trace Replay
 
@@ -138,8 +178,16 @@ Expected `make evals-live` result:
 }
 ```
 
-`make phoenix-check` should confirm required spans and annotations rather than a
-fixed span count:
+`make phoenix-check` must verify:
+
+- the inspected trace is in project `market_fit_trace_agent`;
+- the requested or latest relevant trace exists;
+- the trace contains the required product-level eval span;
+- the required annotation configs exist;
+- the required eval annotations exist on the eval span;
+- no required annotations are missing.
+
+It should confirm required spans and annotations rather than a fixed span count:
 
 ```json
 {
@@ -163,6 +211,10 @@ The captured v1 replay artifact is:
 ```text
 evals/market_fit_v1/v1_trace_audit.md
 ```
+
+In this repo, eval outcomes are written as Phoenix annotations when Phoenix
+credentials are configured, not only as local JSON fields. `make phoenix-check`
+verifies those annotations on the `fit_eval_run` span.
 
 ## Demo Trace-Improvement Path
 
@@ -202,6 +254,26 @@ Expected product behavior:
 before: tempting adjacent market overstates fit
 after: weak_proxy classification, false-strong eval clears
 ```
+
+Expected improve response shape for the live proof:
+
+```json
+{
+  "before_run_id": "run_...",
+  "after_run_id": "run_...",
+  "before_trace_id": "trace_...",
+  "after_trace_id": "trace_...",
+  "inspection_source": "phoenix_mcp",
+  "fallback_used": false,
+  "before_fit": "indirect",
+  "after_fit": "weak_proxy",
+  "false_strong_recommendation_before": true,
+  "false_strong_recommendation_after": false
+}
+```
+
+If `inspection_source` is `local_eval_fallback`, the Arize/Phoenix live proof has
+not passed. The fallback only proves offline reproducibility.
 
 ## 90-Second Judge Demo Script
 
