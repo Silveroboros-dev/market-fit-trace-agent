@@ -1,0 +1,60 @@
+.PHONY: dev test evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens api ui adk-run adk-web smoke-adk smoke-adk-live phoenix-ensure phoenix-check deploy-adk
+
+api:
+	uv run --python 3.11 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+ui:
+	uv run --python 3.11 streamlit run app/ui.py
+
+dev: api
+
+test:
+	uv run --python 3.11 --extra dev pytest
+
+evals:
+	uv run --python 3.11 python scripts/run_evals.py
+
+evals-v2:
+	uv run --python 3.11 python scripts/run_evals.py \
+		--cases evals/market_fit_v2/examples.jsonl \
+		--expected evals/market_fit_v2/expected_outputs.jsonl \
+		--markets evals/market_fit_v2/market_snapshots.jsonl
+
+evals-live:
+	uv run --python 3.11 python scripts/run_evals.py --live
+
+evals-candidates:
+	uv run --python 3.11 python scripts/run_evals.py --allow-failures \
+		--cases evals/market_fit_v2_candidates/examples.jsonl \
+		--expected evals/market_fit_v2_candidates/expected_outputs.jsonl \
+		--markets evals/market_fit_v2_candidates/market_snapshots.jsonl
+
+evals-candidates-v3:
+	uv run --python 3.11 python scripts/run_evals.py --allow-failures \
+		--cases evals/market_fit_v3_candidates/examples.jsonl \
+		--expected evals/market_fit_v3_candidates/expected_outputs.jsonl \
+		--markets evals/market_fit_v3_candidates/market_snapshots.jsonl
+
+intake-goldens:
+	uv run --python 3.11 python scripts/intake_goldens.py
+
+adk-run:
+	uv run --python 3.11 adk run market_fit_adk
+
+adk-web:
+	uv run --python 3.11 adk web --port 8001 .
+
+smoke-adk:
+	uv run --python 3.11 python scripts/smoke_arize_adk.py --offline
+
+smoke-adk-live:
+	uv run --python 3.11 python scripts/smoke_arize_adk.py
+
+phoenix-ensure:
+	uv run --python 3.11 python scripts/ensure_phoenix_annotation_configs.py
+
+phoenix-check:
+	uv run --python 3.11 python scripts/check_phoenix_trace.py
+
+deploy-adk:
+	bash scripts/deploy_adk_cloud_run.sh

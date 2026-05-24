@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Market Fit Trace Agent</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">Arize Track &middot; OpenInference &middot; Phoenix</p>
+          <h1>Market Fit Trace Agent</h1>
+        </div>
+        <div class="status" id="service-status">Checking service</div>
+      </header>
+
+      <section class="workspace">
+        <form class="panel input-panel" id="run-form">
+          <label for="thesis">Thesis / source</label>
+          <textarea id="thesis" name="thesis" rows="14">Google TPU claims mean Gemini will close the gap with frontier models this year. Find the best prediction-market expression and tell me whether the market is a clean fit.</textarea>
+          <div class="toolbar">
+            <select id="prompt-version" name="prompt-version" aria-label="Prompt version">
+              <option value="v1_lenient">First run</option>
+              <option value="v2_trace_inspected">Trace-inspected run</option>
+            </select>
+            <button type="submit" id="run-button">Run agent</button>
+          </div>
+        </form>
+
+        <section class="panel result-panel" aria-live="polite">
+          <div class="panel-head">
+            <p class="eyebrow">Claim lifecycle</p>
+            <button type="button" id="improve-button" disabled>Inspect trace and rerun</button>
+          </div>
+          <div id="result">
+            <p class="empty">Run the agent to create a traceable market-fit judgment.</p>
+          </div>
+        </section>
+
+        <aside class="panel eval-panel">
+          <p class="eyebrow">Eval and trace</p>
+          <div id="eval-summary">
+            <p class="empty">No eval recorded.</p>
+          </div>
+          <div id="ledger-events"></div>
+        </aside>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

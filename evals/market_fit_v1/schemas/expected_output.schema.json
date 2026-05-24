@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://epistemic-ledger.local/schemas/market_fit_v1/expected_output.schema.json",
+  "title": "Market Fit Eval Expected Output",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "example_id",
+    "expected_thesis",
+    "expected_fit",
+    "expected_explanation",
+    "expected_draft_contract",
+    "safety_expectations"
+  ],
+  "properties": {
+    "example_id": { "type": "string", "pattern": "^eval_[0-9]{3}$" },
+    "expected_thesis": { "type": "object" },
+    "expected_fit": {
+      "type": "object",
+      "required": ["semantic_fit_class", "case_tags", "best_market_id", "acceptable_market_ids", "adjacent_market_ids", "rejected_market_ids"],
+      "properties": {
+        "semantic_fit_class": {
+          "type": "string",
+          "enum": ["direct", "indirect", "weak_proxy", "no_clean_expression"]
+        },
+        "case_tags": { "type": "array", "items": { "type": "string" } },
+        "best_market_id": { "type": ["string", "null"] },
+        "acceptable_market_ids": { "type": "array", "items": { "type": "string" } },
+        "adjacent_market_ids": { "type": "array", "items": { "type": "string" } },
+        "rejected_market_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "expected_explanation": { "type": "object" },
+    "expected_draft_contract": { "type": "object" },
+    "safety_expectations": { "type": "object" }
+  }
+}

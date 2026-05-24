@@ -1,0 +1,292 @@
+:root {
+  color-scheme: dark;
+  --bg: #10100f;
+  --panel: #171715;
+  --panel-2: #1d1c19;
+  --line: #34322c;
+  --text: #f0eee7;
+  --muted: #aaa49a;
+  --quiet: #777168;
+  --brass: #c2a15c;
+  --bad: #d68073;
+  --good: #8abf9f;
+  --review: #d4b06a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Avenir Next", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+select {
+  min-height: 40px;
+}
+
+.shell {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  padding: 28px;
+}
+
+.masthead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 0 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+h1 {
+  margin: 4px 0 0;
+  font-size: clamp(32px, 5vw, 68px);
+  line-height: 0.96;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--brass);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status {
+  color: var(--muted);
+  font-size: 13px;
+  border: 1px solid var(--line);
+  padding: 9px 11px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.35fr) minmax(280px, 0.85fr);
+  gap: 14px;
+  padding-top: 14px;
+}
+
+.panel {
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.input-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 360px;
+  resize: vertical;
+  color: var(--text);
+  background: #0c0c0b;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 12px;
+  line-height: 1.5;
+}
+
+select,
+button {
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 12px;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--brass);
+}
+
+button:disabled {
+  color: var(--quiet);
+  cursor: not-allowed;
+}
+
+.toolbar,
+.panel-head,
+.verdicts {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.result-panel,
+.eval-panel {
+  min-height: 520px;
+}
+
+.empty {
+  color: var(--quiet);
+}
+
+.claim-text {
+  margin: 0 0 16px;
+  font-size: 24px;
+  line-height: 1.18;
+  font-weight: 500;
+}
+
+.meta-grid,
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.meta,
+.metric,
+.market,
+.event,
+.inspection {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px;
+  background: #121211;
+}
+
+.label {
+  display: block;
+  color: var(--quiet);
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 5px;
+}
+
+.fit-class {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  padding: 0 12px;
+  color: var(--brass);
+  background: #11100e;
+  margin: 4px 0 12px;
+}
+
+.flag-bad {
+  color: var(--bad);
+}
+
+.flag-good {
+  color: var(--good);
+}
+
+.flag-review {
+  color: var(--review);
+}
+
+ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+li {
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+.event {
+  margin-top: 8px;
+}
+
+.event strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.event time {
+  color: var(--quiet);
+  font-size: 11px;
+}
+
+.trace {
+  word-break: break-all;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.trace a {
+  color: var(--brass);
+  text-decoration: none;
+}
+
+.trace a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1040px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .masthead {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 620px) {
+  .shell {
+    padding: 16px;
+  }
+
+  .meta-grid,
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar button,
+  .toolbar select,
+  .verdicts button,
+  #improve-button {
+    width: 100%;
+  }
+}

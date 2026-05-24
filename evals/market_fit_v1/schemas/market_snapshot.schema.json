@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://epistemic-ledger.local/schemas/market_fit_v1/market_snapshot.schema.json",
+  "title": "Frozen Market Snapshot",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "snapshot_build_id",
+    "market_id",
+    "venue",
+    "title",
+    "close_time",
+    "status",
+    "yes_price",
+    "no_price",
+    "as_of_ts"
+  ],
+  "properties": {
+    "snapshot_build_id": { "type": "string" },
+    "market_id": { "type": "string" },
+    "venue": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "resolution_rules": { "type": "string" },
+    "category": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "close_time": { "type": "string" },
+    "status": { "type": "string", "enum": ["open", "closed", "resolved"] },
+    "yes_price": { "type": "number" },
+    "no_price": { "type": "number" },
+    "liquidity_proxy": { "type": "number" },
+    "volume": { "type": "number" },
+    "as_of_ts": { "type": "string" }
+  }
+}

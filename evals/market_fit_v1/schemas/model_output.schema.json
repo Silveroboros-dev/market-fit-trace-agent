@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://epistemic-ledger.local/schemas/market_fit_v1/model_output.schema.json",
+  "title": "Market Fit Model Output",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["example_id", "thesis", "market_match", "explanation", "draft_contract", "safety"],
+  "properties": {
+    "example_id": { "type": "string", "pattern": "^eval_[0-9]{3}$" },
+    "thesis": { "type": "object" },
+    "market_match": {
+      "type": "object",
+      "required": ["fit_class", "recommended_market_id", "alternative_market_ids", "rejected_market_ids", "fit_score"],
+      "properties": {
+        "fit_class": {
+          "type": "string",
+          "enum": ["direct", "indirect", "weak_proxy", "no_clean_expression"]
+        },
+        "recommended_market_id": { "type": ["string", "null"] },
+        "alternative_market_ids": { "type": "array", "items": { "type": "string" } },
+        "rejected_market_ids": { "type": "array", "items": { "type": "string" } },
+        "fit_score": { "type": "number" }
+      }
+    },
+    "explanation": { "type": "object" },
+    "draft_contract": { "type": "object" },
+    "safety": { "type": "object" }
+  }
+}

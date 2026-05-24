@@ -1,0 +1,94 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+from app.agent import MarketFitTraceAgent
+from app.ledger import LedgerStore
+from app.market_data import load_markets
+from app.models import (
+    HumanVerdictInput,
+    HumanVerdictResult,
+    ImprovementResult,
+    RunResult,
+    SourceInput,
+)
+
+store = LedgerStore()
+agent = MarketFitTraceAgent(store=store)
+app = FastAPI(title="Market Fit Trace Agent", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+static_dir = Path(__file__).parent / "static"
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+
+@app.get("/")
+def index() -> FileResponse:
+    return FileResponse(static_dir / "index.html")
+
+
+@app.get("/api/health")
+def health() -> dict[str, str]:
+    return {"status": "ok", "service": "market-fit-trace-agent"}
+
+
+@app.get("/api/markets")
+def markets() -> list[dict[str, object]]:
+    return [market.model_dump() for market in load_markets()]
+
+
+@app.post("/api/runs", response_model=RunResult)
+async def create_run(payload: SourceInput) -> RunResult:
+    return await agent.run(
+        thesis=payload.thesis,
+        title=payload.title,
+        prompt_version=payload.prompt_version,
+    )
+
+
+@app.post("/api/verdicts", response_model=HumanVerdictResult)
+def record_verdict(payload: HumanVerdictInput) -> HumanVerdictResult:
+    try:
+        result = store.record_human_verdict(
+            claim_id=payload.claim_id,
+            verdict=payload.verdict,
+            corrected_claim_text=payload.corrected_claim_text,
+            corrected_fit_class=payload.corrected_fit_class,
+            reviewer_note=payload.reviewer_note,
+        )
+        return HumanVerdictResult(
+            verdict_id=result["verdict_id"],
+            claim_status=result["claim_status"],
+            ledger=store.query_claim_trace(payload.claim_id),
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/api/ledger/{claim_id}")
+def claim_trace(claim_id: str) -> dict[str, object]:
+    try:
+        return store.query_claim_trace(claim_id).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.post("/api/runs/{run_id}/improve", response_model=ImprovementResult)
+async def improve_run(run_id: str) -> ImprovementResult:
+    try:
+        return await agent.improve_from_trace(run_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+

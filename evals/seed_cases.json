@@ -1,0 +1,24 @@
+[
+  {
+    "case_id": "weak-proxy-google-tpu",
+    "thesis": "Google TPU claims mean Gemini will close the gap with frontier models this year. Find the best prediction-market expression and tell me whether the market is a clean fit.",
+    "expected_fit_class": "weak_proxy",
+    "expected_market_id": "pm-gemini-arena-2026",
+    "eval_focus": ["false_strong_recommendation", "weak_proxy_detection"]
+  },
+  {
+    "case_id": "direct-fed-cut",
+    "thesis": "The Fed will cut interest rates at the July 2026 FOMC meeting.",
+    "expected_fit_class": "direct",
+    "expected_market_id": "pm-direct-fed-cut-july-2026",
+    "eval_focus": ["fit_class_accuracy"]
+  },
+  {
+    "case_id": "no-clean-apple-ai",
+    "thesis": "Apple's private on-device AI architecture will make users trust Siri again this year.",
+    "expected_fit_class": "no_clean_expression",
+    "expected_market_id": null,
+    "eval_focus": ["no_clean_precision"]
+  }
+]
+

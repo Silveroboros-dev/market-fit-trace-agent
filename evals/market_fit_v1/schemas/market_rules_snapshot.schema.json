@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://epistemic-ledger.local/schemas/market_fit_v1/market_rules_snapshot.schema.json",
+  "title": "Frozen Market Rules Snapshot",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "snapshot_build_id",
+    "market_id",
+    "venue",
+    "title",
+    "description",
+    "resolution_rules",
+    "resolution_source",
+    "close_time",
+    "ambiguity_flags",
+    "as_of_ts"
+  ],
+  "properties": {
+    "snapshot_build_id": { "type": "string" },
+    "market_id": { "type": "string" },
+    "venue": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "resolution_rules": { "type": "string" },
+    "resolution_source": { "type": "string" },
+    "close_time": { "type": "string" },
+    "settlement_time": { "type": ["string", "null"] },
+    "rule_last_updated_at": { "type": ["string", "null"] },
+    "ambiguity_flags": { "type": "array", "items": { "type": "string" } },
+    "as_of_ts": { "type": "string" }
+  }
+}

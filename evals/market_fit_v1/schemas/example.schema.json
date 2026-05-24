@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://epistemic-ledger.local/schemas/market_fit_v1/example.schema.json",
+  "title": "Market Fit Eval Example",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "example_id",
+    "schema_version",
+    "as_of_ts",
+    "source_type",
+    "source_text",
+    "source_provenance",
+    "source_signal",
+    "user_context",
+    "market_snapshot_ref",
+    "market_rules_snapshot_ref",
+    "labels"
+  ],
+  "properties": {
+    "example_id": { "type": "string", "pattern": "^eval_[0-9]{3}$" },
+    "schema_version": { "type": "string", "const": "market_fit_v1" },
+    "as_of_ts": { "type": "string" },
+    "source_type": {
+      "type": "string",
+      "enum": ["plain_text", "x_post_text", "article_excerpt", "user_note"]
+    },
+    "source_text": { "type": "string", "minLength": 1 },
+    "source_provenance": { "type": "object" },
+    "source_signal": { "type": "object" },
+    "user_context": { "type": "object" },
+    "market_snapshot_ref": { "type": "object" },
+    "market_rules_snapshot_ref": { "type": "object" },
+    "labels": { "type": "object" }
+  }
+}

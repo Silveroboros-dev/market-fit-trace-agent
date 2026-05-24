@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://epistemic-ledger.local/schemas/market_fit_v1/candidate_set.schema.json",
+  "title": "Market Fit Candidate Set",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "example_id",
+    "retrieval_version",
+    "market_snapshot_build_id",
+    "candidate_market_ids",
+    "tempting_wrong_market_ids",
+    "retrieval_notes"
+  ],
+  "properties": {
+    "example_id": { "type": "string", "pattern": "^eval_[0-9]{3}$" },
+    "retrieval_version": { "type": "string" },
+    "market_snapshot_build_id": { "type": "string" },
+    "candidate_market_ids": { "type": "array", "items": { "type": "string" } },
+    "tempting_wrong_market_ids": { "type": "array", "items": { "type": "string" } },
+    "no_market_evidence": { "type": "array", "items": { "type": "string" } },
+    "retrieval_notes": { "type": "string" }
+  }
+}
