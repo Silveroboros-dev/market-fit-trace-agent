@@ -7,15 +7,15 @@ market thesis can be expressed through an existing prediction market without cre
 a false sense of precision.
 
 Gemini, running through Google ADK, drafts a normalized claim: entities, horizon,
-stance, and target outcome. Deterministic policy code then compares the claim against
-frozen candidate market snapshots and classifies the fit as `direct`, `indirect`,
-`weak_proxy`, or `no_clean_expression`.
+stance, and target outcome. The app retrieves a bounded set of relevant current
+Polymarket markets from recent snapshots, then deterministic policy code classifies
+the fit as `direct`, `indirect`, `weak_proxy`, or `no_clean_expression`.
 
 The Arize/Phoenix integration is not just logging. Phoenix/OpenInference traces expose
 why a market-fit judgment failed, and the improve step uses Phoenix MCP trace context
 to rerun the agent with that failure in context.
 
-Market fit here means **prediction-market fit**: whether a candidate market cleanly
+Market fit here means **prediction-market fit**: whether a market cleanly
 expresses the user's thesis.
 
 Selected Rapid track: **Arize**.
@@ -39,8 +39,8 @@ Phoenix MCP is the partner integration for the Arize track:
 - Phoenix span annotations record trace-linked evals such as `false_strong_recommendation`
   and `weak_proxy_detected`.
 - Phoenix MCP is used during the improve step to inspect failed trace/eval context.
-- The local Ledger MCP records claim lifecycle events and human verdicts; it is a
-  project-local support tool, not the sponsor integration.
+- The local Ledger MCP records claim lifecycle events and optional human verdicts;
+  it is a project-local support tool, not the sponsor integration.
 
 This maps to the official Arize guidance for code-owned agent runtime, OpenInference
 instrumentation, Phoenix traces, Phoenix MCP runtime introspection, trace evals, and
@@ -89,17 +89,18 @@ horizon, platform, entity, metric, or causal mechanism.
 
 Market Fit Trace Agent makes this failure inspectable and correctable. It does not
 just recommend a market; it explains whether the fit is direct, indirect, weak, or
-absent, records human review, and uses Phoenix traces to improve the next run.
+absent, records optional human review, and uses Phoenix traces to improve the next run.
 
 ## What It Does
 
 1. Accepts a messy thesis or source text.
 2. Uses Google ADK/Gemini to normalize the claim: entities, horizon, stance, and
    target outcome.
-3. Compares the claim with frozen candidate prediction-market snapshots.
+3. Retrieves a bounded set of relevant current Polymarket markets from recent
+   market snapshots.
 4. Classifies fit as `direct`, `indirect`, `weak_proxy`, or `no_clean_expression`.
 5. Explains tempting rejected markets so adjacency is not mistaken for clean exposure.
-6. Records human verdicts in a public-safe Ledger MCP lifecycle store.
+6. Records optional human verdicts in a public-safe Ledger MCP lifecycle store.
 7. Sends ADK/Gemini and product-level OpenInference spans to Phoenix.
 8. Runs trace-linked deterministic evals for false strong recommendations and weak proxies.
 9. Uses Phoenix MCP trace inspection to improve a second run.
@@ -110,8 +111,9 @@ absent, records human review, and uses Phoenix traces to improve the next run.
 thesis / source text
   -> Google ADK / Gemini proposal
   -> schema validation
+  -> bounded Polymarket market retrieval
   -> deterministic market-fit policy
-  -> human verdict
+  -> optional human verdict
   -> Ledger MCP lifecycle record
   -> Phoenix / OpenInference trace + eval annotation
   -> Phoenix MCP inspection
@@ -120,7 +122,7 @@ thesis / source text
 
 There is one deployable ADK agent. The FastAPI app is the audited workflow controller
 around that agent: it validates schemas, applies deterministic market-fit policy,
-writes ledger records, runs evals, and handles human verdicts.
+writes ledger records, runs evals, and handles optional human verdicts.
 
 Key files:
 
@@ -131,7 +133,7 @@ Key files:
 - `app/phoenix_mcp.py`: Phoenix MCP trace-inspection bridge.
 - `app/evals.py`: deterministic fit and weak-proxy evals.
 - `mcp/ledger_server.py`: project-local Ledger MCP lifecycle tools.
-- `evals/`: baseline goldens, promoted goldens, candidate packs, and intake report.
+- `evals/`: baseline goldens, promoted goldens, draft eval packs, and intake report.
 
 The trust boundary is explicit: Gemini drafts, extracts, summarizes, and proposes.
 Deterministic code classifies, scores, records, and gates the final market-fit
@@ -141,11 +143,11 @@ judgment.
 
 | Layer | Responsibility | Does not do |
 |---|---|---|
-| Google ADK / Gemini | Drafts normalized claim, entities, horizon, stance, and candidate fit | Final trust decision |
+| Google ADK / Gemini | Drafts normalized claim, entities, horizon, stance, and market-fit proposal | Final trust decision |
 | Deterministic policy | Classifies fit, scores evals, enforces weak-proxy logic | Open-ended reasoning |
 | Phoenix / OpenInference | Captures traces, spans, annotations, and failure context | Policy enforcement |
 | Phoenix MCP | Retrieves failed trace/eval context for improvement | Guarantees correctness by itself |
-| Ledger MCP | Records lifecycle events and human verdicts | Sponsor integration |
+| Ledger MCP | Records lifecycle events and optional human verdicts | Sponsor integration |
 
 ## Quickstart
 
@@ -310,8 +312,8 @@ mcp/phoenix_mcp_config.example.json
 
 ### Ledger MCP
 
-Project-local lifecycle store. Records claim lifecycle events and human verdicts
-for the demo.
+Project-local lifecycle store. Records claim lifecycle events and optional human
+verdicts when users provide them.
 
 Run locally:
 
@@ -325,7 +327,7 @@ python mcp/ledger_server.py
 - `POST /api/verdicts`: record `verify`, `reject`, `needs_review`, or `corrected`.
 - `POST /api/runs/{run_id}/improve`: inspect failed trace/eval and rerun.
 - `GET /api/ledger/{claim_id}`: return lifecycle events.
-- `GET /api/markets`: return frozen candidate markets.
+- `GET /api/markets`: return the current bounded market set or replay fixtures.
 
 ## Deployment
 
@@ -338,9 +340,10 @@ See [docs/deploy-cloud-run.md](docs/deploy-cloud-run.md) for full commands.
 
 ## Known Limitations
 
-- Candidate market snapshots are frozen fixtures, not live market discovery.
+- Dynamic retrieval is bounded by recent market snapshots and liquidity filters;
+  formal evals replay frozen fixtures.
 - The app audits fit quality; it does not give trading advice or execute trades.
-- Candidate goldens mined with external tools remain candidates until independently
+- Draft eval rows mined with external tools are not goldens until independently
   reviewed and promoted.
 - Phoenix MCP is the live sponsor path; the local fallback is only for offline
   reproduction without Phoenix credentials.

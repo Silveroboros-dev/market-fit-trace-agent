@@ -282,11 +282,11 @@ not passed. The fallback only proves offline reproducibility.
 
 | Layer | Responsibility | Does Not Do |
 |---|---|---|
-| Gemini / ADK | Draft normalized claim, entities, horizon, stance, candidate fit | Make final trust decision |
+| Gemini / ADK | Draft normalized claim, entities, horizon, stance, and market-fit proposal | Make final trust decision |
 | Deterministic policy | Enforce market-fit classification rules and eval pass/fail | Generate open-ended reasoning |
 | Phoenix / OpenInference | Capture spans, eval annotations, trace links, and failure context | Replace policy enforcement |
 | Phoenix MCP | Retrieve trace/span/annotation context for the improve step | Guarantee correctness by itself |
-| Ledger MCP | Record claim lifecycle and human verdicts | Act as the sponsor MCP integration |
+| Ledger MCP | Record claim lifecycle and optional human verdicts | Act as the sponsor MCP integration |
 
 ## Phoenix MCP vs OpenInference MCP Tracing
 
@@ -320,4 +320,4 @@ Do not claim:
 - Phoenix replaces the policy layer;
 - Gemini alone makes the final trust decision;
 - the app gives trading or execution advice;
-- candidate goldens become strict goldens because Grok found them.
+- draft eval rows become strict goldens because Grok or another external tool found them.

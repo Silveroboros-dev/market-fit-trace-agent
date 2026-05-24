@@ -4,14 +4,14 @@
 
 Goal:
 
-One thesis -> one market-fit judgment -> one human verdict -> one ledger write.
+One thesis -> one market-fit judgment -> optional human verdict -> one ledger write.
 
 Tasks:
 
 - initialize new public repo;
 - choose FastAPI + Streamlit or FastAPI + Next.js;
 - implement Gemini-backed claim extraction;
-- load a small fixed candidate market set from JSON;
+- load a small fixed market snapshot from JSON;
 - classify fit as direct, indirect, weak proxy, or no clean expression;
 - implement Ledger MCP with the smallest useful tools;
 - show result and verdict buttons in UI.
@@ -75,6 +75,30 @@ Pass condition:
 
 The demo shows a metric moving in the right direction.
 
+## Phase 4.5: Bounded Dynamic Market Retrieval
+
+Goal:
+
+Make the answer space stronger without scanning the whole market universe for
+every user request.
+
+Tasks:
+
+- read recent Polymarket market snapshots from the PolyData / poly-data-explorer
+  surface when credentials are present;
+- start with a simple universe filter: open markets with liquidity, open
+  interest, or volume proxy above USD 10,000;
+- narrow the search space with taxonomy/category buckets, embeddings, or
+  similarity indexes instead of scanning all markets per request;
+- pass only the bounded relevant market set to the fit reasoner;
+- freeze the retrieved market set and rules for formal eval replay;
+- evaluate retrieval quality separately from final fit classification.
+
+Pass condition:
+
+The app can fetch a current bounded market set for a thesis in live mode, while
+strict evals remain replayable from frozen fixtures.
+
 ## Phase 5: Packaging
 
 Goal:
@@ -98,6 +122,7 @@ Cut aggressively:
 
 - more than 2 agents;
 - full Polymarket live integration if snapshots are enough;
+- broad live market integration before bounded retrieval works;
 - full auth;
 - production database migrations if a simple SQLite/Postgres demo works;
 - fancy analytics dashboard;
@@ -112,5 +137,5 @@ Keep:
 - one partner MCP use;
 - one internal Ledger MCP;
 - one bad fit caught;
-- one human correction;
+- one optional human correction;
 - one improved second run.

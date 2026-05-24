@@ -70,6 +70,7 @@ class EvalMetrics(BaseModel):
     unsupported_implication: bool
     human_verification_required: bool
     no_clean_expression_expected: bool = False
+    phoenix_annotations_written: bool = False
     second_run_improvement: bool | None = None
 
 

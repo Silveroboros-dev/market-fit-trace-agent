@@ -1,4 +1,4 @@
-.PHONY: dev test evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens api ui adk-run adk-web smoke-adk smoke-adk-live phoenix-ensure phoenix-check deploy-adk
+.PHONY: dev test lint format evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens api ui adk-run adk-web smoke-adk smoke-adk-live phoenix-ensure phoenix-check deploy-adk
 
 api:
 	uv run --python 3.11 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
@@ -10,6 +10,12 @@ dev: api
 
 test:
 	uv run --python 3.11 --extra dev pytest
+
+lint:
+	uv run --python 3.11 --extra dev ruff check .
+
+format:
+	uv run --python 3.11 --extra dev ruff format .
 
 evals:
 	uv run --python 3.11 python scripts/run_evals.py

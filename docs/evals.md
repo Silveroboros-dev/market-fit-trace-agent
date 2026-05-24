@@ -4,6 +4,34 @@ Market Fit Trace Agent uses deterministic evals to prove its core trust claim:
 the agent must not turn a tempting adjacent prediction market into a clean
 recommendation when the market does not actually express the thesis.
 
+## Product Vs Eval Boundary
+
+In production or live demo mode, the app should retrieve a bounded set of
+relevant current Polymarket markets from recent market snapshots. It should not
+scan the whole market universe for every user request. The retrieval layer can
+use practical indexes such as taxonomy/category buckets, embeddings, similarity
+edges, and liquidity filters.
+
+Strict evals do not call live market APIs. They replay the same kind of market
+data from frozen fixtures so regressions are meaningful.
+
+The markets themselves are not being evaluated; they are the source context. What
+we evaluate is:
+
+- whether the retrieval layer fetched the right relevant markets;
+- whether it included tempting-but-wrong markets when useful;
+- whether the fit layer correctly labels the result as `direct`, `indirect`,
+  `weak_proxy`, or `no_clean_expression`;
+- whether the output avoids false strong recommendations and trading advice.
+
+For the first dynamic retrieval version, use a simple market-universe rule:
+include open markets whose liquidity/open-interest/volume proxy exceeds
+USD 10,000, then narrow by taxonomy/category or semantic index before the agent
+reasons about fit.
+
+The implementation-facing retrieval contract is in
+[poly-data-provider-contract.md](poly-data-provider-contract.md).
+
 ## Commands
 
 Strict local baseline:
@@ -25,14 +53,14 @@ make evals-live
 make phoenix-check
 ```
 
-Candidate-pack reports:
+Draft eval-pack reports:
 
 ```bash
 make evals-candidates
 make evals-candidates-v3
 ```
 
-Golden/candidate intake gate:
+Golden promotion intake gate:
 
 ```bash
 make intake-goldens
@@ -44,11 +72,28 @@ make intake-goldens
 | --- | --- | --- |
 | `evals/market_fit_v1` | Original 10-case baseline covering direct, indirect, weak proxy, and no-clean-expression cases. | Yes |
 | `evals/market_fit_v2` | Promoted second suite focused on weak proxies, no-clean-expression, horizon mismatch, and platform mismatch. | Yes |
-| `evals/market_fit_v2_candidates` | Staged mining pass. Useful for coverage review, not formal proof. | No |
-| `evals/market_fit_v3_candidates` | Second staged mining pass after deduplication. Useful for coverage review, not formal proof. | No |
+| `evals/market_fit_v2_candidates` | Draft eval pack for coverage review and promotion work. | No |
+| `evals/market_fit_v3_candidates` | Draft eval pack after deduplication. | No |
 
-Candidate packs run with `--allow-failures`. They are not formal goldens until
-market snapshots, expected labels, and source provenance are reviewed.
+Draft eval packs run with `--allow-failures`. They are not formal goldens until
+source provenance, frozen market snapshots, frozen rules, and expected labels are
+reviewed.
+
+## Frozen Fixtures
+
+Formal eval rows need four things:
+
+- source text and provenance;
+- expected normalized thesis;
+- frozen market snapshots and resolution rules;
+- expected fit behavior, including tempting wrong markets.
+
+`market_snapshots.jsonl` stores the market context visible at the snapshot time.
+`market_rules_snapshots.jsonl` stores the resolution rules. `expected_outputs.jsonl`
+stores the gold behavior.
+
+Human judgment is required when promoting a draft row into a golden. Human
+judgment is not required before every production recommendation.
 
 ## Baseline Trace Replay
 
@@ -86,11 +131,10 @@ It checks:
 - duplicate example IDs;
 - duplicate source URLs and X status IDs;
 - duplicate and near-duplicate source text;
-- Grok-sourced rows that still require independent review.
+- externally sourced rows that still require independent review.
 
 Structural errors block promotion. Warnings are review signals: they are expected
-for candidate packs and for promoted rows that still exist in archived candidate
-folders.
+for draft eval packs.
 
 ## Demo-Supported Claims
 
@@ -101,4 +145,4 @@ The evals support these README/Devpost claims:
 - The agent catches false strong recommendations.
 - Weak proxy cases stay visible through trace-linked eval metrics.
 - Baseline examples can be replayed through live ADK/Gemini and Phoenix.
-- Candidate rows are not treated as goldens just because an external tool found them.
+- Draft eval rows are not treated as goldens just because an external tool found them.

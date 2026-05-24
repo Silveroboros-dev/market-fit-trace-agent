@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import re
+from typing import Any
+
 from app.config import settings
 from app.ledger import LedgerStore
 from app.models import PhoenixInspection
+
+MAX_TRACE_SUMMARY_CHARS = 1500
 
 
 class PhoenixMCPInspector:
@@ -79,26 +84,69 @@ class PhoenixMCPInspector:
                                 "include_annotations": True,
                             },
                         )
-                        return (
-                            "Phoenix MCP returned trace data. "
-                            f"Eval failure: {fallback_summary} Details: {result}"
+                        return _summarize_phoenix_mcp_result(
+                            result, phoenix_trace_id, fallback_summary
                         )
                     if "get_trace" in tool_names:
                         result = await session.call_tool(
                             "get_trace", {"trace_id": phoenix_trace_id}
                         )
-                        return (
-                            "Phoenix MCP returned trace data. "
-                            f"Eval failure: {fallback_summary} Details: {result}"
+                        return _summarize_phoenix_mcp_result(
+                            result, phoenix_trace_id, fallback_summary
                         )
                     if "get_trace_by_id" in tool_names:
                         result = await session.call_tool(
                             "get_trace_by_id", {"trace_id": phoenix_trace_id}
                         )
-                        return (
-                            "Phoenix MCP returned trace data. "
-                            f"Eval failure: {fallback_summary} Details: {result}"
+                        return _summarize_phoenix_mcp_result(
+                            result, phoenix_trace_id, fallback_summary
                         )
         except Exception:
             return None
         return None
+
+
+def _summarize_phoenix_mcp_result(
+    result: Any, phoenix_trace_id: str, fallback_summary: str
+) -> str:
+    raw_text = _mcp_result_text(result)
+    lower = raw_text.lower()
+    signals = [
+        name
+        for name in [
+            "fit_eval_run",
+            "false_strong_recommendation",
+            "weak_proxy_detected",
+            "unsupported_implication",
+            "schema_valid",
+        ]
+        if name in lower
+    ]
+    signal_text = ", ".join(signals) if signals else "trace data returned"
+    excerpt = _compact(raw_text, max_chars=800)
+    summary = (
+        "Phoenix MCP inspected the failed trace. "
+        f"trace_id={phoenix_trace_id}. "
+        f"Signals found: {signal_text}. "
+        f"Prior eval failure: {fallback_summary}. "
+        f"Compact trace excerpt: {excerpt}"
+    )
+    return _compact(summary, max_chars=MAX_TRACE_SUMMARY_CHARS)
+
+
+def _mcp_result_text(result: Any) -> str:
+    content = getattr(result, "content", None)
+    if content:
+        parts = []
+        for item in content:
+            text = getattr(item, "text", None)
+            parts.append(text if text is not None else str(item))
+        return "\n".join(parts)
+    return str(result)
+
+
+def _compact(text: str, *, max_chars: int) -> str:
+    compacted = re.sub(r"\s+", " ", text).strip()
+    if len(compacted) <= max_chars:
+        return compacted
+    return f"{compacted[:max_chars]}...[truncated]"

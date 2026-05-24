@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from typing import Any
 
 from app.adk_runtime import ADKJsonRuntime
 from app.evals import evaluate_fit, evaluate_improvement
@@ -68,11 +69,19 @@ class MarketFitTraceAgent:
             ):
                 markets = self.markets
             with trace.span("market_fit_classified", attrs):
-                fit = await self.classify_fit(
+                fit, model_fit_proposal = await self.classify_fit(
                     claim=claim,
                     markets=markets,
                     prompt_version=prompt_version,
                     prior_failure_summary=prior_failure_summary,
+                )
+                model_fit_proposal_json = _json_preview(model_fit_proposal)
+                trace.set_current_span_attributes(
+                    {
+                        "model_fit_proposal.present": bool(model_fit_proposal),
+                        "model_fit_proposal.preview": model_fit_proposal_json or "",
+                        "policy_decision_source": "deterministic_policy",
+                    }
                 )
             with trace.span("rejected_markets_explained", {"run_id": run_id}):
                 fit = self._ensure_rejected_markets(fit, markets)
@@ -113,14 +122,6 @@ class MarketFitTraceAgent:
                     markets=markets,
                     phoenix_trace_id=phoenix_trace_id,
                 )
-                eval_ref = self.store.record_eval_result(
-                    run_id=run_id,
-                    claim_id=claim_id,
-                    phoenix_trace_id=phoenix_trace_id,
-                    metrics=eval_result.metrics.model_dump(),
-                    failure_summary=eval_result.failure_summary,
-                )
-                eval_result.eval_record_id = eval_ref["eval_record_id"]
                 trace.set_current_span_attributes(
                     {
                         "eval.schema_valid": eval_result.metrics.schema_valid,
@@ -140,15 +141,35 @@ class MarketFitTraceAgent:
                         "eval.failure_summary": eval_result.failure_summary or "",
                     }
                 )
-            log_eval_annotations(
+            annotations_written = log_eval_annotations(
                 span_id=trace.span_id("fit_eval_run"),
                 eval_result=eval_result,
             )
+            eval_result.metrics.phoenix_annotations_written = annotations_written
+            with trace.span(
+                "phoenix_annotations_logged",
+                {
+                    **attrs,
+                    "run_id": run_id,
+                    "claim_id": claim_id,
+                    "phoenix_annotations_written": annotations_written,
+                },
+            ):
+                pass
+            eval_ref = self.store.record_eval_result(
+                run_id=run_id,
+                claim_id=claim_id,
+                phoenix_trace_id=phoenix_trace_id,
+                metrics=eval_result.metrics.model_dump(),
+                failure_summary=eval_result.failure_summary,
+            )
+            eval_result.eval_record_id = eval_ref["eval_record_id"]
             self.store.update_run(
                 run_id,
                 status="completed",
                 phoenix_trace_id=phoenix_trace_id,
                 eval_summary_json=eval_result.metrics.model_dump_json(),
+                model_fit_proposal_json=model_fit_proposal_json,
             )
 
         return RunResult(
@@ -240,7 +261,7 @@ Thesis:
         markets: list[CandidateMarket],
         prompt_version: str,
         prior_failure_summary: str | None,
-    ) -> MarketFit:
+    ) -> tuple[MarketFit, dict[str, Any] | list[Any] | str | None]:
         prompt = f"""
 Classify which prediction-market expression best fits the normalized claim.
 Allowed semantic_fit_class values: direct, indirect, weak_proxy, no_clean_expression.
@@ -251,7 +272,7 @@ Prior failed trace summary: {prior_failure_summary or "none"}
 Claim: {claim.model_dump_json()}
 Candidate markets: {json.dumps([m.model_dump() for m in markets])}
 """
-        await self.adk_runtime.generate_json(
+        model_fit_proposal = await self.adk_runtime.generate_json(
             prompt=prompt,
             task_name="market_fit_proposal",
             instruction=(
@@ -261,7 +282,7 @@ Candidate markets: {json.dumps([m.model_dump() for m in markets])}
         )
         # ADK/Gemini is used for traceable proposal spans. Final fit decisions stay
         # deterministic so evals are reproducible and policy-owned by app code.
-        return _deterministic_classify(claim, markets, prompt_version)
+        return _deterministic_classify(claim, markets, prompt_version), model_fit_proposal
 
     def _ensure_rejected_markets(
         self, fit: MarketFit, markets: list[CandidateMarket]
@@ -981,6 +1002,19 @@ def _phoenix_trace_url(trace_id: str | None) -> str | None:
     if not settings.phoenix_base_url:
         return None
     return f"{settings.phoenix_base_url.rstrip('/')}/traces/{trace_id}"
+
+
+def _json_preview(value: Any, max_chars: int = 2000) -> str | None:
+    if value is None:
+        return None
+    try:
+        text = json.dumps(value, sort_keys=True, default=str)
+    except TypeError:
+        text = str(value)
+    text = re.sub(r"\s+", " ", text).strip()
+    if len(text) <= max_chars:
+        return text
+    return f"{text[:max_chars]}...[truncated]"
 
 
 def _deterministic_classify(
