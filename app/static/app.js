@@ -1,6 +1,14 @@
 const state = {
   currentRun: null,
+  marketsById: {},
 };
+
+const FIT_CLASSES = [
+  { value: "direct", label: "Direct" },
+  { value: "indirect", label: "Indirect" },
+  { value: "weak_proxy", label: "Weak proxy" },
+  { value: "no_clean_expression", label: "No clean expression" },
+];
 
 const statusEl = document.querySelector("#service-status");
 const resultEl = document.querySelector("#result");
@@ -27,6 +35,15 @@ async function checkHealth() {
     statusEl.textContent = health.status === "ok" ? "Service online" : "Service unavailable";
   } catch {
     statusEl.textContent = "Service unavailable";
+  }
+}
+
+async function loadMarkets() {
+  try {
+    const markets = await api("/api/markets");
+    state.marketsById = Object.fromEntries(markets.map((market) => [market.market_id, market]));
+  } catch {
+    state.marketsById = {};
   }
 }
 
@@ -73,13 +90,15 @@ improveButton.addEventListener("click", async () => {
 function renderRun(run) {
   improveButton.disabled = false;
   resultEl.innerHTML = `
+    <span class="label">Normalized thesis</span>
     <p class="claim-text">${escapeHtml(run.claim.claim_text)}</p>
-    <span class="fit-class">${escapeHtml(run.fit.semantic_fit_class)}</span>
+    ${fitClassScale(run.fit.semantic_fit_class)}
+    ${recommendedMarket(run)}
     <div class="meta-grid">
       ${meta("Entities", run.claim.entities.join(", ") || "Unspecified")}
       ${meta("Horizon", run.claim.horizon)}
       ${meta("Stance", run.claim.stance)}
-      ${meta("Recommended market", run.fit.recommended_market_id || "None")}
+      ${meta("Confidence", run.claim.confidence)}
     </div>
     <div class="market">
       <span class="label">Fit reason</span>
@@ -113,8 +132,10 @@ function renderImprovement(improved) {
       ${meta("Before", `${before.fit.semantic_fit_class} / false strong: ${before.eval.metrics.false_strong_recommendation}`)}
       ${meta("After", `${after.fit.semantic_fit_class} / false strong: ${after.eval.metrics.false_strong_recommendation}`)}
     </div>
+    <span class="label">Revised normalized thesis</span>
     <p class="claim-text">${escapeHtml(after.claim.claim_text)}</p>
-    <span class="fit-class">${escapeHtml(after.fit.semantic_fit_class)}</span>
+    ${fitClassScale(after.fit.semantic_fit_class)}
+    ${recommendedMarket(after)}
     <div class="market">
       <span class="label">Revised fit reason</span>
       <p>${escapeHtml(after.fit.fit_reason)}</p>
@@ -123,6 +144,58 @@ function renderImprovement(improved) {
   `;
   renderEval(after);
   renderLedger(after.ledger);
+}
+
+function fitClassScale(current) {
+  return `
+    <div class="fit-scale">
+      <span class="label">Market-fit class</span>
+      <div class="fit-options">
+        ${FIT_CLASSES.map(
+          (item) => `
+            <span class="fit-option ${item.value === current ? "is-active" : ""}">
+              ${escapeHtml(item.label)}
+            </span>
+          `
+        ).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function recommendedMarket(run) {
+  const marketId = run.fit.recommended_market_id;
+  if (!marketId) {
+    return `
+      <div class="recommended-market">
+        <span class="label">Recommended market</span>
+        <p class="market-title">None</p>
+      </div>
+    `;
+  }
+
+  const market = state.marketsById[marketId];
+  return `
+    <div class="recommended-market">
+      <span class="label">Recommended market</span>
+      <p class="market-title">${escapeHtml(market?.title || marketId)}</p>
+      <p class="trace">${escapeHtml(marketId)}</p>
+      ${
+        market
+          ? `
+            <div class="market-details">
+              ${meta("Venue", market.venue)}
+              ${meta("Close", market.close_date)}
+              ${meta("Outcomes", market.outcomes.join(" / "))}
+              ${meta("Probability", market.current_probability === null || market.current_probability === undefined ? "n/a" : market.current_probability)}
+            </div>
+            <span class="label">Resolution rules</span>
+            <p>${escapeHtml(market.resolution_rules)}</p>
+          `
+          : ""
+      }
+    </div>
+  `;
 }
 
 function bindVerdicts() {
@@ -161,7 +234,7 @@ function renderEval(run) {
     <div class="metric-grid">
       ${metric("Schema", metrics.schema_valid)}
       ${metric("False strong", metrics.false_strong_recommendation, true)}
-      ${metric("Weak proxy", metrics.weak_proxy_detected)}
+      ${metric("Weak proxy detected", metrics.weak_proxy_detected)}
       ${metric("Unsupported", metrics.unsupported_implication, true)}
       ${metric("Human review", metrics.human_verification_required)}
       ${metrics.second_run_improvement === null || metrics.second_run_improvement === undefined ? "" : metric("Second run", metrics.second_run_improvement)}
@@ -211,3 +284,4 @@ function escapeHtml(value) {
 }
 
 checkHealth();
+loadMarkets();
