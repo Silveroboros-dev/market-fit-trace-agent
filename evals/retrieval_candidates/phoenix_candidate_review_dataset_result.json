@@ -3,16 +3,16 @@
   "mode": "phoenix",
   "dataset_name": "market_fit_candidate_cases",
   "dataset_id": "RGF0YXNldDoz",
-  "dataset_version_id": "RGF0YXNldFZlcnNpb246NA==",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246Ng==",
   "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoz",
   "missing_config": [],
   "phoenix_write_error": null,
   "strict_expected_labels_present": false,
-  "candidate_count": 1,
-  "run_backed_count": 1,
+  "candidate_count": 2,
+  "run_backed_count": 2,
   "retrieval_only_count": 0,
-  "pending_review_count": 1,
-  "missing_rules_case_count": 1,
+  "pending_review_count": 2,
+  "missing_rules_case_count": 2,
   "rows": [
     {
       "case_id": "demo-hormuz-candidate",
@@ -49,6 +49,50 @@
       "phoenix_trace_id": "0167041582febac71c4898d20c4902f4",
       "proposed_fit_class": "indirect",
       "recommended_market_id": "2155023",
+      "weak_proxy_detected": false,
+      "false_strong_recommendation": false,
+      "unsupported_implication": false,
+      "rules_status": "missing",
+      "rules_status_summary": {
+        "missing": 5
+      },
+      "recommended_action": "needs_more_rules"
+    },
+    {
+      "case_id": "live-ai-roi-capex-proxy",
+      "source_text": "AI IS EATING 80% OF GLOBAL VC FUNDING. Anthropic spends $3 for every $1 in revenue. Microsoft dumped $300B in capex while AI revenue is far smaller. OpenAI and Anthropic make up a large share of Microsoft, Google, Amazon and Oracle revenue backlogs. Enterprises are burning through annual AI budgets with limited measurable ROI.",
+      "normalized_claim": {
+        "claim_text": "AI is capturing a very large share of VC funding while frontier labs and hyperscalers show high spend and limited measurable ROI.",
+        "confidence": 0.66,
+        "entities": [
+          "AI companies",
+          "Anthropic",
+          "Microsoft",
+          "OpenAI",
+          "hyperscalers"
+        ],
+        "horizon": "2025-2026 period",
+        "reasoning_summary": "The source combines global VC share, lab burn rates, hyperscaler capex, and ROI claims; an Amazon capex market is only a single-entity proxy.",
+        "stance": "skeptical of AI ROI"
+      },
+      "retrieved_market_ids": [
+        "561230",
+        "2119130",
+        "947268",
+        "562803",
+        "678937"
+      ],
+      "human_review_status": "pending",
+      "reviewer_note": "",
+      "agent_run_status": "run_backed",
+      "run_id": "run_a025f7338a5b",
+      "trace_id": "ec50287531f168441836c38e0bda989e",
+      "retrieval_id": "retr_4203d095d1b58bd5",
+      "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00",
+      "as_of_ts": "2026-05-24 00:00:00+00:00",
+      "phoenix_trace_id": "ec50287531f168441836c38e0bda989e",
+      "proposed_fit_class": "weak_proxy",
+      "recommended_market_id": "pm_amazon_2026_capex_above",
       "weak_proxy_detected": false,
       "false_strong_recommendation": false,
       "unsupported_implication": false,
