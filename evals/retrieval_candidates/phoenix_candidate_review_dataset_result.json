@@ -1,0 +1,28 @@
+{
+  "status": "ok",
+  "dataset_name": "market_fit_candidate_review",
+  "dataset_id": "RGF0YXNldDoy",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246Mw==",
+  "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoy",
+  "candidate_count": 1,
+  "run_backed_count": 1,
+  "retrieval_only_count": 0,
+  "pending_review_count": 1,
+  "missing_rules_case_count": 1,
+  "rows": [
+    {
+      "case_id": "demo-hormuz-candidate",
+      "human_review_status": "pending",
+      "agent_run_status": "run_backed",
+      "retrieval_id": "retr_db93d4902a3626b1",
+      "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00",
+      "phoenix_trace_id": "0167041582febac71c4898d20c4902f4",
+      "fit_class_proposed": "indirect",
+      "recommended_market_id": "2155023",
+      "rules_status_summary": {
+        "missing": 5
+      },
+      "recommended_action": "needs_more_rules"
+    }
+  ]
+}

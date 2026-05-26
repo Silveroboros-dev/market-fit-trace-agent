@@ -61,6 +61,62 @@ evals/retrieval_candidates/YYYY-MM-DD/<case_id>/
 
 The exported directory is not a golden. It is a candidate review packet.
 
+For trace-backed review packets, run the exporter with the agent pass enabled:
+
+```bash
+uv run --python 3.11 python scripts/export_retrieval_candidate.py --run-agent
+```
+
+That adds:
+
+```text
+run_result.json
+ledger_store.json
+```
+
+`run_result.json` includes the normalized claim, proposed fit class, recommended
+market, eval metrics, run ID, and Phoenix trace ID/URL when Phoenix is configured.
+
+## Phoenix Candidate Review Dataset
+
+Candidate packets can be mirrored into a Phoenix Dataset review queue:
+
+```bash
+make export-candidate-dataset
+```
+
+The dataset is named `market_fit_candidate_review` by default. It is a review
+queue, not eval truth. Rows include:
+
+- source text and case ID;
+- retrieval ID, snapshot ID, `as_of_ts`, and candidate market IDs;
+- rules-status summary;
+- proposed fit class and recommended market when `run_result.json` exists;
+- Phoenix trace ID/URL when the candidate was exported with `--run-agent`;
+- `human_review_status = pending`;
+- recommended action such as `needs_more_rules` or
+  `review_for_weak_proxy_golden`.
+
+This gives reviewers one Phoenix surface for deciding whether a live retrieval
+is a useful future golden. Human review still decides promotion.
+
+Observed MVP result:
+
+- Dataset: `market_fit_candidate_review`
+- Dataset URL:
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoy`
+- Local result artifact:
+  `evals/retrieval_candidates/phoenix_candidate_review_dataset_result.json`
+- Candidate count: `1`
+- Run-backed count: `1`
+- Pending review count: `1`
+- Current recommended action: `needs_more_rules`
+
+The observed candidate is intentionally not promoted. It demonstrates the review
+queue: live retrieval found relevant markets, the agent proposed an `indirect`
+fit, Phoenix recorded the trace, and the Dataset row tells the reviewer that
+missing rules must be resolved before promotion.
+
 Pass/fail threshold for promotion:
 
 - source provenance is public-safe;

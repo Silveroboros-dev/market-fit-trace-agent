@@ -1,4 +1,4 @@
-.PHONY: dev test lint format evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens export-retrieval-candidate api ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
+.PHONY: dev test lint format evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens export-retrieval-candidate export-candidate-dataset api ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
 
 api:
 	uv run --python 3.11 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
@@ -46,6 +46,9 @@ intake-goldens:
 
 export-retrieval-candidate:
 	uv run --python 3.11 python scripts/export_retrieval_candidate.py
+
+export-candidate-dataset:
+	uv run --python 3.11 python scripts/export_candidate_review_dataset.py
 
 adk-run:
 	uv run --python 3.11 adk run market_fit_adk

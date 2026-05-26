@@ -3,6 +3,7 @@ from __future__ import annotations
 # ruff: noqa: E402, I001
 
 import argparse
+import asyncio
 import json
 import os
 import re
@@ -15,6 +16,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.config import Settings
+from app.agent import MarketFitTraceAgent
+from app.ledger import LedgerStore
 from app.market_provider import PolyDataMarketProvider
 from app.models import NormalizedClaim
 
@@ -35,6 +38,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-confidence", type=float, default=0.85)
     parser.add_argument("--l1", default="")
     parser.add_argument("--out-dir", default="evals/retrieval_candidates")
+    parser.add_argument(
+        "--run-agent",
+        action="store_true",
+        help="Also run the Market Fit Trace Agent and attach proposed fit/eval/trace data.",
+    )
     return parser.parse_args()
 
 
@@ -113,6 +121,33 @@ def main() -> int:
             for market in retrieval.markets
         ],
     )
+    run_summary = None
+    if args.run_agent:
+        store = LedgerStore(output_dir / "ledger_store.json")
+        agent = MarketFitTraceAgent(store=store, market_provider=provider)
+        result = asyncio.run(
+            agent.run(
+                thesis=args.thesis,
+                title=f"Retrieval candidate {case_id}",
+            )
+        )
+        run_summary = {
+            "run_id": result.run_id,
+            "claim_id": result.claim_id,
+            "source_id": result.source_id,
+            "model": result.model,
+            "prompt_version": result.prompt_version,
+            "phoenix_trace_id": result.phoenix_trace_id,
+            "phoenix_trace_url": result.phoenix_trace_url,
+            "claim": result.claim.model_dump(),
+            "fit": result.fit.model_dump(),
+            "eval": result.eval.model_dump(),
+            "market_retrieval": (
+                result.market_retrieval.model_dump() if result.market_retrieval else None
+            ),
+            "market_context_ids": [market.market_id for market in result.market_context],
+        }
+        _write_json(output_dir / "run_result.json", run_summary)
     (output_dir / "review_notes.md").write_text(
         "\n".join(
             [
@@ -141,6 +176,10 @@ def main() -> int:
                 "output_dir": str(output_dir),
                 "retrieval_id": retrieval.retrieval_id,
                 "returned_count": len(retrieval.markets),
+                "agent_run_id": run_summary["run_id"] if run_summary else None,
+                "phoenix_trace_id": (
+                    run_summary["phoenix_trace_id"] if run_summary else None
+                ),
             },
             indent=2,
         )

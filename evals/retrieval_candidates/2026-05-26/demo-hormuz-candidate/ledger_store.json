@@ -1,0 +1,170 @@
+{
+  "agent_runs": [
+    {
+      "created_at": "2026-05-26T18:12:01.369482+00:00",
+      "eval_summary_json": "{\"schema_valid\":true,\"false_strong_recommendation\":false,\"weak_proxy_detected\":false,\"unsupported_implication\":false,\"human_verification_required\":true,\"no_clean_expression_expected\":false,\"phoenix_annotations_written\":true,\"second_run_improvement\":null}",
+      "id": "run_b6c695a677d7",
+      "market_retrieval_json": "{\"mode\":\"polydata\",\"snapshot_id\":\"polydata_polymarket_2026-05-24 00:00:00+00:00\",\"as_of_ts\":\"2026-05-24 00:00:00+00:00\",\"retrieval_id\":\"retr_918c90e2b9faa7b8\",\"query_summary\":{\"claim_text\":\"US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June.\",\"entities\":[\"US\",\"Iran\",\"Strait\",\"Hormuz\",\"June\"],\"horizon\":\"unspecified\",\"top_k\":5,\"min_volume_usd\":10000.0,\"min_taxonomy_confidence\":0.85,\"l1_allowlist\":[],\"liquidity_metric\":\"volume_usd\",\"universe_count\":115,\"returned_count\":5},\"excluded_summary\":{\"after_provider_filters\":115,\"excluded_closed_or_inactive\":19,\"not_returned_after_ranking\":110},\"market_ids_considered\":[\"2155023\",\"1809560\",\"1708086\",\"2119130\",\"1796138\"]}",
+      "model": "google-adk:gemini-3.5-flash",
+      "model_fit_proposal_json": "{\"captures\": [\"Reopening or lifting of the blockade of the Strait of Hormuz\", \"End of June timeline (June 30)\"], \"fit_reason\": \"The market addresses the lifting of the Strait of Hormuz blockade by June 30, which aligns with the 'reopen the Strait of Hormuz by the end of June' portion of the claim. However, it is a weak proxy because it is conditioned on a specific announcement by Donald Trump regarding a US blockade, rather than a mutual US-Iran ceasefire agreement.\", \"misses\": [\"Does not capture the extension of a ceasefire between the US and Iran\", \"Requires a specific public announcement by Donald Trump\", \"Focuses specifically on a US blockade rather than a bilateral agreement to reopen\"], \"recommended_market_id\": \"2155023\", \"rejected_markets\": [\"1809560\", \"1708086\", \"2119130\", \"1796138\"], \"semantic_fit_class\": \"weak_proxy\"}",
+      "phoenix_trace_id": "0167041582febac71c4898d20c4902f4",
+      "prompt_version": "v1_lenient",
+      "status": "completed",
+      "user_goal": "US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June."
+    }
+  ],
+  "claims": [
+    {
+      "claim_text": "US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June.",
+      "confidence": 0.48,
+      "created_at": "2026-05-26T18:12:19.756313+00:00",
+      "entities_json": "[\"US\", \"Iran\", \"Strait\", \"Hormuz\", \"June\"]",
+      "horizon": "unspecified",
+      "id": "claim_c1bf8533589b",
+      "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+      "run_id": "run_b6c695a677d7",
+      "source_id": "src_25ed59cd4eea",
+      "stance": "needs interpretation",
+      "status": "proposed"
+    }
+  ],
+  "eval_results": [
+    {
+      "claim_id": "claim_c1bf8533589b",
+      "created_at": "2026-05-26T18:12:20.567535+00:00",
+      "failure_summary": null,
+      "id": "eval_45ca578df5f3",
+      "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": false, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+      "phoenix_trace_id": "0167041582febac71c4898d20c4902f4",
+      "run_id": "run_b6c695a677d7"
+    }
+  ],
+  "human_verdicts": [],
+  "ledger_events": [
+    {
+      "claim_id": "claim_c1bf8533589b",
+      "created_at": "2026-05-26T18:12:19.757725+00:00",
+      "event_payload_json": {
+        "claim_text": "US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June.",
+        "confidence": 0.48,
+        "created_at": "2026-05-26T18:12:19.756313+00:00",
+        "entities_json": "[\"US\", \"Iran\", \"Strait\", \"Hormuz\", \"June\"]",
+        "horizon": "unspecified",
+        "id": "claim_c1bf8533589b",
+        "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+        "run_id": "run_b6c695a677d7",
+        "source_id": "src_25ed59cd4eea",
+        "stance": "needs interpretation",
+        "status": "proposed"
+      },
+      "event_type": "ledger_claim_proposed",
+      "id": "evt_135364621a21",
+      "run_id": "run_b6c695a677d7",
+      "summary": "Claim proposed: US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June."
+    },
+    {
+      "claim_id": "claim_c1bf8533589b",
+      "created_at": "2026-05-26T18:12:19.758245+00:00",
+      "event_payload_json": {
+        "captures_json": "[\"Some entity overlap\"]",
+        "claim_id": "claim_c1bf8533589b",
+        "created_at": "2026-05-26T18:12:19.758235+00:00",
+        "fit_reason": "The market shares some entities with the claim but only partially expresses it.",
+        "id": "fit_8b3c661a12e0",
+        "misses_json": "[\"Resolution rules do not directly encode the full thesis.\"]",
+        "recommended_market_id": "2155023",
+        "rejected_markets_json": "[{\"market_id\": \"1809560\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}, {\"market_id\": \"1708086\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}]",
+        "semantic_fit_class": "indirect"
+      },
+      "event_type": "market_fit_classified",
+      "id": "evt_5c8c91e22dd6",
+      "run_id": "run_b6c695a677d7",
+      "summary": "Fit classified as indirect"
+    },
+    {
+      "claim_id": "claim_c1bf8533589b",
+      "created_at": "2026-05-26T18:12:19.758667+00:00",
+      "event_payload_json": {
+        "as_of_ts": "2026-05-24 00:00:00+00:00",
+        "excluded_summary": {
+          "after_provider_filters": 115,
+          "excluded_closed_or_inactive": 19,
+          "not_returned_after_ranking": 110
+        },
+        "market_ids_considered": [
+          "2155023",
+          "1809560",
+          "1708086",
+          "2119130",
+          "1796138"
+        ],
+        "mode": "polydata",
+        "query_summary": {
+          "claim_text": "US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June.",
+          "entities": [
+            "US",
+            "Iran",
+            "Strait",
+            "Hormuz",
+            "June"
+          ],
+          "horizon": "unspecified",
+          "l1_allowlist": [],
+          "liquidity_metric": "volume_usd",
+          "min_taxonomy_confidence": 0.85,
+          "min_volume_usd": 10000.0,
+          "returned_count": 5,
+          "top_k": 5,
+          "universe_count": 115
+        },
+        "retrieval_id": "retr_918c90e2b9faa7b8",
+        "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+      },
+      "event_type": "market_retrieval_run",
+      "id": "evt_a94f74c1808c",
+      "run_id": "run_b6c695a677d7",
+      "summary": "Retrieved 5 markets via polydata"
+    },
+    {
+      "claim_id": "claim_c1bf8533589b",
+      "created_at": "2026-05-26T18:12:20.568040+00:00",
+      "event_payload_json": {
+        "claim_id": "claim_c1bf8533589b",
+        "created_at": "2026-05-26T18:12:20.567535+00:00",
+        "failure_summary": null,
+        "id": "eval_45ca578df5f3",
+        "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": false, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+        "phoenix_trace_id": "0167041582febac71c4898d20c4902f4",
+        "run_id": "run_b6c695a677d7"
+      },
+      "event_type": "fit_eval_run",
+      "id": "evt_c53298aadda6",
+      "run_id": "run_b6c695a677d7",
+      "summary": "Fit eval passed"
+    }
+  ],
+  "market_fit_records": [
+    {
+      "captures_json": "[\"Some entity overlap\"]",
+      "claim_id": "claim_c1bf8533589b",
+      "created_at": "2026-05-26T18:12:19.758235+00:00",
+      "fit_reason": "The market shares some entities with the claim but only partially expresses it.",
+      "id": "fit_8b3c661a12e0",
+      "misses_json": "[\"Resolution rules do not directly encode the full thesis.\"]",
+      "recommended_market_id": "2155023",
+      "rejected_markets_json": "[{\"market_id\": \"1809560\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}, {\"market_id\": \"1708086\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}]",
+      "semantic_fit_class": "indirect"
+    }
+  ],
+  "sources": [
+    {
+      "content_hash": "0e9e14d5b7cd529b97c57a7d3d5b8311",
+      "created_at": "2026-05-26T18:12:01.558729+00:00",
+      "id": "src_25ed59cd4eea",
+      "raw_text": "US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June.",
+      "source_type": "pasted_text",
+      "title": "Retrieval candidate demo-hormuz-candidate",
+      "uri": null
+    }
+  ]
+}
