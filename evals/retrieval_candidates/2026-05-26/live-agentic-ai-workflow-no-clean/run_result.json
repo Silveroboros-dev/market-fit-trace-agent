@@ -1,0 +1,92 @@
+{
+  "claim": {
+    "claim_text": "Agentic AI is moving from demos and chatbots toward workflow integration, governance, memory, permissions, monitoring, optimization, and business outcomes.",
+    "confidence": 0.65,
+    "entities": [
+      "AI agent platforms",
+      "enterprise AI adopters"
+    ],
+    "horizon": "2026",
+    "reasoning_summary": "The source is a market narrative about vocabulary and buyer expectations, not a clean market-resolvable event.",
+    "stance": "expects agentic AI maturation"
+  },
+  "claim_id": "claim_e7c1c86dfc66",
+  "eval": {
+    "eval_record_id": "eval_dc6ebb5987ea",
+    "failure_summary": null,
+    "metrics": {
+      "false_strong_recommendation": false,
+      "human_verification_required": true,
+      "no_clean_expression_expected": true,
+      "phoenix_annotations_written": true,
+      "schema_valid": true,
+      "second_run_improvement": null,
+      "unsupported_implication": false,
+      "weak_proxy_detected": false
+    },
+    "phoenix_trace_id": "ea6dbc93ccc19bb3cf9314a58818d03d"
+  },
+  "fit": {
+    "captures": [],
+    "fit_reason": "No supplied market resolves the narrative shift from AI demos to workflow infrastructure with measurable adoption criteria.",
+    "misses": [
+      "Enterprise deployment count",
+      "Governance criteria",
+      "Vocabulary-shift measurement"
+    ],
+    "recommended_market_id": null,
+    "rejected_markets": [
+      {
+        "market_id": "pm_gpt56_release_bucket_june_2026",
+        "reason": "Model release timing does not resolve enterprise agent maturation."
+      }
+    ],
+    "semantic_fit_class": "no_clean_expression"
+  },
+  "market_context_ids": [
+    "616906",
+    "2086885",
+    "2086888",
+    "2086878",
+    "906973"
+  ],
+  "market_retrieval": {
+    "as_of_ts": "2026-05-24 00:00:00+00:00",
+    "excluded_summary": {
+      "after_provider_filters": 115,
+      "excluded_closed_or_inactive": 19,
+      "not_returned_after_ranking": 110
+    },
+    "market_ids_considered": [
+      "616906",
+      "2086885",
+      "2086888",
+      "2086878",
+      "906973"
+    ],
+    "mode": "polydata",
+    "query_summary": {
+      "claim_text": "Agentic AI is moving from demos and chatbots toward workflow integration, governance, memory, permissions, monitoring, optimization, and business outcomes.",
+      "entities": [
+        "AI agent platforms",
+        "enterprise AI adopters"
+      ],
+      "horizon": "2026",
+      "l1_allowlist": [],
+      "liquidity_metric": "volume_usd",
+      "min_taxonomy_confidence": 0.85,
+      "min_volume_usd": 10000.0,
+      "returned_count": 5,
+      "top_k": 5,
+      "universe_count": 115
+    },
+    "retrieval_id": "retr_1cf50d6a284dff5f",
+    "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+  },
+  "model": "google-adk:gemini-3.5-flash",
+  "phoenix_trace_id": "ea6dbc93ccc19bb3cf9314a58818d03d",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/ea6dbc93ccc19bb3cf9314a58818d03d",
+  "prompt_version": "v1_lenient",
+  "run_id": "run_e7464e89cd90",
+  "source_id": "src_a3b8c3d14aa3"
+}

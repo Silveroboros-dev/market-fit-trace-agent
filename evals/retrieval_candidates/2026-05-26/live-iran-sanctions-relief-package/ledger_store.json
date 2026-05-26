@@ -1,0 +1,170 @@
+{
+  "agent_runs": [
+    {
+      "created_at": "2026-05-26T20:25:07.896566+00:00",
+      "eval_summary_json": "{\"schema_valid\":true,\"false_strong_recommendation\":false,\"weak_proxy_detected\":false,\"unsupported_implication\":false,\"human_verification_required\":true,\"no_clean_expression_expected\":false,\"phoenix_annotations_written\":true,\"second_run_improvement\":null}",
+      "id": "run_a00456ecca12",
+      "market_retrieval_json": "{\"mode\":\"polydata\",\"snapshot_id\":\"polydata_polymarket_2026-05-24 00:00:00+00:00\",\"as_of_ts\":\"2026-05-24 00:00:00+00:00\",\"retrieval_id\":\"retr_bb652e5f2bb0bac8\",\"query_summary\":{\"claim_text\":\"The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.\",\"entities\":[\"The US\",\"Iran\",\"Strait\",\"Hormuz\",\"July\"],\"horizon\":\"unspecified\",\"top_k\":5,\"min_volume_usd\":10000.0,\"min_taxonomy_confidence\":0.85,\"l1_allowlist\":[],\"liquidity_metric\":\"volume_usd\",\"universe_count\":115,\"returned_count\":5},\"excluded_summary\":{\"after_provider_filters\":115,\"excluded_closed_or_inactive\":19,\"not_returned_after_ranking\":110},\"market_ids_considered\":[\"2155023\",\"1809560\",\"2119130\",\"1708086\",\"2111640\"]}",
+      "model": "google-adk:gemini-3.5-flash",
+      "model_fit_proposal_json": "{\"captures\": [\"US-Iran diplomatic agreement\", \"Potential sanctions easing and asset unfreezing\"], \"fit_reason\": \"The market on a US-Iran nuclear deal acts as a weak proxy for overall diplomatic thawing and potential sanctions relief or asset unfreezing, but it fails to capture the specific ceasefire, Strait of Hormuz reopening, and has an earlier expiry date.\", \"misses\": [\"60-day ceasefire extension\", \"Partial reopening of the Strait of Hormuz\", \"July 2026 timeline (this market closes May 31, 2026)\"], \"recommended_market_id\": \"2111640\", \"rejected_markets\": [\"2155023\", \"1809560\", \"2119130\", \"1708086\"], \"semantic_fit_class\": \"weak_proxy\"}",
+      "phoenix_trace_id": "16fc940b17cb56de6a5e3a5fa9fa7619",
+      "prompt_version": "v1_lenient",
+      "status": "completed",
+      "user_goal": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026."
+    }
+  ],
+  "claims": [
+    {
+      "claim_text": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.",
+      "confidence": 0.48,
+      "created_at": "2026-05-26T20:25:29.809745+00:00",
+      "entities_json": "[\"The US\", \"Iran\", \"Strait\", \"Hormuz\", \"July\"]",
+      "horizon": "unspecified",
+      "id": "claim_41354790dde9",
+      "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+      "run_id": "run_a00456ecca12",
+      "source_id": "src_f67f71404bec",
+      "stance": "needs interpretation",
+      "status": "proposed"
+    }
+  ],
+  "eval_results": [
+    {
+      "claim_id": "claim_41354790dde9",
+      "created_at": "2026-05-26T20:25:30.625265+00:00",
+      "failure_summary": null,
+      "id": "eval_3ab049778d71",
+      "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": false, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+      "phoenix_trace_id": "16fc940b17cb56de6a5e3a5fa9fa7619",
+      "run_id": "run_a00456ecca12"
+    }
+  ],
+  "human_verdicts": [],
+  "ledger_events": [
+    {
+      "claim_id": "claim_41354790dde9",
+      "created_at": "2026-05-26T20:25:29.811105+00:00",
+      "event_payload_json": {
+        "claim_text": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.",
+        "confidence": 0.48,
+        "created_at": "2026-05-26T20:25:29.809745+00:00",
+        "entities_json": "[\"The US\", \"Iran\", \"Strait\", \"Hormuz\", \"July\"]",
+        "horizon": "unspecified",
+        "id": "claim_41354790dde9",
+        "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+        "run_id": "run_a00456ecca12",
+        "source_id": "src_f67f71404bec",
+        "stance": "needs interpretation",
+        "status": "proposed"
+      },
+      "event_type": "ledger_claim_proposed",
+      "id": "evt_9e7eb458b63a",
+      "run_id": "run_a00456ecca12",
+      "summary": "Claim proposed: The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026."
+    },
+    {
+      "claim_id": "claim_41354790dde9",
+      "created_at": "2026-05-26T20:25:29.812819+00:00",
+      "event_payload_json": {
+        "captures_json": "[\"Some entity overlap\"]",
+        "claim_id": "claim_41354790dde9",
+        "created_at": "2026-05-26T20:25:29.812772+00:00",
+        "fit_reason": "The market shares some entities with the claim but only partially expresses it.",
+        "id": "fit_b2efe25ff931",
+        "misses_json": "[\"Resolution rules do not directly encode the full thesis.\"]",
+        "recommended_market_id": "2155023",
+        "rejected_markets_json": "[{\"market_id\": \"1809560\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}, {\"market_id\": \"2119130\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}]",
+        "semantic_fit_class": "indirect"
+      },
+      "event_type": "market_fit_classified",
+      "id": "evt_f76d9d489084",
+      "run_id": "run_a00456ecca12",
+      "summary": "Fit classified as indirect"
+    },
+    {
+      "claim_id": "claim_41354790dde9",
+      "created_at": "2026-05-26T20:25:29.814556+00:00",
+      "event_payload_json": {
+        "as_of_ts": "2026-05-24 00:00:00+00:00",
+        "excluded_summary": {
+          "after_provider_filters": 115,
+          "excluded_closed_or_inactive": 19,
+          "not_returned_after_ranking": 110
+        },
+        "market_ids_considered": [
+          "2155023",
+          "1809560",
+          "2119130",
+          "1708086",
+          "2111640"
+        ],
+        "mode": "polydata",
+        "query_summary": {
+          "claim_text": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.",
+          "entities": [
+            "The US",
+            "Iran",
+            "Strait",
+            "Hormuz",
+            "July"
+          ],
+          "horizon": "unspecified",
+          "l1_allowlist": [],
+          "liquidity_metric": "volume_usd",
+          "min_taxonomy_confidence": 0.85,
+          "min_volume_usd": 10000.0,
+          "returned_count": 5,
+          "top_k": 5,
+          "universe_count": 115
+        },
+        "retrieval_id": "retr_bb652e5f2bb0bac8",
+        "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+      },
+      "event_type": "market_retrieval_run",
+      "id": "evt_699686d3e468",
+      "run_id": "run_a00456ecca12",
+      "summary": "Retrieved 5 markets via polydata"
+    },
+    {
+      "claim_id": "claim_41354790dde9",
+      "created_at": "2026-05-26T20:25:30.626408+00:00",
+      "event_payload_json": {
+        "claim_id": "claim_41354790dde9",
+        "created_at": "2026-05-26T20:25:30.625265+00:00",
+        "failure_summary": null,
+        "id": "eval_3ab049778d71",
+        "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": false, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+        "phoenix_trace_id": "16fc940b17cb56de6a5e3a5fa9fa7619",
+        "run_id": "run_a00456ecca12"
+      },
+      "event_type": "fit_eval_run",
+      "id": "evt_ee42ef5778f9",
+      "run_id": "run_a00456ecca12",
+      "summary": "Fit eval passed"
+    }
+  ],
+  "market_fit_records": [
+    {
+      "captures_json": "[\"Some entity overlap\"]",
+      "claim_id": "claim_41354790dde9",
+      "created_at": "2026-05-26T20:25:29.812772+00:00",
+      "fit_reason": "The market shares some entities with the claim but only partially expresses it.",
+      "id": "fit_b2efe25ff931",
+      "misses_json": "[\"Resolution rules do not directly encode the full thesis.\"]",
+      "recommended_market_id": "2155023",
+      "rejected_markets_json": "[{\"market_id\": \"1809560\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}, {\"market_id\": \"2119130\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}]",
+      "semantic_fit_class": "indirect"
+    }
+  ],
+  "sources": [
+    {
+      "content_hash": "687753038d225398b70d8621b29c0db2",
+      "created_at": "2026-05-26T20:25:08.089585+00:00",
+      "id": "src_f67f71404bec",
+      "raw_text": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.",
+      "source_type": "pasted_text",
+      "title": "Retrieval candidate live-iran-sanctions-relief-package",
+      "uri": null
+    }
+  ]
+}

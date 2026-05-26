@@ -1,0 +1,100 @@
+{
+  "claim": {
+    "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+    "confidence": 0.48,
+    "entities": [
+      "Solana",
+      "L1",
+      "UX",
+      "SOL"
+    ],
+    "horizon": "unspecified",
+    "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+    "stance": "needs interpretation"
+  },
+  "claim_id": "claim_abb64b46a871",
+  "eval": {
+    "eval_record_id": "eval_0f212d953207",
+    "failure_summary": null,
+    "metrics": {
+      "false_strong_recommendation": false,
+      "human_verification_required": true,
+      "no_clean_expression_expected": true,
+      "phoenix_annotations_written": true,
+      "schema_valid": true,
+      "second_run_improvement": null,
+      "unsupported_implication": false,
+      "weak_proxy_detected": false
+    },
+    "phoenix_trace_id": "f1263a3e02e0e89d7c9bd34fd552174b"
+  },
+  "fit": {
+    "captures": [],
+    "fit_reason": "No supplied market resolves Solana usage, PMF, UX, and fundamentals together; price would be a noisy proxy.",
+    "misses": [
+      "Usage metric",
+      "PMF definition",
+      "UX/speed/efficiency criteria"
+    ],
+    "recommended_market_id": null,
+    "rejected_markets": [
+      {
+        "market_id": "2086878",
+        "reason": "Related terms are present, but the resolution rules do not cleanly express the normalized claim."
+      },
+      {
+        "market_id": "2289144",
+        "reason": "Related terms are present, but the resolution rules do not cleanly express the normalized claim."
+      }
+    ],
+    "semantic_fit_class": "no_clean_expression"
+  },
+  "market_context_ids": [
+    "2086878",
+    "2289144",
+    "553857",
+    "2086886",
+    "2087250"
+  ],
+  "market_retrieval": {
+    "as_of_ts": "2026-05-24 00:00:00+00:00",
+    "excluded_summary": {
+      "after_provider_filters": 115,
+      "excluded_closed_or_inactive": 19,
+      "not_returned_after_ranking": 110
+    },
+    "market_ids_considered": [
+      "2086878",
+      "2289144",
+      "553857",
+      "2086886",
+      "2087250"
+    ],
+    "mode": "polydata",
+    "query_summary": {
+      "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+      "entities": [
+        "Solana",
+        "L1",
+        "UX",
+        "SOL"
+      ],
+      "horizon": "unspecified",
+      "l1_allowlist": [],
+      "liquidity_metric": "volume_usd",
+      "min_taxonomy_confidence": 0.85,
+      "min_volume_usd": 10000.0,
+      "returned_count": 5,
+      "top_k": 5,
+      "universe_count": 115
+    },
+    "retrieval_id": "retr_c61003542c14c520",
+    "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+  },
+  "model": "google-adk:gemini-3.5-flash",
+  "phoenix_trace_id": "f1263a3e02e0e89d7c9bd34fd552174b",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/f1263a3e02e0e89d7c9bd34fd552174b",
+  "prompt_version": "v1_lenient",
+  "run_id": "run_85efee67d1cf",
+  "source_id": "src_ce9f22456c33"
+}

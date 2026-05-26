@@ -1,0 +1,102 @@
+{
+  "claim": {
+    "claim_text": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.",
+    "confidence": 0.48,
+    "entities": [
+      "The US",
+      "Iran",
+      "Strait",
+      "Hormuz",
+      "July"
+    ],
+    "horizon": "unspecified",
+    "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+    "stance": "needs interpretation"
+  },
+  "claim_id": "claim_41354790dde9",
+  "eval": {
+    "eval_record_id": "eval_3ab049778d71",
+    "failure_summary": null,
+    "metrics": {
+      "false_strong_recommendation": false,
+      "human_verification_required": true,
+      "no_clean_expression_expected": false,
+      "phoenix_annotations_written": true,
+      "schema_valid": true,
+      "second_run_improvement": null,
+      "unsupported_implication": false,
+      "weak_proxy_detected": false
+    },
+    "phoenix_trace_id": "16fc940b17cb56de6a5e3a5fa9fa7619"
+  },
+  "fit": {
+    "captures": [
+      "Some entity overlap"
+    ],
+    "fit_reason": "The market shares some entities with the claim but only partially expresses it.",
+    "misses": [
+      "Resolution rules do not directly encode the full thesis."
+    ],
+    "recommended_market_id": "2155023",
+    "rejected_markets": [
+      {
+        "market_id": "1809560",
+        "reason": "Related terms are present, but the resolution rules do not cleanly express the normalized claim."
+      },
+      {
+        "market_id": "2119130",
+        "reason": "Related terms are present, but the resolution rules do not cleanly express the normalized claim."
+      }
+    ],
+    "semantic_fit_class": "indirect"
+  },
+  "market_context_ids": [
+    "2155023",
+    "1809560",
+    "2119130",
+    "1708086",
+    "2111640"
+  ],
+  "market_retrieval": {
+    "as_of_ts": "2026-05-24 00:00:00+00:00",
+    "excluded_summary": {
+      "after_provider_filters": 115,
+      "excluded_closed_or_inactive": 19,
+      "not_returned_after_ranking": 110
+    },
+    "market_ids_considered": [
+      "2155023",
+      "1809560",
+      "2119130",
+      "1708086",
+      "2111640"
+    ],
+    "mode": "polydata",
+    "query_summary": {
+      "claim_text": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.",
+      "entities": [
+        "The US",
+        "Iran",
+        "Strait",
+        "Hormuz",
+        "July"
+      ],
+      "horizon": "unspecified",
+      "l1_allowlist": [],
+      "liquidity_metric": "volume_usd",
+      "min_taxonomy_confidence": 0.85,
+      "min_volume_usd": 10000.0,
+      "returned_count": 5,
+      "top_k": 5,
+      "universe_count": 115
+    },
+    "retrieval_id": "retr_bb652e5f2bb0bac8",
+    "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+  },
+  "model": "google-adk:gemini-3.5-flash",
+  "phoenix_trace_id": "16fc940b17cb56de6a5e3a5fa9fa7619",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/16fc940b17cb56de6a5e3a5fa9fa7619",
+  "prompt_version": "v1_lenient",
+  "run_id": "run_a00456ecca12",
+  "source_id": "src_f67f71404bec"
+}

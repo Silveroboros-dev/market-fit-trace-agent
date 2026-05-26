@@ -1,0 +1,323 @@
+{
+  "agent_runs": [
+    {
+      "created_at": "2026-05-26T20:27:06.993294+00:00",
+      "eval_summary_json": "{\"schema_valid\":true,\"false_strong_recommendation\":false,\"weak_proxy_detected\":false,\"unsupported_implication\":false,\"human_verification_required\":true,\"no_clean_expression_expected\":true,\"phoenix_annotations_written\":true,\"second_run_improvement\":null}",
+      "id": "run_32d4a4f7a6d0",
+      "market_retrieval_json": "{\"mode\":\"polydata\",\"snapshot_id\":\"polydata_polymarket_2026-05-24 00:00:00+00:00\",\"as_of_ts\":\"2026-05-24 00:00:00+00:00\",\"retrieval_id\":\"retr_c61003542c14c520\",\"query_summary\":{\"claim_text\":\"Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.\",\"entities\":[\"Solana\",\"L1\",\"UX\",\"SOL\"],\"horizon\":\"unspecified\",\"top_k\":5,\"min_volume_usd\":10000.0,\"min_taxonomy_confidence\":0.85,\"l1_allowlist\":[],\"liquidity_metric\":\"volume_usd\",\"universe_count\":115,\"returned_count\":5},\"excluded_summary\":{\"after_provider_filters\":115,\"excluded_closed_or_inactive\":19,\"not_returned_after_ranking\":110},\"market_ids_considered\":[\"2086878\",\"2289144\",\"553857\",\"2086886\",\"2087250\"]}",
+      "model": "google-adk:gemini-3.5-flash",
+      "model_fit_proposal_json": "{\"captures\": [], \"fit_reason\": \"None of the candidate markets relate to Solana, blockchain technology, or cryptocurrency. All provided markets are sports and esports betting events.\", \"misses\": [\"Solana blockchain performance and usage in 2026\", \"SOL price weakness or strength\", \"General-purpose L1 blockchain comparison\"], \"recommended_market_id\": null, \"rejected_markets\": [\"2086878\", \"2289144\", \"553857\", \"2086886\", \"2087250\"], \"semantic_fit_class\": \"no_clean_expression\"}",
+      "phoenix_trace_id": "59f723cbe978d7ee3c8c4d1c75e5dd8d",
+      "prompt_version": "v1_lenient",
+      "status": "completed",
+      "user_goal": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness."
+    },
+    {
+      "created_at": "2026-05-26T20:30:00.853067+00:00",
+      "eval_summary_json": "{\"schema_valid\":true,\"false_strong_recommendation\":false,\"weak_proxy_detected\":false,\"unsupported_implication\":false,\"human_verification_required\":true,\"no_clean_expression_expected\":true,\"phoenix_annotations_written\":true,\"second_run_improvement\":null}",
+      "id": "run_85efee67d1cf",
+      "market_retrieval_json": "{\"mode\":\"polydata\",\"snapshot_id\":\"polydata_polymarket_2026-05-24 00:00:00+00:00\",\"as_of_ts\":\"2026-05-24 00:00:00+00:00\",\"retrieval_id\":\"retr_c61003542c14c520\",\"query_summary\":{\"claim_text\":\"Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.\",\"entities\":[\"Solana\",\"L1\",\"UX\",\"SOL\"],\"horizon\":\"unspecified\",\"top_k\":5,\"min_volume_usd\":10000.0,\"min_taxonomy_confidence\":0.85,\"l1_allowlist\":[],\"liquidity_metric\":\"volume_usd\",\"universe_count\":115,\"returned_count\":5},\"excluded_summary\":{\"after_provider_filters\":115,\"excluded_closed_or_inactive\":19,\"not_returned_after_ranking\":110},\"market_ids_considered\":[\"2086878\",\"2289144\",\"553857\",\"2086886\",\"2087250\"]}",
+      "model": "google-adk:gemini-3.5-flash",
+      "model_fit_proposal_json": "{\"captures\": [], \"fit_reason\": \"None of the candidate markets relate to Solana, cryptocurrency, or L1 blockchain performance. All provided candidate markets are sports and esports events.\", \"misses\": [\"Solana blockchain usage, speed, efficiency, or UX improvements in 2026\", \"SOL price performance or market valuation\", \"L1 blockchain competitiveness\"], \"recommended_market_id\": null, \"rejected_markets\": [\"2086878\", \"2289144\", \"553857\", \"2086886\", \"2087250\"], \"semantic_fit_class\": \"no_clean_expression\"}",
+      "phoenix_trace_id": "f1263a3e02e0e89d7c9bd34fd552174b",
+      "prompt_version": "v1_lenient",
+      "status": "completed",
+      "user_goal": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness."
+    }
+  ],
+  "claims": [
+    {
+      "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+      "confidence": 0.48,
+      "created_at": "2026-05-26T20:27:20.934664+00:00",
+      "entities_json": "[\"Solana\", \"L1\", \"UX\", \"SOL\"]",
+      "horizon": "unspecified",
+      "id": "claim_5e7f0bd78328",
+      "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+      "run_id": "run_32d4a4f7a6d0",
+      "source_id": "src_a593df9f4cf7",
+      "stance": "needs interpretation",
+      "status": "proposed"
+    },
+    {
+      "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+      "confidence": 0.48,
+      "created_at": "2026-05-26T20:30:14.594519+00:00",
+      "entities_json": "[\"Solana\", \"L1\", \"UX\", \"SOL\"]",
+      "horizon": "unspecified",
+      "id": "claim_abb64b46a871",
+      "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+      "run_id": "run_85efee67d1cf",
+      "source_id": "src_ce9f22456c33",
+      "stance": "needs interpretation",
+      "status": "proposed"
+    }
+  ],
+  "eval_results": [
+    {
+      "claim_id": "claim_5e7f0bd78328",
+      "created_at": "2026-05-26T20:27:21.784168+00:00",
+      "failure_summary": null,
+      "id": "eval_5289c6e3bab2",
+      "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": true, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+      "phoenix_trace_id": "59f723cbe978d7ee3c8c4d1c75e5dd8d",
+      "run_id": "run_32d4a4f7a6d0"
+    },
+    {
+      "claim_id": "claim_abb64b46a871",
+      "created_at": "2026-05-26T20:30:15.498290+00:00",
+      "failure_summary": null,
+      "id": "eval_0f212d953207",
+      "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": true, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+      "phoenix_trace_id": "f1263a3e02e0e89d7c9bd34fd552174b",
+      "run_id": "run_85efee67d1cf"
+    }
+  ],
+  "human_verdicts": [],
+  "ledger_events": [
+    {
+      "claim_id": "claim_5e7f0bd78328",
+      "created_at": "2026-05-26T20:27:20.936008+00:00",
+      "event_payload_json": {
+        "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+        "confidence": 0.48,
+        "created_at": "2026-05-26T20:27:20.934664+00:00",
+        "entities_json": "[\"Solana\", \"L1\", \"UX\", \"SOL\"]",
+        "horizon": "unspecified",
+        "id": "claim_5e7f0bd78328",
+        "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+        "run_id": "run_32d4a4f7a6d0",
+        "source_id": "src_a593df9f4cf7",
+        "stance": "needs interpretation",
+        "status": "proposed"
+      },
+      "event_type": "ledger_claim_proposed",
+      "id": "evt_3f4d9d015e5f",
+      "run_id": "run_32d4a4f7a6d0",
+      "summary": "Claim proposed: Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness."
+    },
+    {
+      "claim_id": "claim_5e7f0bd78328",
+      "created_at": "2026-05-26T20:27:20.936808+00:00",
+      "event_payload_json": {
+        "captures_json": "[]",
+        "claim_id": "claim_5e7f0bd78328",
+        "created_at": "2026-05-26T20:27:20.936794+00:00",
+        "fit_reason": "No supplied market resolves Solana usage, PMF, UX, and fundamentals together; price would be a noisy proxy.",
+        "id": "fit_76ff72038a25",
+        "misses_json": "[\"Usage metric\", \"PMF definition\", \"UX/speed/efficiency criteria\"]",
+        "recommended_market_id": null,
+        "rejected_markets_json": "[{\"market_id\": \"2086878\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}, {\"market_id\": \"2289144\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}]",
+        "semantic_fit_class": "no_clean_expression"
+      },
+      "event_type": "market_fit_classified",
+      "id": "evt_731fb958aa02",
+      "run_id": "run_32d4a4f7a6d0",
+      "summary": "Fit classified as no_clean_expression"
+    },
+    {
+      "claim_id": "claim_5e7f0bd78328",
+      "created_at": "2026-05-26T20:27:20.937186+00:00",
+      "event_payload_json": {
+        "as_of_ts": "2026-05-24 00:00:00+00:00",
+        "excluded_summary": {
+          "after_provider_filters": 115,
+          "excluded_closed_or_inactive": 19,
+          "not_returned_after_ranking": 110
+        },
+        "market_ids_considered": [
+          "2086878",
+          "2289144",
+          "553857",
+          "2086886",
+          "2087250"
+        ],
+        "mode": "polydata",
+        "query_summary": {
+          "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+          "entities": [
+            "Solana",
+            "L1",
+            "UX",
+            "SOL"
+          ],
+          "horizon": "unspecified",
+          "l1_allowlist": [],
+          "liquidity_metric": "volume_usd",
+          "min_taxonomy_confidence": 0.85,
+          "min_volume_usd": 10000.0,
+          "returned_count": 5,
+          "top_k": 5,
+          "universe_count": 115
+        },
+        "retrieval_id": "retr_c61003542c14c520",
+        "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+      },
+      "event_type": "market_retrieval_run",
+      "id": "evt_85b7394e6741",
+      "run_id": "run_32d4a4f7a6d0",
+      "summary": "Retrieved 5 markets via polydata"
+    },
+    {
+      "claim_id": "claim_5e7f0bd78328",
+      "created_at": "2026-05-26T20:27:21.784531+00:00",
+      "event_payload_json": {
+        "claim_id": "claim_5e7f0bd78328",
+        "created_at": "2026-05-26T20:27:21.784168+00:00",
+        "failure_summary": null,
+        "id": "eval_5289c6e3bab2",
+        "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": true, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+        "phoenix_trace_id": "59f723cbe978d7ee3c8c4d1c75e5dd8d",
+        "run_id": "run_32d4a4f7a6d0"
+      },
+      "event_type": "fit_eval_run",
+      "id": "evt_3782dbca8017",
+      "run_id": "run_32d4a4f7a6d0",
+      "summary": "Fit eval passed"
+    },
+    {
+      "claim_id": "claim_abb64b46a871",
+      "created_at": "2026-05-26T20:30:14.595392+00:00",
+      "event_payload_json": {
+        "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+        "confidence": 0.48,
+        "created_at": "2026-05-26T20:30:14.594519+00:00",
+        "entities_json": "[\"Solana\", \"L1\", \"UX\", \"SOL\"]",
+        "horizon": "unspecified",
+        "id": "claim_abb64b46a871",
+        "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+        "run_id": "run_85efee67d1cf",
+        "source_id": "src_ce9f22456c33",
+        "stance": "needs interpretation",
+        "status": "proposed"
+      },
+      "event_type": "ledger_claim_proposed",
+      "id": "evt_ff83daf8e245",
+      "run_id": "run_85efee67d1cf",
+      "summary": "Claim proposed: Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness."
+    },
+    {
+      "claim_id": "claim_abb64b46a871",
+      "created_at": "2026-05-26T20:30:14.596894+00:00",
+      "event_payload_json": {
+        "captures_json": "[]",
+        "claim_id": "claim_abb64b46a871",
+        "created_at": "2026-05-26T20:30:14.596869+00:00",
+        "fit_reason": "No supplied market resolves Solana usage, PMF, UX, and fundamentals together; price would be a noisy proxy.",
+        "id": "fit_3341c407f4df",
+        "misses_json": "[\"Usage metric\", \"PMF definition\", \"UX/speed/efficiency criteria\"]",
+        "recommended_market_id": null,
+        "rejected_markets_json": "[{\"market_id\": \"2086878\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}, {\"market_id\": \"2289144\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}]",
+        "semantic_fit_class": "no_clean_expression"
+      },
+      "event_type": "market_fit_classified",
+      "id": "evt_da8f2a2ba0ff",
+      "run_id": "run_85efee67d1cf",
+      "summary": "Fit classified as no_clean_expression"
+    },
+    {
+      "claim_id": "claim_abb64b46a871",
+      "created_at": "2026-05-26T20:30:14.597911+00:00",
+      "event_payload_json": {
+        "as_of_ts": "2026-05-24 00:00:00+00:00",
+        "excluded_summary": {
+          "after_provider_filters": 115,
+          "excluded_closed_or_inactive": 19,
+          "not_returned_after_ranking": 110
+        },
+        "market_ids_considered": [
+          "2086878",
+          "2289144",
+          "553857",
+          "2086886",
+          "2087250"
+        ],
+        "mode": "polydata",
+        "query_summary": {
+          "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+          "entities": [
+            "Solana",
+            "L1",
+            "UX",
+            "SOL"
+          ],
+          "horizon": "unspecified",
+          "l1_allowlist": [],
+          "liquidity_metric": "volume_usd",
+          "min_taxonomy_confidence": 0.85,
+          "min_volume_usd": 10000.0,
+          "returned_count": 5,
+          "top_k": 5,
+          "universe_count": 115
+        },
+        "retrieval_id": "retr_c61003542c14c520",
+        "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+      },
+      "event_type": "market_retrieval_run",
+      "id": "evt_5960c35e75b8",
+      "run_id": "run_85efee67d1cf",
+      "summary": "Retrieved 5 markets via polydata"
+    },
+    {
+      "claim_id": "claim_abb64b46a871",
+      "created_at": "2026-05-26T20:30:15.499122+00:00",
+      "event_payload_json": {
+        "claim_id": "claim_abb64b46a871",
+        "created_at": "2026-05-26T20:30:15.498290+00:00",
+        "failure_summary": null,
+        "id": "eval_0f212d953207",
+        "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": true, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+        "phoenix_trace_id": "f1263a3e02e0e89d7c9bd34fd552174b",
+        "run_id": "run_85efee67d1cf"
+      },
+      "event_type": "fit_eval_run",
+      "id": "evt_5e7b147f6a2f",
+      "run_id": "run_85efee67d1cf",
+      "summary": "Fit eval passed"
+    }
+  ],
+  "market_fit_records": [
+    {
+      "captures_json": "[]",
+      "claim_id": "claim_5e7f0bd78328",
+      "created_at": "2026-05-26T20:27:20.936794+00:00",
+      "fit_reason": "No supplied market resolves Solana usage, PMF, UX, and fundamentals together; price would be a noisy proxy.",
+      "id": "fit_76ff72038a25",
+      "misses_json": "[\"Usage metric\", \"PMF definition\", \"UX/speed/efficiency criteria\"]",
+      "recommended_market_id": null,
+      "rejected_markets_json": "[{\"market_id\": \"2086878\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}, {\"market_id\": \"2289144\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}]",
+      "semantic_fit_class": "no_clean_expression"
+    },
+    {
+      "captures_json": "[]",
+      "claim_id": "claim_abb64b46a871",
+      "created_at": "2026-05-26T20:30:14.596869+00:00",
+      "fit_reason": "No supplied market resolves Solana usage, PMF, UX, and fundamentals together; price would be a noisy proxy.",
+      "id": "fit_3341c407f4df",
+      "misses_json": "[\"Usage metric\", \"PMF definition\", \"UX/speed/efficiency criteria\"]",
+      "recommended_market_id": null,
+      "rejected_markets_json": "[{\"market_id\": \"2086878\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}, {\"market_id\": \"2289144\", \"reason\": \"Related terms are present, but the resolution rules do not cleanly express the normalized claim.\"}]",
+      "semantic_fit_class": "no_clean_expression"
+    }
+  ],
+  "sources": [
+    {
+      "content_hash": "3ce16edb666e58dc8352ed078d08f1c3",
+      "created_at": "2026-05-26T20:27:07.177111+00:00",
+      "id": "src_a593df9f4cf7",
+      "raw_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+      "source_type": "pasted_text",
+      "title": "Retrieval candidate live-solana-fundamentals-price-proxy",
+      "uri": null
+    },
+    {
+      "content_hash": "3ce16edb666e58dc8352ed078d08f1c3",
+      "created_at": "2026-05-26T20:30:01.177392+00:00",
+      "id": "src_ce9f22456c33",
+      "raw_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+      "source_type": "pasted_text",
+      "title": "Retrieval candidate live-solana-fundamentals-price-proxy",
+      "uri": null
+    }
+  ]
+}

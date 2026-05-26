@@ -1,4 +1,4 @@
-.PHONY: dev test lint format evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens export-retrieval-candidate export-candidate-dataset phoenix-export-candidates phoenix-sync-goldens phoenix-experiment-goldens api ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
+.PHONY: dev test lint format evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens export-retrieval-candidate export-candidate-dataset review-candidate phoenix-export-candidates phoenix-sync-goldens phoenix-experiment-goldens api ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
 
 api:
 	uv run --python 3.11 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
@@ -49,6 +49,9 @@ export-retrieval-candidate:
 
 export-candidate-dataset:
 	uv run --python 3.11 python scripts/export_candidate_review_dataset.py
+
+review-candidate:
+	uv run --python 3.11 python scripts/review_candidate.py --case-id "$(CASE)" --status "$(STATUS)" --note "$(NOTE)" --reviewer "$(or $(REVIEWER),local_reviewer)"
 
 phoenix-export-candidates:
 	uv run --python 3.11 python scripts/export_candidate_review_dataset.py

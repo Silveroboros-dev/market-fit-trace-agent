@@ -109,6 +109,7 @@ def _candidate_example(path: Path) -> dict[str, Any]:
     markets = _read_jsonl(path / "market_snapshots.jsonl")
     rules = _read_jsonl(path / "market_rules_snapshots.jsonl")
     run_result = _read_optional_json(path / "run_result.json")
+    review_decision = _read_optional_json(path / "review_decision.json") or {}
     review_notes = (path / "review_notes.md").read_text(encoding="utf-8")
     rules_summary = _rules_status_summary(rules)
     eval_metrics = (run_result or {}).get("eval", {}).get("metrics", {})
@@ -116,7 +117,12 @@ def _candidate_example(path: Path) -> dict[str, Any]:
     claim = (run_result or {}).get("claim", {})
     trace_id = (run_result or {}).get("phoenix_trace_id")
     trace_url = (run_result or {}).get("phoenix_trace_url")
-    retrieved_market_ids = retrieval.get("market_ids_considered") or [
+    run_retrieval = (run_result or {}).get("market_retrieval") or {}
+    review_retrieval = run_retrieval or retrieval
+    retrieved_market_ids = review_retrieval.get("market_ids_considered") or [
+        market.get("market_id") for market in markets
+    ]
+    source_market_ids = retrieval.get("market_ids_considered") or [
         market.get("market_id") for market in markets
     ]
     rules_status = _overall_rules_status(rules_summary)
@@ -128,20 +134,26 @@ def _candidate_example(path: Path) -> dict[str, Any]:
             "source_type": source.get("source_type", "retrieval_candidate"),
         },
         "output": {
-            "human_review_status": "pending",
-            "reviewer_note": "",
+            "human_review_status": review_decision.get(
+                "human_review_status", "pending"
+            ),
+            "reviewer_note": review_decision.get("reviewer_note", ""),
             "reviewer_decision_required": True,
             "recommended_action": _recommended_action(rules_summary, eval_metrics),
         },
         "metadata": {
             "candidate_dir": str(path),
             "created_at_utc": source.get("created_at_utc"),
-            "retrieval_id": retrieval.get("retrieval_id"),
-            "snapshot_id": retrieval.get("snapshot_id"),
-            "as_of_ts": retrieval.get("as_of_ts"),
-            "retrieval_mode": retrieval.get("mode"),
+            "retrieval_id": review_retrieval.get("retrieval_id"),
+            "snapshot_id": review_retrieval.get("snapshot_id"),
+            "as_of_ts": review_retrieval.get("as_of_ts"),
+            "retrieval_mode": review_retrieval.get("mode"),
             "retrieved_market_ids": retrieved_market_ids,
             "market_ids_considered": retrieved_market_ids,
+            "agent_retrieval_id": run_retrieval.get("retrieval_id"),
+            "agent_market_ids_considered": run_retrieval.get("market_ids_considered"),
+            "source_retrieval_id": retrieval.get("retrieval_id"),
+            "source_market_ids_considered": source_market_ids,
             "returned_count": len(markets),
             "rules_status": rules_status,
             "rules_status_summary": rules_summary,
@@ -161,6 +173,13 @@ def _candidate_example(path: Path) -> dict[str, Any]:
             "weak_proxy_detected": eval_metrics.get("weak_proxy_detected"),
             "unsupported_implication": eval_metrics.get("unsupported_implication"),
             "review_notes_preview": review_notes[:1000],
+            "reviewed_at_utc": review_decision.get("reviewed_at_utc"),
+            "reviewer": review_decision.get("reviewer"),
+            "review_decision_path": (
+                str(path / "review_decision.json")
+                if (path / "review_decision.json").exists()
+                else None
+            ),
             "agent_run_status": "run_backed" if run_result else "retrieval_only",
         },
     }
@@ -198,6 +217,8 @@ def _summary(
             "retrieved_market_ids": example["metadata"]["retrieved_market_ids"],
             "human_review_status": example["output"]["human_review_status"],
             "reviewer_note": example["output"]["reviewer_note"],
+            "reviewed_at_utc": example["metadata"].get("reviewed_at_utc"),
+            "reviewer": example["metadata"].get("reviewer"),
             "agent_run_status": example["metadata"]["agent_run_status"],
             "run_id": example["metadata"]["run_id"],
             "trace_id": example["metadata"]["trace_id"],
@@ -219,6 +240,7 @@ def _summary(
         for example in examples
     ]
     run_backed = sum(1 for row in rows if row["agent_run_status"] == "run_backed")
+    review_status_counts = _review_status_counts(rows)
     missing_rules_cases = sum(
         1
         for row in rows
@@ -242,7 +264,8 @@ def _summary(
         "candidate_count": len(rows),
         "run_backed_count": run_backed,
         "retrieval_only_count": len(rows) - run_backed,
-        "pending_review_count": len(rows),
+        "pending_review_count": review_status_counts.get("pending", 0),
+        "review_status_counts": review_status_counts,
         "missing_rules_case_count": missing_rules_cases,
         "rows": rows,
     }
@@ -265,6 +288,14 @@ def _rules_status_summary(rules: list[dict[str, Any]]) -> dict[str, int]:
     summary: dict[str, int] = {}
     for rule in rules:
         status = str(rule.get("rules_status") or "unknown")
+        summary[status] = summary.get(status, 0) + 1
+    return summary
+
+
+def _review_status_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
+    summary: dict[str, int] = {}
+    for row in rows:
+        status = str(row.get("human_review_status") or "pending")
         summary[status] = summary.get(status, 0) + 1
     return summary
 

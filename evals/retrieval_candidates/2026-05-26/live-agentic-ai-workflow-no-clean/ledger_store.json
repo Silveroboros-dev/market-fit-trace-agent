@@ -1,0 +1,167 @@
+{
+  "agent_runs": [
+    {
+      "created_at": "2026-05-26T20:23:21.231549+00:00",
+      "eval_summary_json": "{\"schema_valid\":true,\"false_strong_recommendation\":false,\"weak_proxy_detected\":false,\"unsupported_implication\":false,\"human_verification_required\":true,\"no_clean_expression_expected\":true,\"phoenix_annotations_written\":true,\"second_run_improvement\":null}",
+      "id": "run_e7464e89cd90",
+      "market_retrieval_json": "{\"mode\":\"polydata\",\"snapshot_id\":\"polydata_polymarket_2026-05-24 00:00:00+00:00\",\"as_of_ts\":\"2026-05-24 00:00:00+00:00\",\"retrieval_id\":\"retr_1cf50d6a284dff5f\",\"query_summary\":{\"claim_text\":\"Agentic AI is moving from demos and chatbots toward workflow integration, governance, memory, permissions, monitoring, optimization, and business outcomes.\",\"entities\":[\"AI agent platforms\",\"enterprise AI adopters\"],\"horizon\":\"2026\",\"top_k\":5,\"min_volume_usd\":10000.0,\"min_taxonomy_confidence\":0.85,\"l1_allowlist\":[],\"liquidity_metric\":\"volume_usd\",\"universe_count\":115,\"returned_count\":5},\"excluded_summary\":{\"after_provider_filters\":115,\"excluded_closed_or_inactive\":19,\"not_returned_after_ranking\":110},\"market_ids_considered\":[\"616906\",\"2086885\",\"2086888\",\"2086878\",\"906973\"]}",
+      "model": "google-adk:gemini-3.5-flash",
+      "model_fit_proposal_json": "{\"captures\": [], \"fit_reason\": \"None of the candidate markets relate to Agentic AI, enterprise AI adoption, or technology. The candidates are entirely focused on Federal Reserve interest rate decisions and Major League Soccer (MLS) match outcomes.\", \"misses\": [\"Agentic AI workflow integration and governance\", \"Enterprise AI adoption metrics\", \"AI memory, permissions, and monitoring outcomes\"], \"recommended_market_id\": null, \"rejected_markets\": [\"616906\", \"2086885\", \"2086888\", \"2086878\", \"906973\"], \"semantic_fit_class\": \"no_clean_expression\"}",
+      "phoenix_trace_id": "ea6dbc93ccc19bb3cf9314a58818d03d",
+      "prompt_version": "v1_lenient",
+      "status": "completed",
+      "user_goal": "Agentic AI is moving out of the demo phase into governed enterprise workflow infrastructure: memory, permissions, monitoring, optimization, and measurable business outcomes. By 2027, large companies will adopt standardized AI fluency metrics in performance reviews."
+    }
+  ],
+  "claims": [
+    {
+      "claim_text": "Agentic AI is moving from demos and chatbots toward workflow integration, governance, memory, permissions, monitoring, optimization, and business outcomes.",
+      "confidence": 0.65,
+      "created_at": "2026-05-26T20:23:34.892755+00:00",
+      "entities_json": "[\"AI agent platforms\", \"enterprise AI adopters\"]",
+      "horizon": "2026",
+      "id": "claim_e7c1c86dfc66",
+      "reasoning_summary": "The source is a market narrative about vocabulary and buyer expectations, not a clean market-resolvable event.",
+      "run_id": "run_e7464e89cd90",
+      "source_id": "src_a3b8c3d14aa3",
+      "stance": "expects agentic AI maturation",
+      "status": "proposed"
+    }
+  ],
+  "eval_results": [
+    {
+      "claim_id": "claim_e7c1c86dfc66",
+      "created_at": "2026-05-26T20:23:35.714640+00:00",
+      "failure_summary": null,
+      "id": "eval_dc6ebb5987ea",
+      "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": true, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+      "phoenix_trace_id": "ea6dbc93ccc19bb3cf9314a58818d03d",
+      "run_id": "run_e7464e89cd90"
+    }
+  ],
+  "human_verdicts": [],
+  "ledger_events": [
+    {
+      "claim_id": "claim_e7c1c86dfc66",
+      "created_at": "2026-05-26T20:23:34.893490+00:00",
+      "event_payload_json": {
+        "claim_text": "Agentic AI is moving from demos and chatbots toward workflow integration, governance, memory, permissions, monitoring, optimization, and business outcomes.",
+        "confidence": 0.65,
+        "created_at": "2026-05-26T20:23:34.892755+00:00",
+        "entities_json": "[\"AI agent platforms\", \"enterprise AI adopters\"]",
+        "horizon": "2026",
+        "id": "claim_e7c1c86dfc66",
+        "reasoning_summary": "The source is a market narrative about vocabulary and buyer expectations, not a clean market-resolvable event.",
+        "run_id": "run_e7464e89cd90",
+        "source_id": "src_a3b8c3d14aa3",
+        "stance": "expects agentic AI maturation",
+        "status": "proposed"
+      },
+      "event_type": "ledger_claim_proposed",
+      "id": "evt_4796ed892c95",
+      "run_id": "run_e7464e89cd90",
+      "summary": "Claim proposed: Agentic AI is moving from demos and chatbots toward workflow integration, governance, memory, permissions, monitoring, optimization, and business outcomes."
+    },
+    {
+      "claim_id": "claim_e7c1c86dfc66",
+      "created_at": "2026-05-26T20:23:34.894876+00:00",
+      "event_payload_json": {
+        "captures_json": "[]",
+        "claim_id": "claim_e7c1c86dfc66",
+        "created_at": "2026-05-26T20:23:34.894848+00:00",
+        "fit_reason": "No supplied market resolves the narrative shift from AI demos to workflow infrastructure with measurable adoption criteria.",
+        "id": "fit_f10096ef1550",
+        "misses_json": "[\"Enterprise deployment count\", \"Governance criteria\", \"Vocabulary-shift measurement\"]",
+        "recommended_market_id": null,
+        "rejected_markets_json": "[{\"market_id\": \"pm_gpt56_release_bucket_june_2026\", \"reason\": \"Model release timing does not resolve enterprise agent maturation.\"}]",
+        "semantic_fit_class": "no_clean_expression"
+      },
+      "event_type": "market_fit_classified",
+      "id": "evt_4eb8f3efb40c",
+      "run_id": "run_e7464e89cd90",
+      "summary": "Fit classified as no_clean_expression"
+    },
+    {
+      "claim_id": "claim_e7c1c86dfc66",
+      "created_at": "2026-05-26T20:23:34.895948+00:00",
+      "event_payload_json": {
+        "as_of_ts": "2026-05-24 00:00:00+00:00",
+        "excluded_summary": {
+          "after_provider_filters": 115,
+          "excluded_closed_or_inactive": 19,
+          "not_returned_after_ranking": 110
+        },
+        "market_ids_considered": [
+          "616906",
+          "2086885",
+          "2086888",
+          "2086878",
+          "906973"
+        ],
+        "mode": "polydata",
+        "query_summary": {
+          "claim_text": "Agentic AI is moving from demos and chatbots toward workflow integration, governance, memory, permissions, monitoring, optimization, and business outcomes.",
+          "entities": [
+            "AI agent platforms",
+            "enterprise AI adopters"
+          ],
+          "horizon": "2026",
+          "l1_allowlist": [],
+          "liquidity_metric": "volume_usd",
+          "min_taxonomy_confidence": 0.85,
+          "min_volume_usd": 10000.0,
+          "returned_count": 5,
+          "top_k": 5,
+          "universe_count": 115
+        },
+        "retrieval_id": "retr_1cf50d6a284dff5f",
+        "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+      },
+      "event_type": "market_retrieval_run",
+      "id": "evt_f8ebcd4a85f1",
+      "run_id": "run_e7464e89cd90",
+      "summary": "Retrieved 5 markets via polydata"
+    },
+    {
+      "claim_id": "claim_e7c1c86dfc66",
+      "created_at": "2026-05-26T20:23:35.715537+00:00",
+      "event_payload_json": {
+        "claim_id": "claim_e7c1c86dfc66",
+        "created_at": "2026-05-26T20:23:35.714640+00:00",
+        "failure_summary": null,
+        "id": "eval_dc6ebb5987ea",
+        "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": true, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+        "phoenix_trace_id": "ea6dbc93ccc19bb3cf9314a58818d03d",
+        "run_id": "run_e7464e89cd90"
+      },
+      "event_type": "fit_eval_run",
+      "id": "evt_c4fc855602d6",
+      "run_id": "run_e7464e89cd90",
+      "summary": "Fit eval passed"
+    }
+  ],
+  "market_fit_records": [
+    {
+      "captures_json": "[]",
+      "claim_id": "claim_e7c1c86dfc66",
+      "created_at": "2026-05-26T20:23:34.894848+00:00",
+      "fit_reason": "No supplied market resolves the narrative shift from AI demos to workflow infrastructure with measurable adoption criteria.",
+      "id": "fit_f10096ef1550",
+      "misses_json": "[\"Enterprise deployment count\", \"Governance criteria\", \"Vocabulary-shift measurement\"]",
+      "recommended_market_id": null,
+      "rejected_markets_json": "[{\"market_id\": \"pm_gpt56_release_bucket_june_2026\", \"reason\": \"Model release timing does not resolve enterprise agent maturation.\"}]",
+      "semantic_fit_class": "no_clean_expression"
+    }
+  ],
+  "sources": [
+    {
+      "content_hash": "114a3931d93359aaae9aaf13347b49f6",
+      "created_at": "2026-05-26T20:23:21.409346+00:00",
+      "id": "src_a3b8c3d14aa3",
+      "raw_text": "Agentic AI is moving out of the demo phase into governed enterprise workflow infrastructure: memory, permissions, monitoring, optimization, and measurable business outcomes. By 2027, large companies will adopt standardized AI fluency metrics in performance reviews.",
+      "source_type": "pasted_text",
+      "title": "Retrieval candidate live-agentic-ai-workflow-no-clean",
+      "uri": null
+    }
+  ]
+}

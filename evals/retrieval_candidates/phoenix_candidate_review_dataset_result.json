@@ -3,16 +3,20 @@
   "mode": "phoenix",
   "dataset_name": "market_fit_candidate_cases",
   "dataset_id": "RGF0YXNldDoz",
-  "dataset_version_id": "RGF0YXNldFZlcnNpb246Nw==",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246OQ==",
   "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoz",
   "missing_config": [],
   "phoenix_write_error": null,
   "strict_expected_labels_present": false,
-  "candidate_count": 2,
-  "run_backed_count": 2,
+  "candidate_count": 5,
+  "run_backed_count": 5,
   "retrieval_only_count": 0,
-  "pending_review_count": 2,
-  "missing_rules_case_count": 2,
+  "pending_review_count": 4,
+  "review_status_counts": {
+    "pending": 4,
+    "needs_more_rules": 1
+  },
+  "missing_rules_case_count": 5,
   "rows": [
     {
       "case_id": "demo-hormuz-candidate",
@@ -40,15 +44,60 @@
       ],
       "human_review_status": "pending",
       "reviewer_note": "",
+      "reviewed_at_utc": null,
+      "reviewer": null,
       "agent_run_status": "run_backed",
       "run_id": "run_b6c695a677d7",
       "trace_id": "0167041582febac71c4898d20c4902f4",
-      "retrieval_id": "retr_db93d4902a3626b1",
+      "retrieval_id": "retr_918c90e2b9faa7b8",
       "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00",
       "as_of_ts": "2026-05-24 00:00:00+00:00",
       "phoenix_trace_id": "0167041582febac71c4898d20c4902f4",
       "proposed_fit_class": "indirect",
       "recommended_market_id": "2155023",
+      "weak_proxy_detected": false,
+      "false_strong_recommendation": false,
+      "unsupported_implication": false,
+      "rules_status": "missing",
+      "rules_status_summary": {
+        "missing": 5
+      },
+      "recommended_action": "needs_more_rules"
+    },
+    {
+      "case_id": "live-agentic-ai-workflow-no-clean",
+      "source_text": "Agentic AI is moving out of the demo phase into governed enterprise workflow infrastructure: memory, permissions, monitoring, optimization, and measurable business outcomes. By 2027, large companies will adopt standardized AI fluency metrics in performance reviews.",
+      "normalized_claim": {
+        "claim_text": "Agentic AI is moving from demos and chatbots toward workflow integration, governance, memory, permissions, monitoring, optimization, and business outcomes.",
+        "confidence": 0.65,
+        "entities": [
+          "AI agent platforms",
+          "enterprise AI adopters"
+        ],
+        "horizon": "2026",
+        "reasoning_summary": "The source is a market narrative about vocabulary and buyer expectations, not a clean market-resolvable event.",
+        "stance": "expects agentic AI maturation"
+      },
+      "retrieved_market_ids": [
+        "616906",
+        "2086885",
+        "2086888",
+        "2086878",
+        "906973"
+      ],
+      "human_review_status": "pending",
+      "reviewer_note": "",
+      "reviewed_at_utc": null,
+      "reviewer": null,
+      "agent_run_status": "run_backed",
+      "run_id": "run_e7464e89cd90",
+      "trace_id": "ea6dbc93ccc19bb3cf9314a58818d03d",
+      "retrieval_id": "retr_1cf50d6a284dff5f",
+      "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00",
+      "as_of_ts": "2026-05-24 00:00:00+00:00",
+      "phoenix_trace_id": "ea6dbc93ccc19bb3cf9314a58818d03d",
+      "proposed_fit_class": "no_clean_expression",
+      "recommended_market_id": null,
       "weak_proxy_detected": false,
       "false_strong_recommendation": false,
       "unsupported_implication": false,
@@ -76,21 +125,114 @@
         "stance": "skeptical of AI ROI"
       },
       "retrieved_market_ids": [
-        "561230",
-        "2119130",
-        "947268",
-        "562803",
-        "678937"
+        "616906",
+        "2086885",
+        "2086888",
+        "2086878",
+        "906973"
       ],
       "human_review_status": "pending",
       "reviewer_note": "",
+      "reviewed_at_utc": null,
+      "reviewer": null,
       "agent_run_status": "run_backed",
       "run_id": "run_a5ae2a2e8eae",
       "trace_id": "4de1ef62e2b2bd400d1becd4f3583644",
-      "retrieval_id": "retr_4203d095d1b58bd5",
+      "retrieval_id": "retr_c46ba9222684390f",
       "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00",
       "as_of_ts": "2026-05-24 00:00:00+00:00",
       "phoenix_trace_id": "4de1ef62e2b2bd400d1becd4f3583644",
+      "proposed_fit_class": "no_clean_expression",
+      "recommended_market_id": null,
+      "weak_proxy_detected": false,
+      "false_strong_recommendation": false,
+      "unsupported_implication": false,
+      "rules_status": "missing",
+      "rules_status_summary": {
+        "missing": 5
+      },
+      "recommended_action": "needs_more_rules"
+    },
+    {
+      "case_id": "live-iran-sanctions-relief-package",
+      "source_text": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.",
+      "normalized_claim": {
+        "claim_text": "The US and Iran will extend a 60-day ceasefire, partially reopen the Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026.",
+        "confidence": 0.48,
+        "entities": [
+          "The US",
+          "Iran",
+          "Strait",
+          "Hormuz",
+          "July"
+        ],
+        "horizon": "unspecified",
+        "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+        "stance": "needs interpretation"
+      },
+      "retrieved_market_ids": [
+        "2155023",
+        "1809560",
+        "2119130",
+        "1708086",
+        "2111640"
+      ],
+      "human_review_status": "needs_more_rules",
+      "reviewer_note": "Rules missing; composite thesis.",
+      "reviewed_at_utc": "2026-05-26T21:03:30.718523+00:00",
+      "reviewer": "local_reviewer",
+      "agent_run_status": "run_backed",
+      "run_id": "run_a00456ecca12",
+      "trace_id": "16fc940b17cb56de6a5e3a5fa9fa7619",
+      "retrieval_id": "retr_bb652e5f2bb0bac8",
+      "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00",
+      "as_of_ts": "2026-05-24 00:00:00+00:00",
+      "phoenix_trace_id": "16fc940b17cb56de6a5e3a5fa9fa7619",
+      "proposed_fit_class": "indirect",
+      "recommended_market_id": "2155023",
+      "weak_proxy_detected": false,
+      "false_strong_recommendation": false,
+      "unsupported_implication": false,
+      "rules_status": "missing",
+      "rules_status_summary": {
+        "missing": 5
+      },
+      "recommended_action": "needs_more_rules"
+    },
+    {
+      "case_id": "live-solana-fundamentals-price-proxy",
+      "source_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+      "normalized_claim": {
+        "claim_text": "Solana remains one of the strongest general-purpose L1 blockchains in 2026 because speed, efficiency, UX, usage, and product-market fit keep improving despite SOL price weakness.",
+        "confidence": 0.48,
+        "entities": [
+          "Solana",
+          "L1",
+          "UX",
+          "SOL"
+        ],
+        "horizon": "unspecified",
+        "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+        "stance": "needs interpretation"
+      },
+      "retrieved_market_ids": [
+        "2086878",
+        "2289144",
+        "553857",
+        "2086886",
+        "2087250"
+      ],
+      "human_review_status": "pending",
+      "reviewer_note": "",
+      "reviewed_at_utc": null,
+      "reviewer": null,
+      "agent_run_status": "run_backed",
+      "run_id": "run_85efee67d1cf",
+      "trace_id": "f1263a3e02e0e89d7c9bd34fd552174b",
+      "retrieval_id": "retr_c61003542c14c520",
+      "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00",
+      "as_of_ts": "2026-05-24 00:00:00+00:00",
+      "phoenix_trace_id": "f1263a3e02e0e89d7c9bd34fd552174b",
       "proposed_fit_class": "no_clean_expression",
       "recommended_market_id": null,
       "weak_proxy_detected": false,
