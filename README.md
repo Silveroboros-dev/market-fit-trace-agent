@@ -373,10 +373,9 @@ See [docs/deploy-cloud-run.md](docs/deploy-cloud-run.md) for full commands.
   reviewed and promoted.
 - Phoenix MCP is the live sponsor path; the local fallback is only for offline
   reproduction without Phoenix credentials.
-- Next Arize extension: promoted live retrieval candidates can become Phoenix
-  Datasets, and policy/prompt versions can be compared as Phoenix Experiments.
-  The current submission keeps strict evals local and deterministic to preserve
-  the trust boundary.
+- Phoenix Datasets and Experiments are used for eval governance and regression
+  comparison; they do not replace fixture-backed strict eval truth or make live
+  fit decisions.
 
 ## Public Boundary
 
