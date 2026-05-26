@@ -291,6 +291,8 @@ make intake-goldens
 make smoke-polydata
 make export-retrieval-candidate
 make phoenix-export-candidates
+make phoenix-sync-goldens
+make phoenix-experiment-goldens
 ```
 
 `make intake-goldens` scans all eval packs for structural gaps, duplicate
@@ -310,6 +312,12 @@ Phoenix Dataset review queue named `market_fit_candidate_cases`. Those rows are
 pending evidence for human review, not strict eval truth. If Phoenix credentials
 are unavailable, the command writes a local dry-run JSON report instead of
 promoting candidates.
+
+`make phoenix-sync-goldens` mirrors promoted frozen fixtures into
+`market_fit_promoted_goldens_v1`. `make phoenix-experiment-goldens` compares
+current deterministic policy output against those expected labels with code
+evaluators. Repo fixtures remain canonical; Phoenix Datasets/Experiments are an
+inspection and comparison surface, not a replacement source of truth.
 
 ## MCP
 

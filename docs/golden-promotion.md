@@ -123,6 +123,52 @@ queue: live retrieval found relevant markets, the agent proposed an `indirect`
 fit, Phoenix recorded the trace, and the Dataset row tells the reviewer that
 missing rules must be resolved before promotion.
 
+## Phoenix Promoted-Golden Dataset And Experiment
+
+Reviewed/frozen goldens can be mirrored into a separate Phoenix Dataset:
+
+```bash
+make phoenix-sync-goldens
+```
+
+The default promoted-golden Dataset is named `market_fit_promoted_goldens_v1`.
+Unlike candidate rows, promoted rows include strict expected labels from the
+repo fixtures:
+
+- `expected_fit_class`;
+- `expected_best_market_id`;
+- acceptable and adjacent market IDs;
+- frozen market snapshot build ID;
+- frozen market-rules snapshot build ID.
+
+The current policy can then be compared against those labels:
+
+```bash
+make phoenix-experiment-goldens
+```
+
+The experiment uses fixture markets only. It does not call live PolyData and
+does not use an LLM judge. The report includes fit-class accuracy, exact and
+acceptable market-ID match rates, false-strong rate, weak-proxy detection rate,
+unsupported implication rate, no-clean false-positive behavior, and per-row
+trace links when available.
+
+Observed MVP result:
+
+- Dataset: `market_fit_promoted_goldens_v1`
+- Dataset URL:
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0`
+- Experiment URL:
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0/compare?experimentId=RXhwZXJpbWVudDoz`
+- Local Dataset artifact:
+  `evals/market_fit_v1/phoenix_promoted_goldens_dataset_result.json`
+- Local Experiment artifact:
+  `evals/market_fit_v1/phoenix_experiment_result.json`
+- Cases: `10`
+- Fit-class accuracy: `1.0`
+- Acceptable market match rate: `1.0`
+- No-clean false positives: `0 / 4`
+
 Pass/fail threshold for promotion:
 
 - source provenance is public-safe;

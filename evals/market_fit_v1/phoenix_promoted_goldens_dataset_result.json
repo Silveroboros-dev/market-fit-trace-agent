@@ -1,0 +1,122 @@
+{
+  "status": "ok",
+  "mode": "phoenix",
+  "eval_pack": "market_fit_v1",
+  "dataset_name": "market_fit_promoted_goldens_v1",
+  "dataset_id": "RGF0YXNldDo0",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246NQ==",
+  "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0",
+  "missing_config": [],
+  "phoenix_write_error": null,
+  "canonical_truth_source": "repo_fixtures",
+  "strict_experiment_uses_live_polydata": false,
+  "llm_as_judge": false,
+  "promoted_expected_labels_present": true,
+  "case_count": 10,
+  "rows": [
+    {
+      "case_id": "eval_001",
+      "expected_fit_class": "no_clean_expression",
+      "expected_best_market_id": null,
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_002",
+      "expected_fit_class": "no_clean_expression",
+      "expected_best_market_id": null,
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_003",
+      "expected_fit_class": "no_clean_expression",
+      "expected_best_market_id": null,
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [
+        "polymarket_ai_wins_imo_gold_2026"
+      ],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_004",
+      "expected_fit_class": "no_clean_expression",
+      "expected_best_market_id": null,
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [
+        "polymarket_best_ai_model_google_end_june_2026",
+        "polymarket_ai_wins_imo_gold_2026"
+      ],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_005",
+      "expected_fit_class": "indirect",
+      "expected_best_market_id": "polymarket_gemini_3_2_june_30_2026",
+      "acceptable_market_ids": [
+        "polymarket_gemini_3_5_june_30_2026"
+      ],
+      "adjacent_market_ids": [],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_006",
+      "expected_fit_class": "direct",
+      "expected_best_market_id": "polymarket_largest_ipo_2026_spacex",
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [
+        "polymarket_spacex_ipo_closing_market_cap"
+      ],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_007",
+      "expected_fit_class": "direct",
+      "expected_best_market_id": "polymarket_anthropic_500b_valuation_2026",
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_008",
+      "expected_fit_class": "weak_proxy",
+      "expected_best_market_id": null,
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [
+        "polymarket_best_ai_model_google_end_june_2026"
+      ],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_009",
+      "expected_fit_class": "weak_proxy",
+      "expected_best_market_id": null,
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [
+        "polymarket_anthropic_no_ipo_june_30_2026",
+        "polymarket_anthropic_500b_valuation_2026"
+      ],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    },
+    {
+      "case_id": "eval_010",
+      "expected_fit_class": "indirect",
+      "expected_best_market_id": "polymarket_ai_wins_imo_gold_2026",
+      "acceptable_market_ids": [],
+      "adjacent_market_ids": [],
+      "market_snapshot_build_id": "market_snapshot_2026_05_03_seed_001",
+      "market_rules_snapshot_build_id": "market_rules_snapshot_2026_05_03_seed_001"
+    }
+  ]
+}

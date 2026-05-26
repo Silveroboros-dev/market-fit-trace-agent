@@ -21,6 +21,8 @@ as artifacts.
 - Phoenix MCP config example: `mcp/phoenix_mcp_config.example.json`
 - Phoenix Dataset/Experiment artifact:
   `evals/market_fit_v1/phoenix_experiment_result.json`
+- Promoted-golden Dataset sync artifact:
+  `evals/market_fit_v1/phoenix_promoted_goldens_dataset_result.json`
 - Demo run path: `POST /api/runs` -> `POST /api/runs/{run_id}/improve`
 - Public trace link for submission:
   `https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507`
@@ -32,29 +34,35 @@ proof still depends on trace/eval/MCP improvement. The Dataset/Experiment spike
 shows that promoted local goldens can also be mirrored into Phoenix and measured
 with Phoenix Experiments.
 
-Command:
+Commands:
 
 ```bash
-make phoenix-experiment
+make phoenix-sync-goldens
+make phoenix-experiment-goldens
 ```
 
 Observed result:
 
-- Dataset: `market_fit_v1_policy_eval`
-- Dataset ID: `RGF0YXNldDox`
-- Dataset version ID: `RGF0YXNldFZlcnNpb246Mg==`
+- Dataset: `market_fit_promoted_goldens_v1`
+- Dataset ID: `RGF0YXNldDo0`
+- Dataset version ID: `RGF0YXNldFZlcnNpb246NQ==`
 - Dataset URL:
-  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDox`
-- Experiment: `current-policy-de0b35c`
-- Experiment ID: `RXhwZXJpbWVudDoy`
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0`
+- Experiment: `current-policy-market_fit_v1-ded8d43`
+- Experiment ID: `RXhwZXJpbWVudDoz`
 - Experiment URL:
-  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDox/compare?experimentId=RXhwZXJpbWVudDoy`
-- Commit SHA: `de0b35cde41a535b9b8b330d1625dd719fb676f2`
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0/compare?experimentId=RXhwZXJpbWVudDoz`
+- Commit SHA: `ded8d4397ada7c42a69f5d2ee99f7bf567160ed1`
 - Eval pack: `market_fit_v1`
 - Cases: `10`
 - Passed: `10`
 - Fit-class accuracy: `1.0`
-- Market-ID accuracy: `1.0`
+- Exact market-ID match rate: `0.8`
+- Acceptable market match rate: `1.0`
+- False-strong recommendation rate: `0.0`
+- Weak-proxy detected rate: `0.2`
+- Unsupported implication rate: `0.0`
+- No-clean-expression false positives: `0 / 4`
 - Eval-metrics pass rate: `1.0`
 
 Boundary:
@@ -63,6 +71,7 @@ Boundary:
 - Phoenix Dataset mirrors promoted cases for comparison and inspection.
 - Phoenix Experiment compares current policy output against expected labels.
 - Experiment metrics are code evaluators, not LLM-as-judge decisions.
+- Strict Phoenix experiments use fixture markets, not live PolyData retrieval.
 
 ## Product Flow
 
