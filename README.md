@@ -290,7 +290,7 @@ make evals-candidates-v3
 make intake-goldens
 make smoke-polydata
 make export-retrieval-candidate
-make export-candidate-dataset
+make phoenix-export-candidates
 ```
 
 `make intake-goldens` scans all eval packs for structural gaps, duplicate
@@ -305,9 +305,11 @@ connects the two by making failures inspectable and promotable. Optional PolyDat
 mode retrieves bounded current-market context; strict evals and the stable Phoenix
 proof path replay frozen fixtures.
 
-`make export-candidate-dataset` mirrors live retrieval candidate packets into a
-Phoenix Dataset review queue named `market_fit_candidate_review`. Those rows are
-pending evidence for human review, not strict eval truth.
+`make phoenix-export-candidates` mirrors live retrieval candidate packets into a
+Phoenix Dataset review queue named `market_fit_candidate_cases`. Those rows are
+pending evidence for human review, not strict eval truth. If Phoenix credentials
+are unavailable, the command writes a local dry-run JSON report instead of
+promoting candidates.
 
 ## MCP
 

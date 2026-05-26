@@ -82,10 +82,10 @@ market, eval metrics, run ID, and Phoenix trace ID/URL when Phoenix is configure
 Candidate packets can be mirrored into a Phoenix Dataset review queue:
 
 ```bash
-make export-candidate-dataset
+make phoenix-export-candidates
 ```
 
-The dataset is named `market_fit_candidate_review` by default. It is a review
+The dataset is named `market_fit_candidate_cases` by default. It is a review
 queue, not eval truth. Rows include:
 
 - source text and case ID;
@@ -94,17 +94,23 @@ queue, not eval truth. Rows include:
 - proposed fit class and recommended market when `run_result.json` exists;
 - Phoenix trace ID/URL when the candidate was exported with `--run-agent`;
 - `human_review_status = pending`;
+- `reviewer_note = ""`;
 - recommended action such as `needs_more_rules` or
   `review_for_weak_proxy_golden`.
 
 This gives reviewers one Phoenix surface for deciding whether a live retrieval
 is a useful future golden. Human review still decides promotion.
 
+If Phoenix credentials are unavailable, the command writes the same candidate
+row shape to a local JSON dry-run report and marks the missing configuration.
+Dry-run rows are still candidate evidence only and do not include strict
+expected labels.
+
 Observed MVP result:
 
-- Dataset: `market_fit_candidate_review`
+- Dataset: `market_fit_candidate_cases`
 - Dataset URL:
-  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoy`
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoz`
 - Local result artifact:
   `evals/retrieval_candidates/phoenix_candidate_review_dataset_result.json`
 - Candidate count: `1`

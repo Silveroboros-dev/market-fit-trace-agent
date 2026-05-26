@@ -4,6 +4,7 @@ from scripts.export_candidate_review_dataset import (
     _candidate_dirs,
     _candidate_example,
     _rules_status_summary,
+    _summary,
 )
 
 
@@ -65,11 +66,71 @@ def test_candidate_example_preserves_run_trace_and_review_metadata(tmp_path):
 
     assert example["input"]["case_id"] == "case-1"
     assert example["output"]["human_review_status"] == "pending"
+    assert example["output"]["reviewer_note"] == ""
     assert example["output"]["recommended_action"] == "needs_more_rules"
+    assert "expected_fit_class" not in example["output"]
+    assert "expected_best_market_id" not in example["output"]
     assert example["metadata"]["agent_run_status"] == "run_backed"
+    assert example["metadata"]["trace_id"] == "trace-1"
     assert example["metadata"]["phoenix_trace_id"] == "trace-1"
+    assert example["metadata"]["retrieved_market_ids"] == ["m1"]
+    assert example["metadata"]["proposed_fit_class"] == "indirect"
     assert example["metadata"]["fit_class_proposed"] == "indirect"
+    assert example["metadata"]["rules_status"] == "missing"
     assert example["metadata"]["rules_status_summary"] == {"missing": 1}
+    _assert_no_strict_expected_labels(example)
+
+
+def test_dry_run_summary_keeps_candidates_pending_without_expected_labels():
+    example = {
+        "input": {
+            "case_id": "case-1",
+            "source_text": "A thesis about Hormuz reopening.",
+        },
+        "output": {
+            "human_review_status": "pending",
+            "reviewer_note": "",
+            "recommended_action": "needs_more_rules",
+        },
+        "metadata": {
+            "normalized_claim": {"claim_text": "Normalized claim"},
+            "retrieved_market_ids": ["m1", "m2"],
+            "agent_run_status": "run_backed",
+            "run_id": "run-1",
+            "trace_id": "trace-1",
+            "retrieval_id": "retr-1",
+            "snapshot_id": "snapshot-1",
+            "as_of_ts": "2026-05-26T00:00:00+00:00",
+            "phoenix_trace_id": "trace-1",
+            "proposed_fit_class": "indirect",
+            "recommended_market_id": "m1",
+            "weak_proxy_detected": False,
+            "false_strong_recommendation": False,
+            "unsupported_implication": False,
+            "rules_status": "missing",
+            "rules_status_summary": {"missing": 2},
+        },
+    }
+
+    summary = _summary(
+        dataset=None,
+        dataset_name="market_fit_candidate_cases",
+        examples=[example],
+        dry_run=True,
+        missing_config=["PHOENIX_API_KEY"],
+    )
+
+    assert summary["status"] == "dry_run"
+    assert summary["mode"] == "dry_run"
+    assert summary["dataset_name"] == "market_fit_candidate_cases"
+    assert summary["dataset_id"] is None
+    assert summary["strict_expected_labels_present"] is False
+    assert summary["missing_config"] == ["PHOENIX_API_KEY"]
+    assert summary["rows"][0]["human_review_status"] == "pending"
+    assert summary["rows"][0]["reviewer_note"] == ""
+    assert "expected_fit_class" not in summary["rows"][0]
+    assert "expected_best_market_id" not in summary["rows"][0]
+    _assert_no_strict_expected_labels(example)
 
 
 def test_candidate_dirs_finds_review_packets(tmp_path):
@@ -101,3 +162,9 @@ def _write_jsonl(path, rows):
         "".join(json.dumps(row) + "\n" for row in rows),
         encoding="utf-8",
     )
+
+
+def _assert_no_strict_expected_labels(payload):
+    text = json.dumps(payload)
+    assert "expected_fit_class" not in text
+    assert "expected_best_market_id" not in text

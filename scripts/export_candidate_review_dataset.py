@@ -12,8 +12,6 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from phoenix.client import Client
-
 from app.config import settings
 
 DEFAULT_CANDIDATES_DIR = Path("evals/retrieval_candidates")
@@ -27,7 +25,7 @@ def parse_args() -> argparse.Namespace:
         )
     )
     parser.add_argument("--candidates-dir", default=str(DEFAULT_CANDIDATES_DIR))
-    parser.add_argument("--dataset-name", default="market_fit_candidate_review")
+    parser.add_argument("--dataset-name", default="market_fit_candidate_cases")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument(
@@ -35,23 +33,16 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Skip retrieval-only packets that do not include run_result.json.",
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Write the local JSON report without creating/updating a Phoenix Dataset.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    if not settings.phoenix_base_url or not settings.phoenix_api_key:
-        print(
-            json.dumps(
-                {
-                    "status": "error",
-                    "message": "PHOENIX_BASE_URL and PHOENIX_API_KEY are required.",
-                },
-                indent=2,
-            )
-        )
-        return 2
-
     candidate_dirs = _candidate_dirs(Path(args.candidates_dir))
     if args.require_run_result:
         candidate_dirs = [path for path in candidate_dirs if (path / "run_result.json").exists()]
@@ -73,26 +64,33 @@ def main() -> int:
         return 1
 
     examples = [_candidate_example(path) for path in candidate_dirs]
-    client = Client(base_url=settings.phoenix_base_url, api_key=settings.phoenix_api_key)
-    dataset = client.datasets.create_dataset(
-        name=args.dataset_name,
-        examples=examples,
-        dataset_description=(
-            "Candidate market-fit goldens awaiting human review. Rows are evidence "
-            "packets, not strict eval truth."
-        ),
-        timeout=60,
-    )
+    missing_config = []
+    if not settings.phoenix_base_url:
+        missing_config.append("PHOENIX_BASE_URL")
+    if not settings.phoenix_api_key:
+        missing_config.append("PHOENIX_API_KEY")
+    dry_run = bool(args.dry_run or missing_config)
+    phoenix_write_error = None
+    dataset = None
+    if not dry_run:
+        try:
+            dataset = _create_phoenix_dataset(args.dataset_name, examples)
+        except Exception as exc:  # pragma: no cover - depends on Phoenix service state
+            dry_run = True
+            phoenix_write_error = f"{type(exc).__name__}: {exc}"
     summary = _summary(
         dataset=dataset,
         dataset_name=args.dataset_name,
         examples=examples,
+        dry_run=dry_run,
+        missing_config=missing_config,
+        phoenix_write_error=phoenix_write_error,
     )
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(summary, indent=2, default=str) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2, default=str))
-    return 0
+    return 2 if phoenix_write_error else 0
 
 
 def _candidate_dirs(root: Path) -> list[Path]:
@@ -118,9 +116,10 @@ def _candidate_example(path: Path) -> dict[str, Any]:
     claim = (run_result or {}).get("claim", {})
     trace_id = (run_result or {}).get("phoenix_trace_id")
     trace_url = (run_result or {}).get("phoenix_trace_url")
-    market_ids = retrieval.get("market_ids_considered") or [
+    retrieved_market_ids = retrieval.get("market_ids_considered") or [
         market.get("market_id") for market in markets
     ]
+    rules_status = _overall_rules_status(rules_summary)
 
     return {
         "input": {
@@ -130,9 +129,8 @@ def _candidate_example(path: Path) -> dict[str, Any]:
         },
         "output": {
             "human_review_status": "pending",
+            "reviewer_note": "",
             "reviewer_decision_required": True,
-            "expected_fit_class": None,
-            "expected_best_market_id": None,
             "recommended_action": _recommended_action(rules_summary, eval_metrics),
         },
         "metadata": {
@@ -142,14 +140,18 @@ def _candidate_example(path: Path) -> dict[str, Any]:
             "snapshot_id": retrieval.get("snapshot_id"),
             "as_of_ts": retrieval.get("as_of_ts"),
             "retrieval_mode": retrieval.get("mode"),
-            "market_ids_considered": market_ids,
+            "retrieved_market_ids": retrieved_market_ids,
+            "market_ids_considered": retrieved_market_ids,
             "returned_count": len(markets),
+            "rules_status": rules_status,
             "rules_status_summary": rules_summary,
             "run_id": (run_result or {}).get("run_id"),
             "claim_id": (run_result or {}).get("claim_id"),
+            "trace_id": trace_id,
             "phoenix_trace_id": trace_id,
             "phoenix_trace_url": trace_url,
             "normalized_claim": claim,
+            "proposed_fit_class": fit.get("semantic_fit_class"),
             "fit_class_proposed": fit.get("semantic_fit_class"),
             "recommended_market_id": fit.get("recommended_market_id"),
             "fit_reason": fit.get("fit_reason"),
@@ -164,17 +166,53 @@ def _candidate_example(path: Path) -> dict[str, Any]:
     }
 
 
-def _summary(*, dataset: Any, dataset_name: str, examples: list[dict[str, Any]]) -> dict[str, Any]:
+def _create_phoenix_dataset(dataset_name: str, examples: list[dict[str, Any]]) -> Any:
+    from phoenix.client import Client
+
+    client = Client(base_url=settings.phoenix_base_url, api_key=settings.phoenix_api_key)
+    return client.datasets.create_dataset(
+        name=dataset_name,
+        examples=examples,
+        dataset_description=(
+            "Candidate market-fit goldens awaiting human review. Rows are evidence "
+            "packets, not strict eval truth."
+        ),
+        timeout=60,
+    )
+
+
+def _summary(
+    *,
+    dataset: Any | None,
+    dataset_name: str,
+    examples: list[dict[str, Any]],
+    dry_run: bool = False,
+    missing_config: list[str] | None = None,
+    phoenix_write_error: str | None = None,
+) -> dict[str, Any]:
     rows = [
         {
             "case_id": example["input"]["case_id"],
+            "source_text": example["input"]["source_text"],
+            "normalized_claim": example["metadata"]["normalized_claim"],
+            "retrieved_market_ids": example["metadata"]["retrieved_market_ids"],
             "human_review_status": example["output"]["human_review_status"],
+            "reviewer_note": example["output"]["reviewer_note"],
             "agent_run_status": example["metadata"]["agent_run_status"],
+            "run_id": example["metadata"]["run_id"],
+            "trace_id": example["metadata"]["trace_id"],
             "retrieval_id": example["metadata"]["retrieval_id"],
             "snapshot_id": example["metadata"]["snapshot_id"],
+            "as_of_ts": example["metadata"]["as_of_ts"],
             "phoenix_trace_id": example["metadata"]["phoenix_trace_id"],
-            "fit_class_proposed": example["metadata"]["fit_class_proposed"],
+            "proposed_fit_class": example["metadata"]["proposed_fit_class"],
             "recommended_market_id": example["metadata"]["recommended_market_id"],
+            "weak_proxy_detected": example["metadata"]["weak_proxy_detected"],
+            "false_strong_recommendation": example["metadata"][
+                "false_strong_recommendation"
+            ],
+            "unsupported_implication": example["metadata"]["unsupported_implication"],
+            "rules_status": example["metadata"]["rules_status"],
             "rules_status_summary": example["metadata"]["rules_status_summary"],
             "recommended_action": example["output"]["recommended_action"],
         }
@@ -186,13 +224,21 @@ def _summary(*, dataset: Any, dataset_name: str, examples: list[dict[str, Any]])
         for row in rows
         if row["rules_status_summary"].get("missing", 0) > 0
     )
-    dataset_url = f"{settings.phoenix_base_url.rstrip('/')}/datasets/{dataset.id}"
+    dataset_url = (
+        f"{settings.phoenix_base_url.rstrip('/')}/datasets/{dataset.id}"
+        if dataset is not None and settings.phoenix_base_url
+        else None
+    )
     return {
-        "status": "ok",
+        "status": "blocked" if phoenix_write_error else ("dry_run" if dry_run else "ok"),
+        "mode": "dry_run" if dry_run else "phoenix",
         "dataset_name": dataset_name,
-        "dataset_id": dataset.id,
-        "dataset_version_id": dataset.version_id,
+        "dataset_id": dataset.id if dataset is not None else None,
+        "dataset_version_id": dataset.version_id if dataset is not None else None,
         "dataset_url": dataset_url,
+        "missing_config": missing_config or [],
+        "phoenix_write_error": phoenix_write_error,
+        "strict_expected_labels_present": False,
         "candidate_count": len(rows),
         "run_backed_count": run_backed,
         "retrieval_only_count": len(rows) - run_backed,
@@ -221,6 +267,14 @@ def _rules_status_summary(rules: list[dict[str, Any]]) -> dict[str, int]:
         status = str(rule.get("rules_status") or "unknown")
         summary[status] = summary.get(status, 0) + 1
     return summary
+
+
+def _overall_rules_status(rules_summary: dict[str, int]) -> str:
+    if not rules_summary:
+        return "unknown"
+    if len(rules_summary) == 1:
+        return next(iter(rules_summary))
+    return "mixed"
 
 
 def _read_json(path: Path) -> dict[str, Any]:

@@ -1,9 +1,13 @@
 {
   "status": "ok",
-  "dataset_name": "market_fit_candidate_review",
-  "dataset_id": "RGF0YXNldDoy",
-  "dataset_version_id": "RGF0YXNldFZlcnNpb246Mw==",
-  "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoy",
+  "mode": "phoenix",
+  "dataset_name": "market_fit_candidate_cases",
+  "dataset_id": "RGF0YXNldDoz",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246NA==",
+  "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoz",
+  "missing_config": [],
+  "phoenix_write_error": null,
+  "strict_expected_labels_present": false,
   "candidate_count": 1,
   "run_backed_count": 1,
   "retrieval_only_count": 0,
@@ -12,13 +16,43 @@
   "rows": [
     {
       "case_id": "demo-hormuz-candidate",
+      "source_text": "US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June.",
+      "normalized_claim": {
+        "claim_text": "US and Iran will extend a ceasefire and reopen the Strait of Hormuz by the end of June.",
+        "confidence": 0.48,
+        "entities": [
+          "US",
+          "Iran",
+          "Strait",
+          "Hormuz",
+          "June"
+        ],
+        "horizon": "unspecified",
+        "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+        "stance": "needs interpretation"
+      },
+      "retrieved_market_ids": [
+        "2155023",
+        "1809560",
+        "1708086",
+        "2119130",
+        "1796138"
+      ],
       "human_review_status": "pending",
+      "reviewer_note": "",
       "agent_run_status": "run_backed",
+      "run_id": "run_b6c695a677d7",
+      "trace_id": "0167041582febac71c4898d20c4902f4",
       "retrieval_id": "retr_db93d4902a3626b1",
       "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00",
+      "as_of_ts": "2026-05-24 00:00:00+00:00",
       "phoenix_trace_id": "0167041582febac71c4898d20c4902f4",
-      "fit_class_proposed": "indirect",
+      "proposed_fit_class": "indirect",
       "recommended_market_id": "2155023",
+      "weak_proxy_detected": false,
+      "false_strong_recommendation": false,
+      "unsupported_implication": false,
+      "rules_status": "missing",
       "rules_status_summary": {
         "missing": 5
       },
