@@ -125,11 +125,16 @@ Key files:
 
 - `market_fit_adk/agent.py`: deployable Google ADK `root_agent` in the official ADK shape.
 - `app/adk_runtime.py`: runner that calls the deployable ADK `root_agent` for JSON proposals.
-- `app/agent.py`: product workflow and deterministic audit loop.
+- `app/agent.py`: compatibility wrapper around the workflow controller.
+- `app/workflow.py`: product workflow and deterministic audit loop.
+- `app/market_provider.py`: fixture and PolyData market providers.
 - `app/tracing.py`: OpenInference/Phoenix tracing setup.
 - `app/phoenix_mcp.py`: Phoenix MCP trace-inspection bridge.
 - `app/evals.py`: deterministic fit and weak-proxy evals.
 - `mcp/ledger_server.py`: project-local Ledger MCP lifecycle tools.
+- `scripts/smoke_polydata.py`: optional live PolyData retrieval smoke check.
+- `scripts/export_retrieval_candidate.py`: export live retrievals into candidate future goldens.
+- `docs/golden-promotion.md`: live-retrieval to strict-golden promotion process.
 - `evals/`: baseline goldens, promoted goldens, draft eval packs, and intake report.
 
 The trust boundary is explicit: Gemini drafts, extracts, summarizes, and proposes.
@@ -283,6 +288,8 @@ Advanced eval maintenance:
 make evals-candidates
 make evals-candidates-v3
 make intake-goldens
+make smoke-polydata
+make export-retrieval-candidate
 ```
 
 `make intake-goldens` scans all eval packs for structural gaps, duplicate
@@ -291,6 +298,11 @@ assumptions, and market IDs referenced without frozen snapshots. It writes
 `evals/golden_intake_report.md`.
 
 For full eval-pack details, see [docs/evals.md](docs/evals.md).
+
+Live data creates candidate evidence. Frozen snapshots create eval truth. Phoenix
+connects the two by making failures inspectable and promotable. Optional PolyData
+mode retrieves bounded current-market context; strict evals and the stable Phoenix
+proof path replay frozen fixtures.
 
 ## MCP
 
@@ -339,11 +351,17 @@ See [docs/deploy-cloud-run.md](docs/deploy-cloud-run.md) for full commands.
 
 - Dynamic retrieval is bounded by recent market snapshots and liquidity filters;
   formal evals replay frozen fixtures.
+- PolyData live mode currently treats missing resolution rules as a conservative
+  fit risk, so clean direct-fit claims should remain fixture-backed or human-verified.
 - The app audits fit quality; it does not give trading advice or execute trades.
 - Draft eval rows mined with external tools are not goldens until independently
   reviewed and promoted.
 - Phoenix MCP is the live sponsor path; the local fallback is only for offline
   reproduction without Phoenix credentials.
+- Next Arize extension: promoted live retrieval candidates can become Phoenix
+  Datasets, and policy/prompt versions can be compared as Phoenix Experiments.
+  The current submission keeps strict evals local and deterministic to preserve
+  the trust boundary.
 
 ## Public Boundary
 

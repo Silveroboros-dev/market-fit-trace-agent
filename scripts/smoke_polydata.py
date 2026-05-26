@@ -75,6 +75,10 @@ def main() -> int:
         confidence=0.5,
     )
     retrieval = provider.retrieve(claim)
+    rules_status_summary = {
+        "present": sum(1 for market in retrieval.markets if market.resolution_rules.strip()),
+        "missing": sum(1 for market in retrieval.markets if not market.resolution_rules.strip()),
+    }
     print(
         json.dumps(
             {
@@ -85,6 +89,7 @@ def main() -> int:
                 "retrieval_id": retrieval.retrieval_id,
                 "query_summary": retrieval.query_summary,
                 "excluded_summary": retrieval.excluded_summary,
+                "rules_status_summary": rules_status_summary,
                 "markets": [
                     {
                         "market_id": market.market_id,

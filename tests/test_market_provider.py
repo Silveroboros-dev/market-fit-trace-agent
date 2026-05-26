@@ -81,6 +81,47 @@ def test_polydata_provider_ranks_cached_universe_without_live_client():
     assert "Maritime chokepoint closure" in markets[0].entity_tags
 
 
+def test_polydata_provider_excludes_explicitly_closed_or_inactive_rows():
+    provider = PolyDataMarketProvider(
+        settings_obj=Settings(
+            market_provider="polydata",
+            poly_data_top_k=10,
+            poly_data_max_k=50,
+        )
+    )
+    provider._universe = [
+        {
+            "market_id": "open-market",
+            "question": "Open market?",
+            "volume_usd": 25000,
+            "days_to_close": 5,
+        },
+        {
+            "market_id": "closed-market",
+            "question": "Closed market?",
+            "volume_usd": 25000,
+            "closed": True,
+        },
+        {
+            "market_id": "inactive-market",
+            "question": "Inactive market?",
+            "volume_usd": 25000,
+            "active": False,
+        },
+        {
+            "market_id": "expired-market",
+            "question": "Expired market?",
+            "volume_usd": 25000,
+            "days_to_close": -1,
+        },
+    ]
+
+    retrieval = provider.retrieve()
+
+    assert [market.market_id for market in retrieval.markets] == ["open-market"]
+    assert retrieval.excluded_summary["excluded_closed_or_inactive"] == 3
+
+
 def test_explicit_markets_override_polydata_for_strict_evals():
     markets = load_markets()
     provider = build_market_provider(

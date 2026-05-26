@@ -65,7 +65,9 @@ class PolyDataMarketProvider:
     _loaded_at_monotonic: float | None = field(default=None, init=False, repr=False)
 
     def retrieve(self, claim: NormalizedClaim | None = None) -> MarketRetrievalResult:
-        rows = self._load_universe()
+        loaded_rows = self._load_universe()
+        rows = [row for row in loaded_rows if _row_is_open_market_context(row)]
+        excluded_closed_or_inactive = len(loaded_rows) - len(rows)
         top_k = max(1, min(self.settings_obj.poly_data_top_k, self.settings_obj.poly_data_max_k))
         ranked = _rank_rows(rows, claim)
         selected = ranked[:top_k]
@@ -103,6 +105,7 @@ class PolyDataMarketProvider:
             raw_markets=selected,
             excluded_summary={
                 "after_provider_filters": len(rows),
+                "excluded_closed_or_inactive": excluded_closed_or_inactive,
                 "not_returned_after_ranking": max(0, len(rows) - len(selected)),
             },
         )
@@ -373,6 +376,20 @@ def _probability(row: dict[str, object]) -> float | None:
     if value < 0.0 or value > 1.0:
         return None
     return value
+
+
+def _row_is_open_market_context(row: dict[str, object]) -> bool:
+    if _field_is_true(row, "closed") or _field_is_true(row, "archived"):
+        return False
+    if _field_is_false(row, "active"):
+        return False
+    raw_days_to_close = row.get("days_to_close")
+    if raw_days_to_close is None:
+        return True
+    try:
+        return float(raw_days_to_close) >= 0.0
+    except (TypeError, ValueError):
+        return True
 
 
 def _volume_usd(row: dict[str, object]) -> float:
