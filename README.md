@@ -26,6 +26,12 @@ Selected Rapid track: **Arize**.
 - Phoenix trace proof: [v1 trace audit](evals/market_fit_v1/v1_trace_audit.md)
 - Phoenix live trace:
   [latest checked trace](https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507)
+- Phoenix candidate Dataset: `market_fit_candidate_cases`
+- Phoenix promoted-golden Dataset: `market_fit_promoted_goldens_v1`
+- Phoenix Experiment artifact:
+  [market_fit_v1 experiment result](evals/market_fit_v1/phoenix_experiment_result.json)
+- Regression-risk audit:
+  [docs/regression-risk-coverage.md](docs/regression-risk-coverage.md)
 - License: Apache-2.0
 
 ## Partner Integration
@@ -38,6 +44,10 @@ Phoenix MCP is the partner integration for the Arize track:
 - Phoenix MCP is used during the improve step to inspect failed trace/eval context.
 - The local Ledger MCP records claim lifecycle events and optional human verdicts;
   it is a project-local support tool, not the sponsor integration.
+- Phoenix also supports eval governance: trace-backed live failures become
+  candidate Dataset rows, reviewed fixture goldens are mirrored into a promoted
+  Dataset, and Phoenix Experiments compare current policy output against expected
+  labels.
 
 This maps to the official Arize guidance for code-owned agent runtime, OpenInference
 instrumentation, Phoenix traces, Phoenix MCP runtime introspection, trace evals, and
