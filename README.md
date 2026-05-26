@@ -30,6 +30,8 @@ Selected Rapid track: **Arize**.
 - Phoenix promoted-golden Dataset: `market_fit_promoted_goldens_v1`
 - Phoenix Experiment artifact:
   [market_fit_v1 experiment result](evals/market_fit_v1/phoenix_experiment_result.json)
+- Demo golden trio:
+  [docs/demo-golden-trio.md](docs/demo-golden-trio.md)
 - Regression-risk audit:
   [docs/regression-risk-coverage.md](docs/regression-risk-coverage.md)
 - License: Apache-2.0
