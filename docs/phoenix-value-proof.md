@@ -19,9 +19,50 @@ as artifacts.
 - Phoenix check command: `make phoenix-check`
 - Captured audit artifact: `evals/market_fit_v1/v1_trace_audit.md`
 - Phoenix MCP config example: `mcp/phoenix_mcp_config.example.json`
+- Phoenix Dataset/Experiment artifact:
+  `evals/market_fit_v1/phoenix_experiment_result.json`
 - Demo run path: `POST /api/runs` -> `POST /api/runs/{run_id}/improve`
 - Public trace link for submission:
   `https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507`
+
+## Phoenix Dataset / Experiment Spike
+
+This is a small Arize extension, not the core proof path. The stable Phoenix
+proof still depends on trace/eval/MCP improvement. The Dataset/Experiment spike
+shows that promoted local goldens can also be mirrored into Phoenix and measured
+with Phoenix Experiments.
+
+Command:
+
+```bash
+make phoenix-experiment
+```
+
+Observed result:
+
+- Dataset: `market_fit_v1_policy_eval`
+- Dataset ID: `RGF0YXNldDox`
+- Dataset version ID: `RGF0YXNldFZlcnNpb246Mg==`
+- Dataset URL:
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDox`
+- Experiment: `current-policy-de0b35c`
+- Experiment ID: `RXhwZXJpbWVudDoy`
+- Experiment URL:
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDox/compare?experimentId=RXhwZXJpbWVudDoy`
+- Commit SHA: `de0b35cde41a535b9b8b330d1625dd719fb676f2`
+- Eval pack: `market_fit_v1`
+- Cases: `10`
+- Passed: `10`
+- Fit-class accuracy: `1.0`
+- Market-ID accuracy: `1.0`
+- Eval-metrics pass rate: `1.0`
+
+Boundary:
+
+- Local frozen fixtures remain the strict eval source of truth.
+- Phoenix Dataset mirrors promoted cases for comparison and inspection.
+- Phoenix Experiment compares current policy output against expected labels.
+- Experiment metrics are code evaluators, not LLM-as-judge decisions.
 
 ## Product Flow
 
