@@ -7,12 +7,13 @@ from typing import Any
 from app.adk_runtime import ADKJsonRuntime
 from app.evals import evaluate_fit, evaluate_improvement
 from app.ledger import LedgerStore
-from app.market_data import load_markets
+from app.market_provider import MarketProvider, build_market_provider
 from app.models import (
     CandidateMarket,
     FitClass,
     ImprovementResult,
     MarketFit,
+    MarketRetrievalProvenance,
     NormalizedClaim,
     RejectedMarket,
     RunResult,
@@ -32,10 +33,11 @@ class MarketFitTraceAgent:
         store: LedgerStore | None = None,
         adk_runtime: ADKJsonRuntime | None = None,
         markets: list[CandidateMarket] | None = None,
+        market_provider: MarketProvider | None = None,
     ) -> None:
         self.store = store or LedgerStore()
         self.adk_runtime = adk_runtime or ADKJsonRuntime()
-        self.markets = markets or load_markets()
+        self.market_provider = market_provider or build_market_provider(markets=markets)
 
     async def run(
         self,
@@ -67,10 +69,30 @@ class MarketFitTraceAgent:
             with trace.span("claim_extracted", attrs):
                 claim = await self.extract_claim(thesis, prompt_version)
             with trace.span(
-                "candidate_markets_loaded",
-                {"run_id": run_id, "count": len(self.markets)},
+                "market_retrieval_run",
+                {
+                    "run_id": run_id,
+                    "market_data_mode": self.market_provider.name,
+                },
             ):
-                markets = self.markets
+                retrieval = self.market_provider.retrieve(claim)
+                markets = retrieval.markets
+                trace.set_current_span_attributes(
+                    {
+                        "market_data_mode": retrieval.mode,
+                        "snapshot_id": retrieval.snapshot_id or "",
+                        "as_of_ts": retrieval.as_of_ts or "",
+                        "retrieval_id": retrieval.retrieval_id or "",
+                        "returned_count": len(markets),
+                        "top_k": retrieval.query_summary.get("top_k", len(markets)),
+                        "min_liquidity_usd": retrieval.query_summary.get(
+                            "min_volume_usd", ""
+                        ),
+                        "liquidity_metric": retrieval.query_summary.get(
+                            "liquidity_metric", ""
+                        ),
+                    }
+                )
             with trace.span("market_fit_classified", attrs):
                 fit, model_fit_proposal = await self.classify_fit(
                     claim=claim,
@@ -88,6 +110,7 @@ class MarketFitTraceAgent:
                 )
             with trace.span("rejected_markets_explained", {"run_id": run_id}):
                 fit = self._ensure_rejected_markets(fit, markets)
+            market_retrieval = _retrieval_provenance(retrieval)
             with trace.span("ledger_claim_proposed", attrs):
                 claim_ref = self.store.propose_claim(
                     run_id=run_id,
@@ -108,6 +131,11 @@ class MarketFitTraceAgent:
                     captures=fit.captures,
                     misses=fit.misses,
                     rejected_markets=[item.model_dump() for item in fit.rejected_markets],
+                )
+                self.store.record_market_retrieval(
+                    run_id=run_id,
+                    claim_id=claim_id,
+                    retrieval=market_retrieval.model_dump(),
                 )
             phoenix_trace_id = trace.trace_id()
             with trace.span(
@@ -173,6 +201,7 @@ class MarketFitTraceAgent:
                 phoenix_trace_id=phoenix_trace_id,
                 eval_summary_json=eval_result.metrics.model_dump_json(),
                 model_fit_proposal_json=model_fit_proposal_json,
+                market_retrieval_json=market_retrieval.model_dump_json(),
             )
 
         return RunResult(
@@ -185,6 +214,8 @@ class MarketFitTraceAgent:
             prompt_version=prompt_version,
             claim=claim,
             fit=fit,
+            market_retrieval=market_retrieval,
+            market_context=markets,
             eval=eval_result,
             ledger=self.store.query_claim_trace(claim_id),
         )
@@ -336,6 +367,12 @@ class MarketFitTraceAgent:
             metrics=EvalMetrics.model_validate(json.loads(eval_row["metrics_json"])),
             failure_summary=eval_row["failure_summary"],
         )
+        market_retrieval_json = run.get("market_retrieval_json")
+        market_retrieval = (
+            MarketRetrievalProvenance.model_validate(json.loads(market_retrieval_json))
+            if market_retrieval_json
+            else None
+        )
         return RunResult(
             run_id=run_id,
             source_id=claim_row["source_id"],
@@ -346,6 +383,8 @@ class MarketFitTraceAgent:
             prompt_version=run["prompt_version"],
             claim=claim,
             fit=fit,
+            market_retrieval=market_retrieval,
+            market_context=[],
             eval=eval_result,
             ledger=self.store.query_claim_trace(claim_row["id"]),
         )
@@ -372,3 +411,15 @@ def _json_preview(value: Any, max_chars: int = 2000) -> str | None:
     if len(text) <= max_chars:
         return text
     return f"{text[:max_chars]}...[truncated]"
+
+
+def _retrieval_provenance(retrieval: Any) -> MarketRetrievalProvenance:
+    return MarketRetrievalProvenance(
+        mode=retrieval.mode,
+        snapshot_id=retrieval.snapshot_id,
+        as_of_ts=retrieval.as_of_ts,
+        retrieval_id=retrieval.retrieval_id,
+        query_summary=retrieval.query_summary,
+        excluded_summary=retrieval.excluded_summary,
+        market_ids_considered=[market.market_id for market in retrieval.markets],
+    )

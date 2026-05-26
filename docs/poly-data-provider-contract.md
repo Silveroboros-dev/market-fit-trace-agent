@@ -41,17 +41,18 @@ Start with one simple universe filter:
 The exact liquidity metric can be provider-defined, but it must be named in the
 response as `liquidity_metric`.
 
-## Observed PolyData Surface As Of 2026-05-24
+## Observed PolyData Surface As Of 2026-05-26
 
-The current `poly-data-explorer` client already supports the bounded discovery
-part of this contract through:
+The current `poly-data-explorer` Python client already supports the bounded
+discovery and current-market-state parts of this contract through:
 
 - `poly.taxonomy()`
 - `poly.markets()`
+- `poly.cross_section()`
 
 Observed `poly.taxonomy()` shape:
 
-- rows: `133305`
+- rows: `139537`
 - `market_id`
 - `as_of_date`
 - `l1`
@@ -85,32 +86,68 @@ Observed `poly.markets()` shape:
 - `closed_time`
 - `end_date`
 
+Observed `poly.cross_section()` shape:
+
+- rows: `1956`
+- `id`
+- `question`
+- `category`
+- `tags`
+- `neg_risk`
+- `closed_time`
+- `end_date`
+- `days_to_close`
+- `price`
+- `vwap`
+- `volume_usd`
+- `n_trades`
+- `bar_ts`
+
 The current join key is:
 
 ```text
 taxonomy.market_id == markets.id
+taxonomy.market_id == cross_section.id
 ```
 
 This is enough for an MVP bounded market provider:
 
 1. choose product-controlled L1 buckets from the normalized thesis;
 2. fetch live L2 buckets from taxonomy;
-3. join taxonomy to markets;
-4. filter `closed_time IS NULL`;
-5. filter `is_low_confidence = false` and `is_unmapped = false`;
-6. filter `confidence >= 0.85`;
-7. cast `volume` to USD float and filter `volume >= 10000`;
-8. rank within L1/L2 by a simple retrieval score plus volume;
-9. return top `20`, hard max `50`.
+3. join taxonomy to `poly.cross_section().df` for current state;
+4. optionally join `poly.markets()` for outcome tokens, slug, and full static
+   market metadata;
+5. filter active markets with current-state fields;
+6. filter `is_low_confidence = false` and `is_unmapped = false`;
+7. filter `confidence >= 0.85`;
+8. filter `volume_usd >= 10000`;
+9. rank within L1/L2 by retrieval score plus `volume_usd` / recency;
+10. return top `20`, hard max `50`.
 
-The current client does **not** expose full market-resolution rules,
-descriptions, current prices, `open_interest`, or a separate `liquidity` field
-through `poly.markets()`. Therefore the first integration should treat PolyData
-as a bounded discovery provider, not yet a complete rules provider.
+The important correction: current prices and current market state are available
+now through `poly.cross_section()`, even though they are not columns on
+`poly.markets()`.
+
+The current client still does **not** expose full market-resolution rules or a
+separate `open_interest` field through the observed methods. Descriptions may
+be available through `poly.embeddings()`, but that path should be tested
+separately because it materializes a heavier similarity dataset.
+
+Therefore the first integration should treat PolyData as:
+
+- authoritative for real current market inventory;
+- authoritative for L1/L2 taxonomy;
+- authoritative for current price, VWAP, volume, trade count, active status, and
+  days to close;
+- not yet authoritative for complete resolution-rule text unless a rules/source
+  method is identified.
 
 For now:
 
-- use `volume` as `liquidity_metric = "volume_usd"`;
+- use `cross_section.volume_usd` as `liquidity_metric = "volume_usd"`;
+- use `cross_section.price` as the current binary probability proxy;
+- use `cross_section.vwap`, `n_trades`, `bar_ts`, and `days_to_close` as
+  current-state context;
 - map `answer1` / `answer2` to outcomes;
 - map `question` to `title`;
 - derive `source_url` from `market_slug`;
@@ -236,7 +273,14 @@ Response:
   "markets": [
     {
       "rank": 1,
+      "event_id": "event_...",
+      "event_slug": "how-many-fed-rate-cuts-in-2026",
+      "event_title": "How many Fed rate cuts in 2026?",
       "market_id": "polymarket_fed_rate_cuts_2026_count",
+      "market_slug": "how-many-fed-rate-cuts-in-2026",
+      "condition_id": "0x...",
+      "question_id": "0x...",
+      "clob_token_ids": ["...", "..."],
       "venue": "polymarket",
       "title": "How many Fed rate cuts in 2026?",
       "description": "Multi-outcome market on the number of Federal Reserve rate cuts in 2026.",
@@ -244,9 +288,23 @@ Response:
       "resolution_source": "Federal Reserve / FOMC",
       "outcomes": ["0 cuts", "1 cut", "2 cuts", "3+ cuts"],
       "yes_price": null,
+      "outcome_prices": null,
       "current_probability": null,
+      "probability_source": "multi_outcome_or_unavailable",
+      "probability_as_of_ts": "2026-05-24T12:00:00Z",
       "close_time": "2026-12-31T23:59:59-05:00",
       "status": "open",
+      "active": true,
+      "closed": false,
+      "archived": false,
+      "restricted": false,
+      "enable_order_book": true,
+      "raw_status": {
+        "active": true,
+        "closed": false,
+        "archived": false,
+        "enableOrderBook": true
+      },
       "liquidity_metric": "volume_usd",
       "liquidity_usd": 82345.12,
       "volume_usd": 82345.12,
@@ -262,14 +320,31 @@ Response:
         "topic_match: rates",
         "horizon_partial_match: 2026 market vs through-2027 thesis"
       ],
-      "retrieval_risk_flags": ["wrong_horizon"]
+      "retrieval_risk_flags": ["wrong_horizon"],
+      "rules_status": "present",
+      "data_quality_flags": [],
+      "raw_provider": "polymarket_gamma",
+      "raw_endpoint": "/events?active=true&closed=false",
+      "raw_market_id": "...",
+      "raw_event_id": "...",
+      "raw_condition_id": "...",
+      "raw_updated_at": "2026-05-24T12:00:00Z",
+      "raw_payload_hash": "sha256:..."
     }
   ],
   "excluded_summary": {
     "below_liquidity_threshold": 231,
     "closed_or_resolved": 18,
     "outside_l1_or_l2": 1190
-  }
+  },
+  "excluded_examples": [
+    {
+      "market_id": "...",
+      "title": "Fed rate cut by June?",
+      "excluded_reason": "below_liquidity_threshold",
+      "liquidity_usd": 3400.0
+    }
+  ]
 }
 ```
 
@@ -280,13 +355,20 @@ current `CandidateMarket` shape and support future eval freezing.
 
 Required:
 
+- `event_id` or explicit `event_status = "unknown"`;
+- `event_slug` or explicit `event_status = "unknown"`;
 - `market_id`;
+- `market_slug`;
 - `venue`;
 - `title`;
 - `description`;
 - `resolution_rules`;
+- `rules_status`;
 - `close_time`;
 - `status`;
+- `active`;
+- `closed`;
+- `enable_order_book`;
 - `outcomes`;
 - `source_url`;
 - `as_of_ts` through the enclosing snapshot;
@@ -294,17 +376,27 @@ Required:
   `open_interest_usd`;
 - `retrieval_score`;
 - `retrieval_reasons`.
+- `raw_payload_hash` or explicit `raw_payload_hash_status = "not_available"`.
 
 Strongly preferred:
 
 - `resolution_source`;
+- `condition_id`;
+- `question_id`;
+- `clob_token_ids`;
+- `raw_provider`;
+- `raw_endpoint`;
+- `raw_updated_at`;
+- `data_quality_flags`;
+- `raw_status`;
 - `l1`;
 - `l2_id`;
 - `l2_name`;
 - `tags`;
 - `yes_price` / `no_price` or current outcome prices;
+- `probability_source`;
+- `probability_as_of_ts`;
 - `market_slug`;
-- `condition_id`;
 - `question`;
 - `retrieval_risk_flags`.
 
@@ -324,6 +416,42 @@ The app can map provider records into `CandidateMarket` as:
 | `yes_price` or best binary price | `current_probability` |
 | `retrieval_risk_flags` | `known_fit_risks` |
 | `tags` + `l1` + `l2_name` | `entity_tags` |
+
+Important mapping rule:
+
+> Event identity is context; market identity is the tradable question. The fit
+> layer must not give a market credit merely because its parent event is
+> relevant. A thesis may match an event while only weakly matching a specific
+> market inside that event.
+
+Current price is also context, not fit evidence. The fit classifier should rely
+primarily on title, rules, entity, horizon, and metric alignment.
+
+## Phoenix Retrieval Span
+
+Dynamic retrieval should emit a product-level span named:
+
+```text
+market_retrieval_run
+```
+
+Minimum span attributes:
+
+```json
+{
+  "market_data_mode": "polydata",
+  "snapshot_id": "polydata_polymarket_2026-05-24T00:00:00Z",
+  "as_of_ts": "2026-05-24T00:00:00Z",
+  "retrieval_id": "retr_...",
+  "top_k": 20,
+  "returned_count": 12,
+  "min_liquidity_usd": 10000,
+  "liquidity_metric": "volume_usd"
+}
+```
+
+Strict eval runs must keep `market_data_mode = "fixture"` and must not call the
+live PolyData provider.
 
 ## Evaluation Contract
 
@@ -345,6 +473,12 @@ source of market reality. We evaluate:
      retrieval reasons;
    - returned markets can be frozen into `market_snapshots.jsonl` and
      `market_rules_snapshots.jsonl`.
+
+4. **Eval isolation**
+   - strict evals use fixture snapshots even if live retrieval is configured in
+     the environment;
+   - the default Phoenix proof path remains stable and does not depend on the
+     current Polymarket universe.
 
 ## Non-Goals
 
@@ -387,3 +521,70 @@ The provider should return a ranked list that includes at least one Fed rate-cut
 market, includes the market rules or marks them missing, and records why it was
 retrieved. The app will decide that a 2026 cut-count market is at most
 `indirect` for a no-cuts-until-2028 thesis.
+
+## First App Integration
+
+The first retrieval MVP is implemented behind a provider seam. Fixture replay is
+still the default so evals and demos remain deterministic.
+
+Default replay mode:
+
+```bash
+MARKET_PROVIDER=fixture
+```
+
+Optional PolyData mode:
+
+```bash
+MARKET_PROVIDER=polydata
+POLY_DATA_SAS_TOKEN=...
+POLY_DATA_EXCHANGE=polymarket
+POLY_DATA_MIN_VOLUME_USD=10000
+POLY_DATA_MIN_TAXONOMY_CONFIDENCE=0.85
+POLY_DATA_TOP_K=20
+POLY_DATA_MAX_K=50
+POLY_DATA_CACHE_TTL_SECONDS=14400
+# Optional comma-separated product-controlled L1 bound:
+POLY_DATA_L1_ALLOWLIST=politics,macro,crypto
+```
+
+If `poly_data_client` is not installed in this repo's virtual environment, the
+local smoke path can bridge to a sibling checkout:
+
+```bash
+POLY_DATA_EXPLORER_PATH=/Users/rk/Desktop/poly-data-explorer
+```
+
+or directly to a site-packages directory:
+
+```bash
+POLY_DATA_CLIENT_PATH=/Users/rk/Desktop/poly-data-explorer/.venv/lib/python3.11/site-packages
+```
+
+Current behavior:
+
+1. The app normalizes the thesis.
+2. `PolyDataMarketProvider` loads and caches the joined
+   `taxonomy + cross_section + markets` universe for the process.
+3. The provider filters low-confidence, unmapped, and low-volume markets.
+4. The provider ranks the bounded universe with a simple lexical/entity score
+   plus volume tie-breakers.
+5. The provider returns a retrieval result with `mode`, `snapshot_id`,
+   `as_of_ts`, `retrieval_id`, `query_summary`, raw rows, and an exclusion
+   summary.
+6. Returned rows are mapped into `CandidateMarket`.
+7. Missing resolution rules are marked as `missing_resolution_rules` so the
+   deterministic fit policy remains conservative.
+8. The workflow emits a `market_retrieval_run` span with retrieval mode, count,
+   snapshot, retrieval id, liquidity threshold, and top-k metadata.
+
+This is intentionally an MVP. It validates the retrieval contract without
+making PolyData mandatory for strict evals or adding a new database/cache layer.
+
+Current limitation: the observed PolyData Python surface does not yet expose all
+event-level and CLOB-level fields listed above. The app preserves and maps those
+fields when present, but does not require them for fixture replay or strict
+evals.
+
+The cache TTL is controlled by `POLY_DATA_CACHE_TTL_SECONDS`. Set it to `0` to
+force refresh on every retrieval during local debugging.

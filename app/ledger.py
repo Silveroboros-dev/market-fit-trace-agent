@@ -189,6 +189,26 @@ class LedgerStore:
             )
         return {"eval_record_id": record["id"], "status": "recorded"}
 
+    def record_market_retrieval(
+        self,
+        *,
+        run_id: str,
+        claim_id: str | None,
+        retrieval: dict[str, Any],
+    ) -> None:
+        with self._locked_store() as data:
+            self._append_event(
+                data,
+                run_id=run_id,
+                claim_id=claim_id,
+                event_type="market_retrieval_run",
+                summary=(
+                    f"Retrieved {len(retrieval.get('market_ids_considered', []))} "
+                    f"markets via {retrieval.get('mode', 'unknown')}"
+                ),
+                payload=retrieval,
+            )
+
     def record_human_verdict(
         self,
         *,

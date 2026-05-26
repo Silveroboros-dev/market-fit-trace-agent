@@ -94,6 +94,16 @@ class ClaimTrace(BaseModel):
     events: list[LedgerEvent]
 
 
+class MarketRetrievalProvenance(BaseModel):
+    mode: str
+    snapshot_id: str | None = None
+    as_of_ts: str | None = None
+    retrieval_id: str | None = None
+    query_summary: dict[str, Any] = Field(default_factory=dict)
+    excluded_summary: dict[str, Any] = Field(default_factory=dict)
+    market_ids_considered: list[str] = Field(default_factory=list)
+
+
 class RunResult(BaseModel):
     run_id: str
     source_id: str
@@ -104,6 +114,8 @@ class RunResult(BaseModel):
     prompt_version: str
     claim: NormalizedClaim
     fit: MarketFit
+    market_retrieval: MarketRetrievalProvenance | None = None
+    market_context: list[CandidateMarket] = Field(default_factory=list)
     eval: EvalResult
     ledger: ClaimTrace
 

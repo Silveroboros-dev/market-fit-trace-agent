@@ -74,6 +74,10 @@ async def _direct_market_fit(tmp_path):
     assert result.fit.semantic_fit_class == FitClass.DIRECT
     assert result.fit.recommended_market_id == "pm-direct-fed-cut-july-2026"
     assert result.eval.metrics.false_strong_recommendation is False
+    assert result.market_retrieval is not None
+    assert result.market_retrieval.mode == "fixture"
+    assert result.market_retrieval.market_ids_considered
+    assert any(event.event_type == "market_retrieval_run" for event in result.ledger.events)
 
 
 def test_model_fit_proposal_is_captured_but_policy_wins(tmp_path):

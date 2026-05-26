@@ -9,6 +9,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def _float_env(name: str, default: float) -> float:
+    raw = os.getenv(name)
+    if raw is None or raw == "":
+        return default
+    return float(raw)
+
+
+def _int_env(name: str, default: int) -> int:
+    raw = os.getenv(name)
+    if raw is None or raw == "":
+        return default
+    return int(raw)
+
+
+def _tuple_env(name: str, default: str = "") -> tuple[str, ...]:
+    raw = os.getenv(name, default)
+    return tuple(part.strip() for part in raw.split(",") if part.strip())
+
+
 @dataclass(frozen=True)
 class Settings:
     app_name: str = "Market Fit Trace Agent"
@@ -38,6 +57,17 @@ class Settings:
     )
     ledger_store_path: Path = Path(os.getenv("LEDGER_STORE_PATH", ".local/ledger_store.json"))
     market_data_path: Path = Path(os.getenv("MARKET_DATA_PATH", "app/data/seed_markets.json"))
+    market_provider: str = os.getenv("MARKET_PROVIDER", "fixture").lower()
+    poly_data_sas_token: str | None = os.getenv("POLY_DATA_SAS_TOKEN")
+    poly_data_exchange: str = os.getenv("POLY_DATA_EXCHANGE", "polymarket")
+    poly_data_l1_allowlist: tuple[str, ...] = _tuple_env("POLY_DATA_L1_ALLOWLIST")
+    poly_data_min_volume_usd: float = _float_env("POLY_DATA_MIN_VOLUME_USD", 10000.0)
+    poly_data_min_taxonomy_confidence: float = _float_env(
+        "POLY_DATA_MIN_TAXONOMY_CONFIDENCE", 0.85
+    )
+    poly_data_top_k: int = _int_env("POLY_DATA_TOP_K", 20)
+    poly_data_max_k: int = _int_env("POLY_DATA_MAX_K", 50)
+    poly_data_cache_ttl_seconds: int = _int_env("POLY_DATA_CACHE_TTL_SECONDS", 14400)
 
     @property
     def vertex_configured(self) -> bool:

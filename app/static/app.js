@@ -89,6 +89,7 @@ improveButton.addEventListener("click", async () => {
 
 function renderRun(run) {
   improveButton.disabled = false;
+  indexRunMarkets(run);
   resultEl.innerHTML = `
     <span class="label">Normalized thesis</span>
     <p class="claim-text">${escapeHtml(run.claim.claim_text)}</p>
@@ -122,6 +123,7 @@ function renderRun(run) {
 function renderImprovement(improved) {
   const before = improved.before;
   const after = improved.after;
+  indexRunMarkets(after);
   resultEl.innerHTML = `
     <div class="inspection">
       <span class="label">Phoenix MCP inspection</span>
@@ -144,6 +146,13 @@ function renderImprovement(improved) {
   `;
   renderEval(after);
   renderLedger(after.ledger);
+}
+
+function indexRunMarkets(run) {
+  if (!Array.isArray(run.market_context)) return;
+  run.market_context.forEach((market) => {
+    state.marketsById[market.market_id] = market;
+  });
 }
 
 function fitClassScale(current) {
@@ -175,6 +184,7 @@ function recommendedMarket(run) {
   }
 
   const market = state.marketsById[marketId];
+  const resolutionRules = market?.resolution_rules?.trim();
   return `
     <div class="recommended-market">
       <span class="label">Recommended market</span>
@@ -190,7 +200,12 @@ function recommendedMarket(run) {
               ${meta("Probability", market.current_probability === null || market.current_probability === undefined ? "n/a" : market.current_probability)}
             </div>
             <span class="label">Resolution rules</span>
-            <p>${escapeHtml(market.resolution_rules)}</p>
+            ${
+              resolutionRules
+                ? `<p>${escapeHtml(resolutionRules)}</p>`
+                : `<p class="flag-warn">Rules unavailable from provider; treated as fit-risk.</p>`
+            }
+            ${riskTags(market.known_fit_risks)}
           `
           : ""
       }
@@ -272,6 +287,16 @@ function metric(label, value, invert = false) {
 function list(label, values) {
   if (!values || values.length === 0) return "";
   return `<span class="label">${escapeHtml(label)}</span><ul>${values.map((value) => `<li>${escapeHtml(value)}</li>`).join("")}</ul>`;
+}
+
+function riskTags(values) {
+  if (!values || values.length === 0) return "";
+  return `
+    <span class="label">Fit risk signals</span>
+    <div class="risk-tags">
+      ${values.map((value) => `<span>${escapeHtml(value.replaceAll("_", " "))}</span>`).join("")}
+    </div>
+  `;
 }
 
 function escapeHtml(value) {

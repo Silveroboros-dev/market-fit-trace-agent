@@ -17,6 +17,7 @@ if str(ROOT) not in sys.path:
 
 from app.agent import MarketFitTraceAgent
 from app.ledger import LedgerStore
+from app.market_data import load_markets
 from app.models import CandidateMarket, FitClass
 
 
@@ -103,7 +104,7 @@ async def run_legacy_seed_cases(args: argparse.Namespace) -> int:
     with tempfile.TemporaryDirectory() as tmpdir:
         store = LedgerStore(Path(tmpdir) / "ledger.json")
         runtime = None if args.live else OfflineADKRuntime()
-        agent = MarketFitTraceAgent(store=store, adk_runtime=runtime)
+        agent = MarketFitTraceAgent(store=store, adk_runtime=runtime, markets=load_markets())
         rows: list[dict[str, Any]] = []
         for case in cases:
             prompt_version = (

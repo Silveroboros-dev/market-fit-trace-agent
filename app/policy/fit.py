@@ -912,7 +912,20 @@ def _deterministic_classify(
             ],
         )
 
-    best = _score_markets(claim, markets)[0]
+    scored_markets = _score_markets(claim, markets)
+    if not scored_markets:
+        return MarketFit(
+            recommended_market_id=None,
+            semantic_fit_class=FitClass.NO_CLEAN_EXPRESSION,
+            fit_reason=(
+                "The bounded market context did not return any candidate market for this claim."
+            ),
+            captures=[],
+            misses=["No candidate market was available for comparison."],
+            rejected_markets=[],
+        )
+
+    best = scored_markets[0]
     if best[0] < 2:
         return MarketFit(
             recommended_market_id=None,

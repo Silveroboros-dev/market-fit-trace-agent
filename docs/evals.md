@@ -32,6 +32,9 @@ reasons about fit.
 The implementation-facing retrieval contract is in
 [poly-data-provider-contract.md](poly-data-provider-contract.md).
 
+The live-retrieval to strict-golden promotion process is in
+[golden-promotion.md](golden-promotion.md).
+
 ## Commands
 
 Strict local baseline:
@@ -64,6 +67,12 @@ Golden promotion intake gate:
 
 ```bash
 make intake-goldens
+```
+
+Live retrieval candidate export:
+
+```bash
+make export-retrieval-candidate
 ```
 
 ## Eval Packs

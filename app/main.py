@@ -1,15 +1,18 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.agent import MarketFitTraceAgent
+from app.config import settings
 from app.ledger import LedgerStore
 from app.market_data import load_markets
+from app.market_provider import PolyDataMarketProvider
 from app.models import (
     HumanVerdictInput,
     HumanVerdictResult,
@@ -45,7 +48,30 @@ def health() -> dict[str, str]:
 
 
 @app.get("/api/markets")
-def markets() -> list[dict[str, object]]:
+def markets(
+    mode: str = "fixture",
+    top_k: int = Query(default=5, ge=1, le=50),
+    min_volume_usd: float | None = Query(default=None, ge=0),
+    l1: str | None = None,
+) -> list[dict[str, object]]:
+    if mode == "live":
+        provider = PolyDataMarketProvider(
+            settings_obj=replace(
+                settings,
+                market_provider="polydata",
+                poly_data_top_k=top_k,
+                poly_data_min_volume_usd=(
+                    min_volume_usd
+                    if min_volume_usd is not None
+                    else settings.poly_data_min_volume_usd
+                ),
+                poly_data_l1_allowlist=tuple(
+                    item.strip() for item in (l1 or "").split(",") if item.strip()
+                )
+                or settings.poly_data_l1_allowlist,
+            )
+        )
+        return [market.model_dump() for market in provider.get_markets()]
     return [market.model_dump() for market in load_markets()]
 
 
@@ -91,4 +117,3 @@ async def improve_run(run_id: str) -> ImprovementResult:
         return await agent.improve_from_trace(run_id)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
-
