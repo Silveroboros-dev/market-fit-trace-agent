@@ -23,6 +23,18 @@
       "prompt_version": "v1_lenient",
       "status": "completed",
       "user_goal": "AI IS EATING 80% OF GLOBAL VC FUNDING. Anthropic spends $3 for every $1 in revenue. Microsoft dumped $300B in capex while AI revenue is far smaller. OpenAI and Anthropic make up a large share of Microsoft, Google, Amazon and Oracle revenue backlogs. Enterprises are burning through annual AI budgets with limited measurable ROI."
+    },
+    {
+      "created_at": "2026-05-26T20:10:43.005533+00:00",
+      "eval_summary_json": "{\"schema_valid\":true,\"false_strong_recommendation\":false,\"weak_proxy_detected\":false,\"unsupported_implication\":false,\"human_verification_required\":true,\"no_clean_expression_expected\":true,\"phoenix_annotations_written\":true,\"second_run_improvement\":null}",
+      "id": "run_a5ae2a2e8eae",
+      "market_retrieval_json": "{\"mode\":\"polydata\",\"snapshot_id\":\"polydata_polymarket_2026-05-24 00:00:00+00:00\",\"as_of_ts\":\"2026-05-24 00:00:00+00:00\",\"retrieval_id\":\"retr_c46ba9222684390f\",\"query_summary\":{\"claim_text\":\"AI is capturing a very large share of VC funding while frontier labs and hyperscalers show high spend and limited measurable ROI.\",\"entities\":[\"AI companies\",\"Anthropic\",\"Microsoft\",\"OpenAI\",\"hyperscalers\"],\"horizon\":\"2025-2026 period\",\"top_k\":5,\"min_volume_usd\":10000.0,\"min_taxonomy_confidence\":0.85,\"l1_allowlist\":[],\"liquidity_metric\":\"volume_usd\",\"universe_count\":115,\"returned_count\":5},\"excluded_summary\":{\"after_provider_filters\":115,\"excluded_closed_or_inactive\":19,\"not_returned_after_ranking\":110},\"market_ids_considered\":[\"616906\",\"2086885\",\"2086888\",\"2086878\",\"906973\"]}",
+      "model": "google-adk:gemini-3.5-flash",
+      "model_fit_proposal_json": "{\"captures\": [], \"fit_reason\": \"None of the candidate markets relate to AI VC funding, hyperscaler capex, or AI ROI. The candidate pool consists entirely of unrelated macroeconomic (Fed rate cuts) and sports (MLS soccer) markets.\", \"misses\": [\"AI VC funding share\", \"Frontier lab burn rates\", \"Hyperscaler capex and ROI\"], \"recommended_market_id\": null, \"rejected_markets\": [\"616906\", \"2086885\", \"2086888\", \"2086878\", \"906973\"], \"semantic_fit_class\": \"no_clean_expression\"}",
+      "phoenix_trace_id": "4de1ef62e2b2bd400d1becd4f3583644",
+      "prompt_version": "v1_lenient",
+      "status": "completed",
+      "user_goal": "AI IS EATING 80% OF GLOBAL VC FUNDING. Anthropic spends $3 for every $1 in revenue. Microsoft dumped $300B in capex while AI revenue is far smaller. OpenAI and Anthropic make up a large share of Microsoft, Google, Amazon and Oracle revenue backlogs. Enterprises are burning through annual AI budgets with limited measurable ROI."
     }
   ],
   "claims": [
@@ -51,6 +63,19 @@
       "source_id": "src_e10063d5455e",
       "stance": "skeptical of AI ROI",
       "status": "proposed"
+    },
+    {
+      "claim_text": "AI is capturing a very large share of VC funding while frontier labs and hyperscalers show high spend and limited measurable ROI.",
+      "confidence": 0.66,
+      "created_at": "2026-05-26T20:10:58.538526+00:00",
+      "entities_json": "[\"AI companies\", \"Anthropic\", \"Microsoft\", \"OpenAI\", \"hyperscalers\"]",
+      "horizon": "2025-2026 period",
+      "id": "claim_e7a04c6f0620",
+      "reasoning_summary": "The source combines global VC share, lab burn rates, hyperscaler capex, and ROI claims; an Amazon capex market is only a single-entity proxy.",
+      "run_id": "run_a5ae2a2e8eae",
+      "source_id": "src_07e242f4be92",
+      "stance": "skeptical of AI ROI",
+      "status": "proposed"
     }
   ],
   "eval_results": [
@@ -71,6 +96,15 @@
       "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": false, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
       "phoenix_trace_id": "ec50287531f168441836c38e0bda989e",
       "run_id": "run_a025f7338a5b"
+    },
+    {
+      "claim_id": "claim_e7a04c6f0620",
+      "created_at": "2026-05-26T20:10:59.461317+00:00",
+      "failure_summary": null,
+      "id": "eval_63cfb65a542a",
+      "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": true, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+      "phoenix_trace_id": "4de1ef62e2b2bd400d1becd4f3583644",
+      "run_id": "run_a5ae2a2e8eae"
     }
   ],
   "human_verdicts": [],
@@ -276,6 +310,107 @@
       "id": "evt_c4dd0c546d8e",
       "run_id": "run_a025f7338a5b",
       "summary": "Fit eval passed"
+    },
+    {
+      "claim_id": "claim_e7a04c6f0620",
+      "created_at": "2026-05-26T20:10:58.539229+00:00",
+      "event_payload_json": {
+        "claim_text": "AI is capturing a very large share of VC funding while frontier labs and hyperscalers show high spend and limited measurable ROI.",
+        "confidence": 0.66,
+        "created_at": "2026-05-26T20:10:58.538526+00:00",
+        "entities_json": "[\"AI companies\", \"Anthropic\", \"Microsoft\", \"OpenAI\", \"hyperscalers\"]",
+        "horizon": "2025-2026 period",
+        "id": "claim_e7a04c6f0620",
+        "reasoning_summary": "The source combines global VC share, lab burn rates, hyperscaler capex, and ROI claims; an Amazon capex market is only a single-entity proxy.",
+        "run_id": "run_a5ae2a2e8eae",
+        "source_id": "src_07e242f4be92",
+        "stance": "skeptical of AI ROI",
+        "status": "proposed"
+      },
+      "event_type": "ledger_claim_proposed",
+      "id": "evt_5f756cd9ae3e",
+      "run_id": "run_a5ae2a2e8eae",
+      "summary": "Claim proposed: AI is capturing a very large share of VC funding while frontier labs and hyperscalers show high spend and limited measurable ROI."
+    },
+    {
+      "claim_id": "claim_e7a04c6f0620",
+      "created_at": "2026-05-26T20:10:58.540778+00:00",
+      "event_payload_json": {
+        "captures_json": "[]",
+        "claim_id": "claim_e7a04c6f0620",
+        "created_at": "2026-05-26T20:10:58.540758+00:00",
+        "fit_reason": "The policy proposed market `pm_amazon_2026_capex_above`, but that market was not present in the bounded retrieved market context for this run. The app cannot recommend a market it did not retrieve and inspect, so this run is classified as no_clean_expression pending reviewed market evidence.",
+        "id": "fit_f432f91ea884",
+        "misses_json": "[\"Recommended market absent from retrieved market context\", \"No retrieved market cleanly expresses the normalized thesis\"]",
+        "recommended_market_id": null,
+        "rejected_markets_json": "[{\"market_id\": \"pm_amazon_2026_capex_above\", \"reason\": \"Rejected because this market ID was not returned by the bounded market retrieval step for this run.\"}]",
+        "semantic_fit_class": "no_clean_expression"
+      },
+      "event_type": "market_fit_classified",
+      "id": "evt_bf5791bc3a46",
+      "run_id": "run_a5ae2a2e8eae",
+      "summary": "Fit classified as no_clean_expression"
+    },
+    {
+      "claim_id": "claim_e7a04c6f0620",
+      "created_at": "2026-05-26T20:10:58.542341+00:00",
+      "event_payload_json": {
+        "as_of_ts": "2026-05-24 00:00:00+00:00",
+        "excluded_summary": {
+          "after_provider_filters": 115,
+          "excluded_closed_or_inactive": 19,
+          "not_returned_after_ranking": 110
+        },
+        "market_ids_considered": [
+          "616906",
+          "2086885",
+          "2086888",
+          "2086878",
+          "906973"
+        ],
+        "mode": "polydata",
+        "query_summary": {
+          "claim_text": "AI is capturing a very large share of VC funding while frontier labs and hyperscalers show high spend and limited measurable ROI.",
+          "entities": [
+            "AI companies",
+            "Anthropic",
+            "Microsoft",
+            "OpenAI",
+            "hyperscalers"
+          ],
+          "horizon": "2025-2026 period",
+          "l1_allowlist": [],
+          "liquidity_metric": "volume_usd",
+          "min_taxonomy_confidence": 0.85,
+          "min_volume_usd": 10000.0,
+          "returned_count": 5,
+          "top_k": 5,
+          "universe_count": 115
+        },
+        "retrieval_id": "retr_c46ba9222684390f",
+        "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
+      },
+      "event_type": "market_retrieval_run",
+      "id": "evt_735b26879652",
+      "run_id": "run_a5ae2a2e8eae",
+      "summary": "Retrieved 5 markets via polydata"
+    },
+    {
+      "claim_id": "claim_e7a04c6f0620",
+      "created_at": "2026-05-26T20:10:59.462327+00:00",
+      "event_payload_json": {
+        "claim_id": "claim_e7a04c6f0620",
+        "created_at": "2026-05-26T20:10:59.461317+00:00",
+        "failure_summary": null,
+        "id": "eval_63cfb65a542a",
+        "metrics_json": "{\"schema_valid\": true, \"false_strong_recommendation\": false, \"weak_proxy_detected\": false, \"unsupported_implication\": false, \"human_verification_required\": true, \"no_clean_expression_expected\": true, \"phoenix_annotations_written\": true, \"second_run_improvement\": null}",
+        "phoenix_trace_id": "4de1ef62e2b2bd400d1becd4f3583644",
+        "run_id": "run_a5ae2a2e8eae"
+      },
+      "event_type": "fit_eval_run",
+      "id": "evt_637fc15715cf",
+      "run_id": "run_a5ae2a2e8eae",
+      "summary": "Fit eval passed"
     }
   ],
   "market_fit_records": [
@@ -300,6 +435,17 @@
       "recommended_market_id": "pm_amazon_2026_capex_above",
       "rejected_markets_json": "[{\"market_id\": \"pm_amazon_2026_capex_above\", \"reason\": \"Tempting but weak: it resolves Amazon purchases of property and equipment, not the broader VC/capex/ROI thesis.\"}]",
       "semantic_fit_class": "weak_proxy"
+    },
+    {
+      "captures_json": "[]",
+      "claim_id": "claim_e7a04c6f0620",
+      "created_at": "2026-05-26T20:10:58.540758+00:00",
+      "fit_reason": "The policy proposed market `pm_amazon_2026_capex_above`, but that market was not present in the bounded retrieved market context for this run. The app cannot recommend a market it did not retrieve and inspect, so this run is classified as no_clean_expression pending reviewed market evidence.",
+      "id": "fit_f432f91ea884",
+      "misses_json": "[\"Recommended market absent from retrieved market context\", \"No retrieved market cleanly expresses the normalized thesis\"]",
+      "recommended_market_id": null,
+      "rejected_markets_json": "[{\"market_id\": \"pm_amazon_2026_capex_above\", \"reason\": \"Rejected because this market ID was not returned by the bounded market retrieval step for this run.\"}]",
+      "semantic_fit_class": "no_clean_expression"
     }
   ],
   "sources": [
@@ -316,6 +462,15 @@
       "content_hash": "53f0d8725b59565cbb20a0c3fec76646",
       "created_at": "2026-05-26T19:56:18.802817+00:00",
       "id": "src_e10063d5455e",
+      "raw_text": "AI IS EATING 80% OF GLOBAL VC FUNDING. Anthropic spends $3 for every $1 in revenue. Microsoft dumped $300B in capex while AI revenue is far smaller. OpenAI and Anthropic make up a large share of Microsoft, Google, Amazon and Oracle revenue backlogs. Enterprises are burning through annual AI budgets with limited measurable ROI.",
+      "source_type": "pasted_text",
+      "title": "Retrieval candidate live-ai-roi-capex-proxy",
+      "uri": null
+    },
+    {
+      "content_hash": "53f0d8725b59565cbb20a0c3fec76646",
+      "created_at": "2026-05-26T20:10:43.185160+00:00",
+      "id": "src_07e242f4be92",
       "raw_text": "AI IS EATING 80% OF GLOBAL VC FUNDING. Anthropic spends $3 for every $1 in revenue. Microsoft dumped $300B in capex while AI revenue is far smaller. OpenAI and Anthropic make up a large share of Microsoft, Google, Amazon and Oracle revenue backlogs. Enterprises are burning through annual AI budgets with limited measurable ROI.",
       "source_type": "pasted_text",
       "title": "Retrieval candidate live-ai-roi-capex-proxy",

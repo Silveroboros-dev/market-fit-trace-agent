@@ -4,7 +4,8 @@ import asyncio
 
 from app.agent import MarketFitTraceAgent
 from app.ledger import LedgerStore
-from app.models import FitClass
+from app.market_provider import MarketRetrievalResult
+from app.models import CandidateMarket, FitClass, NormalizedClaim
 
 
 class OfflineADKRuntime:
@@ -25,6 +26,39 @@ class ProposalADKRuntime:
                 "fit_reason": "model proposal intentionally overstates fit",
             }
         return None
+
+
+class MissingRecommendationMarketProvider:
+    name = "polydata"
+
+    def retrieve(self, claim: NormalizedClaim | None = None) -> MarketRetrievalResult:
+        return MarketRetrievalResult(
+            mode=self.name,
+            markets=[
+                CandidateMarket(
+                    market_id="live-unrelated-market",
+                    title="Will an unrelated market resolve?",
+                    venue="Polymarket",
+                    description="A live retrieved market that does not express the claim.",
+                    resolution_rules="",
+                    close_date="2026-12-31",
+                    outcomes=["Yes", "No"],
+                    current_probability=0.5,
+                    known_fit_risks=[
+                        "dynamic_polydata_retrieval",
+                        "missing_resolution_rules",
+                    ],
+                    entity_tags=["Politics"],
+                )
+            ],
+            snapshot_id="test-snapshot",
+            as_of_ts="2026-05-26T00:00:00Z",
+            retrieval_id="retr_test_missing_market",
+            query_summary={"returned_count": 1},
+        )
+
+    def get_markets(self, claim: NormalizedClaim | None = None) -> list[CandidateMarket]:
+        return self.retrieve(claim).markets
 
 
 def test_weak_proxy_first_run_then_improves(tmp_path):
@@ -100,3 +134,31 @@ async def _model_fit_proposal_is_captured_but_policy_wins(tmp_path):
     assert "pm-gemini-arena-2026" in run["model_fit_proposal_json"]
     assert result.fit.semantic_fit_class == FitClass.WEAK_PROXY
     assert isinstance(result.eval.metrics.phoenix_annotations_written, bool)
+
+
+def test_missing_recommended_market_is_guarded_to_no_clean_expression(tmp_path):
+    asyncio.run(_missing_recommended_market_is_guarded_to_no_clean_expression(tmp_path))
+
+
+async def _missing_recommended_market_is_guarded_to_no_clean_expression(tmp_path):
+    store = LedgerStore(tmp_path / "ledger.json")
+    agent = MarketFitTraceAgent(
+        store=store,
+        adk_runtime=OfflineADKRuntime(),
+        market_provider=MissingRecommendationMarketProvider(),
+    )
+
+    result = await agent.run(
+        thesis=(
+            "AI IS EATING 80% OF GLOBAL VC FUNDING. Anthropic spends $3 for every "
+            "$1 in revenue. Microsoft dumped $300B in capex while AI revenue is "
+            "far smaller. Enterprises are burning through annual AI budgets with "
+            "limited measurable ROI."
+        )
+    )
+
+    assert result.fit.semantic_fit_class == FitClass.NO_CLEAN_EXPRESSION
+    assert result.fit.recommended_market_id is None
+    assert result.eval.metrics.no_clean_expression_expected is True
+    assert result.fit.rejected_markets[0].market_id == "pm_amazon_2026_capex_above"
+    assert "not returned" in result.fit.rejected_markets[0].reason

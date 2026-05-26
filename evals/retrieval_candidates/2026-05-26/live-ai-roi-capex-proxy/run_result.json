@@ -13,42 +13,37 @@
     "reasoning_summary": "The source combines global VC share, lab burn rates, hyperscaler capex, and ROI claims; an Amazon capex market is only a single-entity proxy.",
     "stance": "skeptical of AI ROI"
   },
-  "claim_id": "claim_de3ee4bf3503",
+  "claim_id": "claim_e7a04c6f0620",
   "eval": {
-    "eval_record_id": "eval_d9c5e2d4ffc1",
+    "eval_record_id": "eval_63cfb65a542a",
     "failure_summary": null,
     "metrics": {
       "false_strong_recommendation": false,
       "human_verification_required": true,
-      "no_clean_expression_expected": false,
+      "no_clean_expression_expected": true,
       "phoenix_annotations_written": true,
       "schema_valid": true,
       "second_run_improvement": null,
       "unsupported_implication": false,
       "weak_proxy_detected": false
     },
-    "phoenix_trace_id": "ec50287531f168441836c38e0bda989e"
+    "phoenix_trace_id": "4de1ef62e2b2bd400d1becd4f3583644"
   },
   "fit": {
-    "captures": [
-      "One hyperscaler capex metric",
-      "AI infrastructure spend direction"
-    ],
-    "fit_reason": "Amazon capex is only a weak proxy for the source's aggregate AI funding, lab burn-rate, backlog, and ROI thesis.",
+    "captures": [],
+    "fit_reason": "The policy proposed market `pm_amazon_2026_capex_above`, but that market was not present in the bounded retrieved market context for this run. The app cannot recommend a market it did not retrieve and inspect, so this run is classified as no_clean_expression pending reviewed market evidence.",
     "misses": [
-      "Global VC funding share",
-      "Anthropic spend-to-revenue ratio",
-      "Enterprise AI ROI",
-      "Multi-company backlog concentration"
+      "Recommended market absent from retrieved market context",
+      "No retrieved market cleanly expresses the normalized thesis"
     ],
-    "recommended_market_id": "pm_amazon_2026_capex_above",
+    "recommended_market_id": null,
     "rejected_markets": [
       {
         "market_id": "pm_amazon_2026_capex_above",
-        "reason": "Tempting but weak: it resolves Amazon purchases of property and equipment, not the broader VC/capex/ROI thesis."
+        "reason": "Rejected because this market ID was not returned by the bounded market retrieval step for this run."
       }
     ],
-    "semantic_fit_class": "weak_proxy"
+    "semantic_fit_class": "no_clean_expression"
   },
   "market_context_ids": [
     "616906",
@@ -94,9 +89,9 @@
     "snapshot_id": "polydata_polymarket_2026-05-24 00:00:00+00:00"
   },
   "model": "google-adk:gemini-3.5-flash",
-  "phoenix_trace_id": "ec50287531f168441836c38e0bda989e",
-  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/ec50287531f168441836c38e0bda989e",
+  "phoenix_trace_id": "4de1ef62e2b2bd400d1becd4f3583644",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/4de1ef62e2b2bd400d1becd4f3583644",
   "prompt_version": "v1_lenient",
-  "run_id": "run_a025f7338a5b",
-  "source_id": "src_e10063d5455e"
+  "run_id": "run_a5ae2a2e8eae",
+  "source_id": "src_07e242f4be92"
 }

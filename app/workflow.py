@@ -100,12 +100,21 @@ class MarketFitTraceAgent:
                     prompt_version=prompt_version,
                     prior_failure_summary=prior_failure_summary,
                 )
+                fit, missing_market_id = self._guard_recommended_market_in_context(
+                    fit, markets
+                )
                 model_fit_proposal_json = _json_preview(model_fit_proposal)
                 trace.set_current_span_attributes(
                     {
                         "model_fit_proposal.present": bool(model_fit_proposal),
                         "model_fit_proposal.preview": model_fit_proposal_json or "",
                         "policy_decision_source": "deterministic_policy",
+                        "policy_guard.recommended_market_in_context": (
+                            missing_market_id is None
+                        ),
+                        "policy_guard.missing_recommended_market_id": (
+                            missing_market_id or ""
+                        ),
                     }
                 )
             with trace.span("rejected_markets_explained", {"run_id": run_id}):
@@ -304,6 +313,42 @@ class MarketFitTraceAgent:
         # ADK/Gemini is used for traceable proposal spans. Final fit decisions stay
         # deterministic so evals are reproducible and policy-owned by app code.
         return _deterministic_classify(claim, markets, prompt_version), model_fit_proposal
+
+    def _guard_recommended_market_in_context(
+        self, fit: MarketFit, markets: list[CandidateMarket]
+    ) -> tuple[MarketFit, str | None]:
+        recommended_id = fit.recommended_market_id
+        if recommended_id is None:
+            return fit, None
+        retrieved_ids = {market.market_id for market in markets}
+        if recommended_id in retrieved_ids:
+            return fit, None
+
+        guarded_fit = MarketFit(
+            recommended_market_id=None,
+            semantic_fit_class=FitClass.NO_CLEAN_EXPRESSION,
+            fit_reason=(
+                f"The policy proposed market `{recommended_id}`, but that market was not "
+                "present in the bounded retrieved market context for this run. The app "
+                "cannot recommend a market it did not retrieve and inspect, so this run is "
+                "classified as no_clean_expression pending reviewed market evidence."
+            ),
+            captures=[],
+            misses=[
+                "Recommended market absent from retrieved market context",
+                "No retrieved market cleanly expresses the normalized thesis",
+            ],
+            rejected_markets=[
+                RejectedMarket(
+                    market_id=recommended_id,
+                    reason=(
+                        "Rejected because this market ID was not returned by the bounded "
+                        "market retrieval step for this run."
+                    ),
+                )
+            ],
+        )
+        return guarded_fit, recommended_id
 
     def _ensure_rejected_markets(
         self, fit: MarketFit, markets: list[CandidateMarket]
