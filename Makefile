@@ -1,4 +1,4 @@
-.PHONY: dev test lint format evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens export-retrieval-candidate api ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check deploy-adk
+.PHONY: dev test lint format evals evals-v2 evals-live evals-candidates evals-candidates-v3 intake-goldens export-retrieval-candidate api ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
 
 api:
 	uv run --python 3.11 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
@@ -67,6 +67,9 @@ phoenix-ensure:
 
 phoenix-check:
 	uv run --python 3.11 python scripts/check_phoenix_trace.py
+
+phoenix-experiment:
+	uv run --python 3.11 python scripts/run_phoenix_dataset_experiment.py
 
 deploy-adk:
 	bash scripts/deploy_adk_cloud_run.sh
