@@ -20,12 +20,9 @@ expresses the user's thesis.
 
 Selected Rapid track: **Arize**.
 
-## Submission Links
+## Project Artifacts
 
-- Hosted demo: TODO before Devpost submission
-- Demo video: TODO before Devpost submission
 - Public repository: [github.com/Silveroboros-dev/market-fit-trace-agent](https://github.com/Silveroboros-dev/market-fit-trace-agent)
-- Devpost submission: TODO before Devpost submission
 - Phoenix trace proof: [v1 trace audit](evals/market_fit_v1/v1_trace_audit.md)
 - Phoenix live trace:
   [latest checked trace](https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507)
