@@ -11,6 +11,9 @@ stance, and target outcome. The app retrieves a bounded set of relevant current
 Polymarket markets from recent snapshots, then deterministic policy code classifies
 the fit as `direct`, `indirect`, `weak_proxy`, or `no_clean_expression`.
 
+The stable proof path and strict evals remain fixture-backed; PolyData live retrieval
+is the product mode and candidate-golden acquisition path.
+
 The Arize/Phoenix integration is not just logging. Phoenix/OpenInference traces expose
 why a market-fit judgment failed, and the improve step uses Phoenix MCP trace context
 to rerun the agent with that failure in context.
