@@ -302,6 +302,7 @@ make evals-candidates-v3
 make intake-goldens
 make smoke-polydata
 make export-retrieval-candidate
+make review-candidate CASE=live-iran-sanctions-relief-package STATUS=needs_more_rules NOTE="Rules missing; composite thesis."
 make phoenix-export-candidates
 make phoenix-sync-goldens
 make phoenix-experiment-goldens
@@ -324,6 +325,13 @@ Phoenix Dataset review queue named `market_fit_candidate_cases`. Those rows are
 pending evidence for human review, not strict eval truth. If Phoenix credentials
 are unavailable, the command writes a local dry-run JSON report instead of
 promoting candidates.
+
+`make review-candidate` records a local human review decision such as
+`needs_more_rules`, `candidate_only`, `reject`, or `promote` in the candidate
+packet's `review_decision.json`. Re-running `make phoenix-export-candidates`
+syncs that decision back into the Phoenix Dataset row. A `promote` review status
+does not automatically create a strict golden; expected labels and frozen rules
+still have to be reviewed before promotion.
 
 `make phoenix-sync-goldens` mirrors promoted frozen fixtures into
 `market_fit_promoted_goldens_v1`. `make phoenix-experiment-goldens` compares

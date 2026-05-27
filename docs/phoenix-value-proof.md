@@ -37,9 +37,21 @@ with Phoenix Experiments.
 Commands:
 
 ```bash
+make phoenix-export-candidates
 make phoenix-sync-goldens
 make phoenix-experiment-goldens
 ```
+
+Candidate-review Dataset result:
+
+- Dataset: `market_fit_candidate_cases`
+- Dataset ID: `RGF0YXNldDoz`
+- Latest observed Dataset version ID: `RGF0YXNldFZlcnNpb246OQ==`
+- Local artifact:
+  `evals/retrieval_candidates/phoenix_candidate_review_dataset_result.json`
+- Candidate rows: `5`
+- Review status counts: `pending=4`, `needs_more_rules=1`
+- Boundary: candidate rows are trace-backed evidence, not strict eval truth.
 
 Observed result:
 

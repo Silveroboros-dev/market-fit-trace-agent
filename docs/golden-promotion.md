@@ -93,13 +93,32 @@ queue, not eval truth. Rows include:
 - rules-status summary;
 - proposed fit class and recommended market when `run_result.json` exists;
 - Phoenix trace ID/URL when the candidate was exported with `--run-agent`;
-- `human_review_status = pending`;
-- `reviewer_note = ""`;
+- `human_review_status`, initially `pending`;
+- `reviewer_note`, initially empty;
 - recommended action such as `needs_more_rules` or
   `review_for_weak_proxy_golden`.
 
 This gives reviewers one Phoenix surface for deciding whether a live retrieval
 is a useful future golden. Human review still decides promotion.
+
+Review decisions are recorded locally first:
+
+```bash
+make review-candidate CASE=live-iran-sanctions-relief-package STATUS=needs_more_rules NOTE="Rules missing; composite thesis."
+```
+
+Allowed review statuses:
+
+- `needs_more_rules`: market resolution rules are missing or unclear;
+- `candidate_only`: useful evidence, but not strict eval truth yet;
+- `reject`: noisy or not useful;
+- `promote`: reviewer approves drafting a strict golden.
+
+The command writes `review_decision.json` inside the candidate packet. Re-running
+`make phoenix-export-candidates` syncs that status and note into the Phoenix
+Dataset row. `promote` is intentionally not automatic promotion: the case still
+needs frozen market snapshots, frozen or explicitly missing rules, and reviewed
+expected labels before it can move into a strict eval pack.
 
 If Phoenix credentials are unavailable, the command writes the same candidate
 row shape to a local JSON dry-run report and marks the missing configuration.
@@ -113,14 +132,17 @@ Observed MVP result:
   `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoz`
 - Local result artifact:
   `evals/retrieval_candidates/phoenix_candidate_review_dataset_result.json`
-- Candidate count: `1`
-- Run-backed count: `1`
-- Pending review count: `1`
-- Current recommended action: `needs_more_rules`
+- Candidate count: `5`
+- Run-backed count: `5`
+- Pending review count: `4`
+- Review status counts: `pending=4`, `needs_more_rules=1`
+- Current reviewed example:
+  `live-iran-sanctions-relief-package` with reviewer status
+  `needs_more_rules`
 
-The observed candidate is intentionally not promoted. It demonstrates the review
-queue: live retrieval found relevant markets, the agent proposed an `indirect`
-fit, Phoenix recorded the trace, and the Dataset row tells the reviewer that
+The observed reviewed candidate is intentionally not promoted. It demonstrates
+the review queue: live retrieval found relevant markets, the agent proposed an
+`indirect` fit, Phoenix recorded the trace, and the Dataset row records that
 missing rules must be resolved before promotion.
 
 ## Phoenix Promoted-Golden Dataset And Experiment
