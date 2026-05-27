@@ -79,6 +79,11 @@ The Arize/Phoenix proof passes if:
 
 ## Demo Story
 
+A prediction market gives you a number, but the product question is whether it is
+the right number for the claim the user actually cares about. Market Fit Trace
+Agent audits that last mile: it checks whether a real market cleanly expresses a
+messy thesis, flags weak proxies, and makes the failure traceable and correctable.
+
 The seed demo starts with this thesis:
 
 > Google TPU progress means Gemini closes the frontier-model gap in 2026.
@@ -88,10 +93,10 @@ A tempting prediction market appears relevant:
 > Gemini becomes #1 on a public model leaderboard.
 
 The first run overstates the fit by treating an adjacent market as stronger evidence
-than it deserves. A trace-linked eval flags the false strong recommendation.
-Phoenix/OpenInference traces show the failure context. The improve step uses Phoenix
-MCP inspection and reruns the mission. The second run correctly classifies the market
-as `weak_proxy`.
+than it deserves. A trace-linked eval flags the false strong recommendation. Under
+the hood, Phoenix traces show exactly where the weak proxy entered the workflow and
+how the corrected run improved. The improve step uses Phoenix MCP inspection and
+reruns the mission. The second run correctly classifies the market as `weak_proxy`.
 
 ## Why It Matters
 
@@ -257,11 +262,14 @@ For the exact Phoenix proof path, see [docs/phoenix-value-proof.md](docs/phoenix
 
 ## 90-Second Demo Script
 
-1. Open the hosted demo.
+1. Open with the problem:
+   a prediction market gives a number, but the question is whether it is the
+   right number for the claim the user actually cares about.
 2. Use the default TPU/Gemini thesis.
 3. Click **Run agent**.
 4. Show the first-run market-fit judgment and trace-linked eval warning.
-5. Open the Phoenix trace and show the eval span/annotations.
+5. After the failure is visible, open the Phoenix trace and show the eval
+   span/annotations.
 6. Click **Inspect trace and rerun**.
 7. Show the second run downgrades the market to `weak_proxy`.
 8. Show ledger events for initial run, trace inspection, and improved run.

@@ -323,20 +323,25 @@ not passed. The fallback only proves offline reproducibility.
 
 ## 90-Second Judge Demo Script
 
-1. Start with the default thesis:
+1. Start with the problem:
+   a prediction market gives a number, but the question is whether it is the
+   right number for the claim the user actually cares about. Market Fit Trace
+   Agent audits that last mile by checking whether a real market cleanly
+   expresses a messy thesis.
+2. Start with the default thesis:
    `Google TPU claims mean Gemini will close the gap with frontier models this year.`
-2. Click **Run agent**.
-3. Show the first run:
+3. Click **Run agent**.
+4. Show the first run:
    normalized thesis, tempting related market, first-run fit classification, and
    eval warning for false-strong / weak-proxy risk.
-4. Open the Phoenix trace:
+5. Open the Phoenix trace:
    show the `fit_eval_run` span and annotations for `false_strong_recommendation`
    and `weak_proxy_detected`.
-5. Click **Inspect trace and rerun**.
-6. Show the second run:
+6. Click **Inspect trace and rerun**.
+7. Show the second run:
    classification changes to `weak_proxy`, false-strong eval clears, and the
    ledger records trace inspection plus the updated run.
-7. Close with:
+8. Close with:
    Phoenix did not merely log the run. It supplied the failure context that the
    agent used to improve the next run.
 
