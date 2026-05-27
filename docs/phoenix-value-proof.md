@@ -324,10 +324,10 @@ not passed. The fallback only proves offline reproducibility.
 ## 90-Second Judge Demo Script
 
 1. Start with the problem:
-   a prediction market gives a number, but the question is whether it is the
-   right number for the claim the user actually cares about. Market Fit Trace
-   Agent audits that last mile by checking whether a real market cleanly
-   expresses a messy thesis.
+   prediction markets turn beliefs into testable probabilities, but that power
+   breaks when a related market gets mistaken for a clean expression of the
+   thesis. Market Fit Trace Agent audits the thesis-to-market path by checking
+   whether a real market measures the claim someone cares about.
 2. Start with the default thesis:
    `Google TPU claims mean Gemini will close the gap with frontier models this year.`
 3. Click **Run agent**.

@@ -79,10 +79,12 @@ The Arize/Phoenix proof passes if:
 
 ## Demo Story
 
-A prediction market gives you a number, but the product question is whether it is
-the right number for the claim the user actually cares about. Market Fit Trace
-Agent audits that last mile: it checks whether a real market cleanly expresses a
-messy thesis, flags weak proxies, and makes the failure traceable and correctable.
+Market Fit Trace Agent checks whether a prediction market actually measures the
+claim someone cares about. Prediction markets turn beliefs about the world into
+testable probabilities, but that power breaks when a related market gets mistaken
+for a clean expression of the thesis. This agent audits the thesis-to-market path:
+it normalizes a messy claim, checks candidate markets, flags weak proxies, and
+makes the correction traceable.
 
 The seed demo starts with this thesis:
 
@@ -263,8 +265,9 @@ For the exact Phoenix proof path, see [docs/phoenix-value-proof.md](docs/phoenix
 ## 90-Second Demo Script
 
 1. Open with the problem:
-   a prediction market gives a number, but the question is whether it is the
-   right number for the claim the user actually cares about.
+   prediction markets turn beliefs into testable probabilities, but that power
+   breaks when a related market gets mistaken for a clean expression of the
+   thesis.
 2. Use the default TPU/Gemini thesis.
 3. Click **Run agent**.
 4. Show the first-run market-fit judgment and trace-linked eval warning.
