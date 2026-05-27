@@ -181,7 +181,7 @@ Observed MVP result:
 - Dataset URL:
   `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0`
 - Experiment URL:
-  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0/compare?experimentId=RXhwZXJpbWVudDoz`
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0/compare?experimentId=RXhwZXJpbWVudDo0`
 - Local Dataset artifact:
   `evals/market_fit_v1/phoenix_promoted_goldens_dataset_result.json`
 - Local Experiment artifact:
