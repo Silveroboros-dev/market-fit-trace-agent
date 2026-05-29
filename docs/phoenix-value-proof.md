@@ -13,6 +13,43 @@ and correctable. The agent does not silently rewrite history: the failed first
 run, eval annotations, trace inspection, and improved second run are all visible
 as artifacts.
 
+## Arize Value Summary
+
+Phoenix is valuable here because it turns market-fit errors into reusable evidence.
+
+**Self-improving agent loop**
+
+The core Arize proof is a closed correction loop: the first run overstates a
+market fit, Phoenix/OpenInference traces expose the failure, Phoenix MCP
+retrieves the trace/eval context, and the second run downgrades the
+recommendation to `weak_proxy`. This proves Phoenix is not passive logging; it
+participates in the correction loop.
+
+**Golden governance**
+
+Phoenix also supports golden governance: to promote live market cases into
+reliable goldens, reviewers need market resolution rules, not just market
+titles. Resolution rules make human review more defensible because reviewers
+can judge whether the market actually resolves the user's thesis. This turns
+trace-backed live failures into reviewable candidate goldens instead of noisy
+examples.
+
+**Experiment readability**
+
+Phoenix Experiments also exposed that eval metrics must be judge-readable.
+`weak_proxy_detected_rate: 0.2` sounded like bad detector performance, but it
+actually meant 2 of 10 cases were weak-proxy cases. The corrected metrics say:
+weak-proxy case share is 2/10, and weak-proxy detection on those cases is 2/2.
+That is not cosmetic; it prevents the experiment from misleading reviewers.
+
+Concise framing for README and demo:
+
+```text
+Phoenix turns one failed recommendation into three assets: a corrected second
+run, a trace-backed candidate golden, and an experiment result that explains
+whether the policy actually improved.
+```
+
 ## Proof Artifacts
 
 - Live replay command: `make evals-live`
@@ -60,11 +97,11 @@ Observed result:
 - Dataset version ID: `RGF0YXNldFZlcnNpb246NQ==`
 - Dataset URL:
   `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0`
-- Experiment: `current-policy-market_fit_v1-96bedcd`
-- Experiment ID: `RXhwZXJpbWVudDo0`
+- Experiment: `current-policy-market_fit_v1-f5db70a`
+- Experiment ID: `RXhwZXJpbWVudDo2`
 - Experiment URL:
-  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0/compare?experimentId=RXhwZXJpbWVudDo0`
-- Commit SHA: `96bedcd36783909da1f3a037cba4130ad1554747`
+  `https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo0/compare?experimentId=RXhwZXJpbWVudDo2`
+- Commit SHA: `f5db70a9f7bffc0ea5ca8f32de998a3c77c2ef16`
 - Eval pack: `market_fit_v1`
 - Cases: `10`
 - Passed: `10`
@@ -72,7 +109,8 @@ Observed result:
 - Exact market-ID match rate: `0.8`
 - Acceptable market match rate: `1.0`
 - False-strong recommendation rate: `0.0`
-- Weak-proxy detected rate: `0.2`
+- Weak-proxy case share: `2 / 10`
+- Weak-proxy detection on weak-proxy cases: `2 / 2`
 - Unsupported implication rate: `0.0`
 - No-clean-expression false positives: `0 / 4`
 - Eval-metrics pass rate: `1.0`

@@ -70,6 +70,20 @@ absent, records optional human review, and uses Phoenix traces to improve the ne
 8. Runs trace-linked deterministic evals for false strong recommendations and weak proxies.
 9. Uses Phoenix MCP trace inspection to improve a second run.
 
+## Why This Is An Agent, Not A Classifier
+
+The workflow is iterative and stateful, not a single labeler call. Gemini
+proposes a normalized claim, the controller retrieves bounded market context,
+deterministic policy classifies fit, Phoenix records eval-linked failure
+context, and the improve step uses Phoenix MCP to rerun with that context.
+
+The workflow controller acts as the code router: it chooses extraction,
+retrieval, policy classification, eval, trace inspection, rerun, and recording
+based on run state and eval outcome. The action space is deliberately
+constrained: extract, retrieve, classify, evaluate, inspect trace, rerun, and
+record. Reliability comes from a mapped solution space, not open-ended ReAct
+behavior.
+
 ## Partner Integration
 
 Phoenix MCP is the partner integration for the Arize track:
@@ -89,6 +103,12 @@ This maps to the official Arize guidance for code-owned agent runtime, OpenInfer
 instrumentation, Phoenix traces, Phoenix MCP runtime introspection, trace evals, and
 observability-driven improvement:
 [official Arize track guidance](https://rapid-agent.devpost.com/details/arize-resources).
+
+Concise Arize framing: Phoenix turns one failed recommendation into three assets:
+a corrected second run, a trace-backed candidate golden, and an experiment result
+that explains whether the policy actually improved. See
+[docs/phoenix-value-proof.md](docs/phoenix-value-proof.md) for the full value
+proof.
 
 ## Phoenix Value Proof: Pass Conditions
 
@@ -276,6 +296,9 @@ For the exact Phoenix proof path, see [docs/phoenix-value-proof.md](docs/phoenix
 6. Click **Inspect trace and rerun**.
 7. Show the second run downgrades the market to `weak_proxy`.
 8. Show ledger events for initial run, trace inspection, and improved run.
+9. Use the Arize close: Phoenix turns one failed recommendation into a corrected
+   second run, a trace-backed candidate golden, and an experiment result. The
+   full reference is [docs/phoenix-value-proof.md](docs/phoenix-value-proof.md).
 
 ## Evals
 
@@ -289,6 +312,12 @@ Promoted second golden suite:
 
 ```bash
 make evals-v2
+```
+
+Promoted live PolyData-derived suite:
+
+```bash
+make evals-v4-live-promoted
 ```
 
 Live ADK/Gemini + Phoenix eval:
@@ -313,6 +342,7 @@ Advanced eval maintenance:
 ```bash
 make evals-candidates
 make evals-candidates-v3
+make evals-v4-live-promoted
 make intake-goldens
 make smoke-polydata
 make export-retrieval-candidate

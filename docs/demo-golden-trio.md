@@ -99,15 +99,23 @@ Use this closing line:
   good eval case, but less visually important than the three user-facing
   outcomes above.
 
-## What Not To Use As A Golden Demo Yet
+## Live-Promoted Hormuz Cases
 
-Do not present the live Hormuz PolyData retrieval packet as a promoted golden.
-It is useful as a live retrieval / candidate-review example, but it remains
-candidate evidence until human review freezes rules and expected labels.
+The reviewed Hormuz PolyData packets now live in
+`evals/market_fit_v4_live_promoted` as strict frozen goldens:
+
+- `demo-hormuz-candidate`: `indirect`, best market `2155023`;
+- `live-iran-sanctions-relief-package`: `weak_proxy`, no clean best market,
+  with `2155023` as a tempting adjacent market.
+
+Use these as secondary evidence for the live-retrieval promotion story. Keep the
+main 3-minute Arize proof focused on the stable v1 weak-proxy correction loop
+unless there is enough time to show the governance path.
 
 For demo wording:
 
 ```text
 The stable proof uses promoted frozen goldens. Live PolyData retrieval creates
-candidate evidence that can later become a golden after human review.
+candidate evidence; reviewed cases can become strict goldens after rules and
+expected labels are frozen.
 ```

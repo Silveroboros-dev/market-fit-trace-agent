@@ -134,16 +134,19 @@ Observed MVP result:
   `evals/retrieval_candidates/phoenix_candidate_review_dataset_result.json`
 - Candidate count: `5`
 - Run-backed count: `5`
-- Pending review count: `4`
-- Review status counts: `pending=4`, `needs_more_rules=1`
-- Current reviewed example:
-  `live-iran-sanctions-relief-package` with reviewer status
-  `needs_more_rules`
+- Pending review count: `0`
+- Review status counts: `promote=2`, `reject=2`, `needs_more_rules=1`
+- Promoted strict pack: `evals/market_fit_v4_live_promoted`
 
-The observed reviewed candidate is intentionally not promoted. It demonstrates
-the review queue: live retrieval found relevant markets, the agent proposed an
-`indirect` fit, Phoenix recorded the trace, and the Dataset row records that
-missing rules must be resolved before promotion.
+Two reviewed candidates have been promoted into strict frozen goldens after
+resolution rules were backfilled:
+
+- `demo-hormuz-candidate`: `indirect`, best market `2155023`;
+- `live-iran-sanctions-relief-package`: `weak_proxy`, no clean best market,
+  with `2155023` as a tempting adjacent market.
+
+The promotion preserves the boundary: candidate Dataset rows remain review
+evidence, while strict expected labels live in repo fixtures after human review.
 
 ## Phoenix Promoted-Golden Dataset And Experiment
 

@@ -49,6 +49,12 @@ Strict promoted v2 suite:
 make evals-v2
 ```
 
+Strict live-promoted suite:
+
+```bash
+make evals-v4-live-promoted
+```
+
 Live ADK/Gemini + Phoenix replay:
 
 ```bash
@@ -81,6 +87,7 @@ make export-retrieval-candidate
 | --- | --- | --- |
 | `evals/market_fit_v1` | Original 10-case baseline covering direct, indirect, weak proxy, and no-clean-expression cases. | Yes |
 | `evals/market_fit_v2` | Promoted second suite focused on weak proxies, no-clean-expression, horizon mismatch, and platform mismatch. | Yes |
+| `evals/market_fit_v4_live_promoted` | Reviewed live PolyData retrieval candidates with frozen agent-run market sets and backfilled resolution rules. | Yes |
 | `evals/market_fit_v2_candidates` | Draft eval pack for coverage review and promotion work. | No |
 | `evals/market_fit_v3_candidates` | Draft eval pack after deduplication. | No |
 
