@@ -23,21 +23,52 @@ expresses the user's thesis.
 
 Selected Rapid track: **Arize**.
 
-## Project Artifacts
+## Demo Story
 
-- Public repository: [github.com/Silveroboros-dev/market-fit-trace-agent](https://github.com/Silveroboros-dev/market-fit-trace-agent)
-- Phoenix trace proof: [v1 trace audit](evals/market_fit_v1/v1_trace_audit.md)
-- Phoenix live trace:
-  [latest checked trace](https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507)
-- Phoenix candidate Dataset: `market_fit_candidate_cases`
-- Phoenix promoted-golden Dataset: `market_fit_promoted_goldens_v1`
-- Phoenix Experiment artifact:
-  [market_fit_v1 experiment result](evals/market_fit_v1/phoenix_experiment_result.json)
-- Demo golden trio:
-  [docs/demo-golden-trio.md](docs/demo-golden-trio.md)
-- Regression-risk audit:
-  [docs/regression-risk-coverage.md](docs/regression-risk-coverage.md)
-- License: Apache-2.0
+Market Fit Trace Agent checks whether a prediction market actually measures the
+claim someone cares about. Prediction markets turn beliefs about the world into
+testable probabilities, but that power breaks when a related market gets mistaken
+for a clean expression of the thesis. This agent audits the thesis-to-market path:
+it normalizes a messy claim, checks candidate markets, flags weak proxies, and
+makes the correction traceable.
+
+The seed demo starts with this thesis:
+
+> Google TPU progress means Gemini closes the frontier-model gap in 2026.
+
+A tempting prediction market appears relevant:
+
+> Gemini becomes #1 on a public model leaderboard.
+
+The first run overstates the fit by treating an adjacent market as stronger evidence
+than it deserves. A trace-linked eval flags the false strong recommendation. Under
+the hood, Phoenix traces show where the weak proxy entered the workflow and how the
+corrected run improved. The improve step uses Phoenix MCP inspection and reruns the
+mission. The second run correctly classifies the market as `weak_proxy`.
+
+## Why It Matters
+
+Prediction markets are useful only when the market cleanly expresses the thesis.
+Many tempting markets are weak proxies: they look relevant but encode the wrong
+horizon, platform, entity, metric, or causal mechanism.
+
+Market Fit Trace Agent makes this failure inspectable and correctable. It does not
+just recommend a market; it explains whether the fit is direct, indirect, weak, or
+absent, records optional human review, and uses Phoenix traces to improve the next run.
+
+## What It Does
+
+1. Accepts a messy thesis or source text.
+2. Uses Google ADK/Gemini to normalize the claim: entities, horizon, stance, and
+   target outcome.
+3. Retrieves a bounded set of relevant current Polymarket markets from recent
+   market snapshots.
+4. Classifies fit as `direct`, `indirect`, `weak_proxy`, or `no_clean_expression`.
+5. Explains tempting rejected markets so adjacency is not mistaken for clean exposure.
+6. Records optional human verdicts in a public-safe Ledger MCP lifecycle store.
+7. Sends ADK/Gemini and product-level OpenInference spans to Phoenix.
+8. Runs trace-linked deterministic evals for false strong recommendations and weak proxies.
+9. Uses Phoenix MCP trace inspection to improve a second run.
 
 ## Partner Integration
 
@@ -77,52 +108,21 @@ The Arize/Phoenix proof passes if:
    false-strong eval.
 9. The ledger records both the initial run and the trace-informed rerun.
 
-## Demo Story
+## Project Artifacts
 
-Market Fit Trace Agent checks whether a prediction market actually measures the
-claim someone cares about. Prediction markets turn beliefs about the world into
-testable probabilities, but that power breaks when a related market gets mistaken
-for a clean expression of the thesis. This agent audits the thesis-to-market path:
-it normalizes a messy claim, checks candidate markets, flags weak proxies, and
-makes the correction traceable.
-
-The seed demo starts with this thesis:
-
-> Google TPU progress means Gemini closes the frontier-model gap in 2026.
-
-A tempting prediction market appears relevant:
-
-> Gemini becomes #1 on a public model leaderboard.
-
-The first run overstates the fit by treating an adjacent market as stronger evidence
-than it deserves. A trace-linked eval flags the false strong recommendation. Under
-the hood, Phoenix traces show exactly where the weak proxy entered the workflow and
-how the corrected run improved. The improve step uses Phoenix MCP inspection and
-reruns the mission. The second run correctly classifies the market as `weak_proxy`.
-
-## Why It Matters
-
-Prediction markets are useful only when the market cleanly expresses the thesis.
-Many tempting markets are weak proxies: they look relevant but encode the wrong
-horizon, platform, entity, metric, or causal mechanism.
-
-Market Fit Trace Agent makes this failure inspectable and correctable. It does not
-just recommend a market; it explains whether the fit is direct, indirect, weak, or
-absent, records optional human review, and uses Phoenix traces to improve the next run.
-
-## What It Does
-
-1. Accepts a messy thesis or source text.
-2. Uses Google ADK/Gemini to normalize the claim: entities, horizon, stance, and
-   target outcome.
-3. Retrieves a bounded set of relevant current Polymarket markets from recent
-   market snapshots.
-4. Classifies fit as `direct`, `indirect`, `weak_proxy`, or `no_clean_expression`.
-5. Explains tempting rejected markets so adjacency is not mistaken for clean exposure.
-6. Records optional human verdicts in a public-safe Ledger MCP lifecycle store.
-7. Sends ADK/Gemini and product-level OpenInference spans to Phoenix.
-8. Runs trace-linked deterministic evals for false strong recommendations and weak proxies.
-9. Uses Phoenix MCP trace inspection to improve a second run.
+- Public repository: [github.com/Silveroboros-dev/market-fit-trace-agent](https://github.com/Silveroboros-dev/market-fit-trace-agent)
+- Phoenix trace proof: [v1 trace audit](evals/market_fit_v1/v1_trace_audit.md)
+- Phoenix live trace:
+  [latest checked trace](https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507)
+- Phoenix candidate Dataset: `market_fit_candidate_cases`
+- Phoenix promoted-golden Dataset: `market_fit_promoted_goldens_v1`
+- Phoenix Experiment artifact:
+  [market_fit_v1 experiment result](evals/market_fit_v1/phoenix_experiment_result.json)
+- Demo golden trio:
+  [docs/demo-golden-trio.md](docs/demo-golden-trio.md)
+- Regression-risk audit:
+  [docs/regression-risk-coverage.md](docs/regression-risk-coverage.md)
+- License: Apache-2.0
 
 ## Architecture
 

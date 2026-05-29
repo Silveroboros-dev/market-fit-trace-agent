@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--thesis", default=DEFAULT_THESIS)
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--min-volume-usd", type=float, default=10000.0)
+    parser.add_argument("--min-volume-usd", type=float, default=5000.0)
     parser.add_argument("--min-confidence", type=float, default=0.85)
     parser.add_argument(
         "--l1",

@@ -61,7 +61,7 @@ class Settings:
     poly_data_sas_token: str | None = os.getenv("POLY_DATA_SAS_TOKEN")
     poly_data_exchange: str = os.getenv("POLY_DATA_EXCHANGE", "polymarket")
     poly_data_l1_allowlist: tuple[str, ...] = _tuple_env("POLY_DATA_L1_ALLOWLIST")
-    poly_data_min_volume_usd: float = _float_env("POLY_DATA_MIN_VOLUME_USD", 10000.0)
+    poly_data_min_volume_usd: float = _float_env("POLY_DATA_MIN_VOLUME_USD", 5000.0)
     poly_data_min_taxonomy_confidence: float = _float_env(
         "POLY_DATA_MIN_TAXONOMY_CONFIDENCE", 0.85
     )

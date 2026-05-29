@@ -68,17 +68,129 @@ def test_polydata_provider_ranks_cached_universe_without_live_client():
     retrieval = provider.retrieve(claim)
     markets = retrieval.markets
 
-    assert [market.market_id for market in markets] == ["iran-hormuz", "fed-cuts"]
+    assert [market.market_id for market in markets] == ["iran-hormuz"]
     assert retrieval.mode == "polydata"
     assert retrieval.retrieval_id
     assert retrieval.query_summary["liquidity_metric"] == "volume_usd"
-    assert retrieval.query_summary["returned_count"] == 2
+    assert retrieval.query_summary["returned_count"] == 1
+    assert retrieval.query_summary["rules_status_summary"] == {"missing": 1}
+    assert retrieval.raw_markets[0]["rules_status"] == "missing"
+    assert retrieval.excluded_summary["rules_status_summary"] == {"missing": 1}
     assert markets[0].venue == "Polymarket"
     assert markets[0].current_probability == 0.51
     assert "missing_resolution_rules" in markets[0].known_fit_risks
     assert "dynamic_polydata_retrieval" in markets[0].known_fit_risks
     assert "not_orderbook_enabled" in markets[0].known_fit_risks
     assert "Maritime chokepoint closure" in markets[0].entity_tags
+
+
+def test_polydata_provider_does_not_fill_claim_results_with_unrelated_volume():
+    provider = PolyDataMarketProvider(
+        settings_obj=Settings(
+            market_provider="polydata",
+            poly_data_top_k=5,
+            poly_data_max_k=50,
+        )
+    )
+    provider._universe = [
+        {
+            "market_id": "hormuz",
+            "question": "Will the Strait of Hormuz reopen by June 30?",
+            "volume_usd": 12000,
+        },
+        {
+            "market_id": "sports-high-volume",
+            "question": "Will Crystal Palace win today?",
+            "description": "This market resolves at the end of the match in June.",
+            "volume_usd": 1_000_000,
+        },
+    ]
+    claim = NormalizedClaim(
+        claim_text="US and Iran will reopen the Strait of Hormuz after a ceasefire deal.",
+        entities=["Iran", "Strait of Hormuz"],
+        horizon="by end of June 2026",
+        stance="will happen",
+    )
+
+    retrieval = provider.retrieve(claim)
+
+    assert [market.market_id for market in retrieval.markets] == ["hormuz"]
+    assert retrieval.query_summary["returned_count"] == 1
+
+
+def test_polydata_provider_does_not_match_short_entities_as_substrings():
+    provider = PolyDataMarketProvider(
+        settings_obj=Settings(
+            market_provider="polydata",
+            poly_data_top_k=5,
+            poly_data_max_k=50,
+        )
+    )
+    provider._universe = [
+        {
+            "market_id": "related-us-market",
+            "question": "Will the US announce a new Iran agreement?",
+            "tags": ["U.S. x Iran"],
+            "volume_usd": 12000,
+        },
+        {
+            "market_id": "substring-noise",
+            "question": "Will Ivan Cepeda Castro win the election?",
+            "agent_rationale": "Candidates must win a national vote.",
+            "volume_usd": 1_000_000,
+        },
+    ]
+    claim = NormalizedClaim(
+        claim_text="US and Iran will announce an agreement.",
+        entities=["US", "Iran"],
+        horizon="2026",
+        stance="will happen",
+    )
+
+    retrieval = provider.retrieve(claim)
+
+    assert [market.market_id for market in retrieval.markets] == ["related-us-market"]
+
+
+def test_polydata_provider_maps_description_to_resolution_rules():
+    provider = PolyDataMarketProvider(
+        settings_obj=Settings(
+            market_provider="polydata",
+            poly_data_top_k=1,
+            poly_data_max_k=50,
+        )
+    )
+    provider._universe = [
+        {
+            "market_id": "hormuz-blockade-lifted",
+            "question": "Will the United States blockade of the Strait of Hormuz be lifted?",
+            "description": (
+                "This market resolves Yes if official US government sources announce "
+                "that the blockade has been lifted by the close date."
+            ),
+            "resolution_source": "Official US government announcement",
+            "question_id": "0xquestion",
+            "condition_id": "0xcondition",
+            "l1": "politics",
+            "l2_name": "Maritime chokepoint",
+            "volume_usd": 25000,
+            "price": 0.83,
+            "end_date": "2026-06-30",
+        }
+    ]
+
+    retrieval = provider.retrieve()
+    market = retrieval.markets[0]
+
+    assert market.resolution_rules.startswith("This market resolves Yes")
+    assert "missing_resolution_rules" not in market.known_fit_risks
+    assert "dynamic_polydata_retrieval" in market.known_fit_risks
+    assert "rules_status: present" in market.description
+    assert "resolution_source: Official US government announcement" in market.description
+    assert "question_id: 0xquestion" in market.description
+    assert retrieval.raw_markets[0]["rules_status"] == "present"
+    assert retrieval.query_summary["rules_status_summary"] == {"present": 1}
+    assert retrieval.excluded_summary["rules_status_summary"] == {"present": 1}
 
 
 def test_polydata_provider_excludes_explicitly_closed_or_inactive_rows():

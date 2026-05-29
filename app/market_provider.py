@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import math
 import os
 import re
 import sys
@@ -70,7 +69,7 @@ class PolyDataMarketProvider:
         excluded_closed_or_inactive = len(loaded_rows) - len(rows)
         top_k = max(1, min(self.settings_obj.poly_data_top_k, self.settings_obj.poly_data_max_k))
         ranked = _rank_rows(rows, claim)
-        selected = ranked[:top_k]
+        selected = [_with_rules_status(row) for row in ranked[:top_k]]
         as_of_ts = _max_timestamp(rows, "bar_ts")
         snapshot_id = (
             f"polydata_{self.settings_obj.poly_data_exchange}_{as_of_ts}"
@@ -85,9 +84,10 @@ class PolyDataMarketProvider:
             "min_volume_usd": self.settings_obj.poly_data_min_volume_usd,
             "min_taxonomy_confidence": self.settings_obj.poly_data_min_taxonomy_confidence,
             "l1_allowlist": list(self.settings_obj.poly_data_l1_allowlist),
-            "liquidity_metric": "volume_usd",
+            "liquidity_metric": _liquidity_metric(loaded_rows),
             "universe_count": len(rows),
             "returned_count": len(selected),
+            "rules_status_summary": _rules_status_summary(selected),
         }
         retrieval_id = _retrieval_id(
             mode=self.name,
@@ -107,6 +107,7 @@ class PolyDataMarketProvider:
                 "after_provider_filters": len(rows),
                 "excluded_closed_or_inactive": excluded_closed_or_inactive,
                 "not_returned_after_ranking": max(0, len(rows) - len(selected)),
+                "rules_status_summary": _rules_status_summary(selected),
             },
         )
 
@@ -143,6 +144,7 @@ class PolyDataMarketProvider:
         taxonomy = poly.taxonomy()
         markets = poly.markets()
         cross_section = poly.cross_section().df
+        market_stats = poly.list_market_stats()
 
         joined = taxonomy.join(
             cross_section,
@@ -159,6 +161,9 @@ class PolyDataMarketProvider:
                 "answer2",
                 "market_slug",
                 "condition_id",
+                "question_id",
+                "description",
+                "resolution_source",
                 "ticker",
                 "created_at",
             )
@@ -172,11 +177,33 @@ class PolyDataMarketProvider:
                 how="left",
             )
 
+        stats_columns = [
+            column
+            for column in (
+                "market_id",
+                "trading_days_count",
+                "first_trade_date",
+                "last_trade_date",
+                "total_trades",
+                "total_volume_usd",
+            )
+            if column in market_stats.columns
+        ]
+        if {"market_id", "total_volume_usd"}.issubset(stats_columns):
+            joined = joined.join(
+                market_stats.select(stats_columns),
+                on="market_id",
+                how="left",
+            )
+
+        liquidity_field = (
+            "total_volume_usd" if "total_volume_usd" in joined.columns else "volume_usd"
+        )
         filters = (
             (~joined["is_low_confidence"])
             & (~joined["is_unmapped"])
             & (joined["confidence"] >= self.settings_obj.poly_data_min_taxonomy_confidence)
-            & (joined["volume_usd"] >= self.settings_obj.poly_data_min_volume_usd)
+            & (joined[liquidity_field].fill_null(0.0) >= self.settings_obj.poly_data_min_volume_usd)
         )
         if self.settings_obj.poly_data_l1_allowlist:
             filters = filters & joined["l1"].is_in(list(self.settings_obj.poly_data_l1_allowlist))
@@ -266,8 +293,7 @@ def _rank_rows(
         score = _retrieval_score(row, query_tokens, claim.entities)
         scored.append((score, row))
 
-    positive = [(score, row) for score, row in scored if score > 0.0]
-    ranked = positive or scored
+    ranked = [(score, row) for score, row in scored if score > 0.0]
     return [
         row
         for _, row in sorted(
@@ -287,6 +313,8 @@ def _retrieval_score(
         _stringify(row.get(field_name))
         for field_name in (
             "question",
+            "description",
+            "resolution_source",
             "category",
             "tags",
             "l1",
@@ -296,15 +324,18 @@ def _retrieval_score(
         )
     )
     haystack_tokens = _tokens(haystack)
-    if not query_tokens:
+    query_semantic_tokens = _semantic_tokens(query_tokens)
+    semantic_overlap = _semantic_tokens(query_tokens & haystack_tokens)
+    if not query_semantic_tokens:
         overlap_score = 0.0
     else:
-        overlap_score = len(query_tokens & haystack_tokens) / len(query_tokens)
+        overlap_score = len(semantic_overlap) / len(query_semantic_tokens)
 
-    haystack_lower = haystack.lower()
-    entity_boost = sum(0.08 for entity in entities if entity.lower() in haystack_lower)
-    volume_boost = min(math.log10(_volume_usd(row) + 1.0) / 10.0, 0.12)
-    return overlap_score + entity_boost + volume_boost
+    entity_match_count = sum(1 for entity in entities if _entity_matches(entity, haystack))
+    if entity_match_count == 0 and len(semantic_overlap) < 2:
+        return 0.0
+    entity_boost = entity_match_count * 0.08
+    return overlap_score + entity_boost
 
 
 def _row_to_candidate_market(row: dict[str, object]) -> CandidateMarket:
@@ -316,7 +347,11 @@ def _row_to_candidate_market(row: dict[str, object]) -> CandidateMarket:
             _stringify(row.get("l2_name")),
         ]
     )
-    risks = ["dynamic_polydata_retrieval", "missing_resolution_rules"]
+    resolution_rules = _clean_text(row.get("description"))
+    rules_status = _rules_status(row)
+    risks = ["dynamic_polydata_retrieval"]
+    if rules_status != "present":
+        risks.append("missing_resolution_rules")
     if bool(row.get("is_low_confidence")):
         risks.append("taxonomy_low_confidence")
     if _field_is_false(row, "enable_order_book") or _field_is_false(row, "enableOrderBook"):
@@ -331,9 +366,16 @@ def _row_to_candidate_market(row: dict[str, object]) -> CandidateMarket:
         f"market_slug: {_stringify(row.get('market_slug'))}" if row.get("market_slug") else "",
         f"condition_id: {_stringify(row.get('condition_id'))}" if row.get("condition_id") else "",
         f"question_id: {_stringify(row.get('question_id'))}" if row.get("question_id") else "",
+        f"rules_status: {rules_status}",
+        (
+            f"resolution_source: {_stringify(row.get('resolution_source'))}"
+            if row.get("resolution_source")
+            else ""
+        ),
         f"L1: {_stringify(row.get('l1'))}" if row.get("l1") else "",
         f"L2: {_stringify(row.get('l2_name'))}" if row.get("l2_name") else "",
-        f"volume_usd: {_volume_usd(row):.2f}",
+        f"total_volume_usd: {_volume_usd(row):.2f}",
+        f"current_bar_volume_usd: {_current_bar_volume_usd(row):.2f}",
         f"price: {_probability(row)}" if _probability(row) is not None else "",
         "probability_source: cross_section.price" if _probability(row) is not None else "",
         f"source: {source_url}" if source_url else "",
@@ -343,13 +385,31 @@ def _row_to_candidate_market(row: dict[str, object]) -> CandidateMarket:
         title=_stringify(row.get("question")),
         venue="Polymarket",
         description=" | ".join(part for part in description_parts if part),
-        resolution_rules="",
+        resolution_rules=resolution_rules,
         close_date=_stringify(row.get("end_date") or row.get("closed_time")),
         outcomes=_outcomes(row),
         current_probability=_probability(row),
         known_fit_risks=risks,
         entity_tags=tags,
     )
+
+
+def _with_rules_status(row: dict[str, object]) -> dict[str, object]:
+    annotated = dict(row)
+    annotated["rules_status"] = _rules_status(row)
+    return annotated
+
+
+def _rules_status(row: dict[str, object]) -> str:
+    return "present" if _clean_text(row.get("description")) else "missing"
+
+
+def _rules_status_summary(rows: list[dict[str, object]]) -> dict[str, int]:
+    summary: dict[str, int] = {}
+    for row in rows:
+        status = _rules_status(row)
+        summary[status] = summary.get(status, 0) + 1
+    return summary
 
 
 def _source_url(row: dict[str, object]) -> str | None:
@@ -393,11 +453,25 @@ def _row_is_open_market_context(row: dict[str, object]) -> bool:
 
 
 def _volume_usd(row: dict[str, object]) -> float:
-    raw = row.get("volume_usd") or row.get("volume") or 0.0
+    raw = row.get("total_volume_usd") or row.get("volume_usd") or row.get("volume") or 0.0
     try:
         return float(raw)
     except (TypeError, ValueError):
         return 0.0
+
+
+def _current_bar_volume_usd(row: dict[str, object]) -> float:
+    raw = row.get("volume_usd") or 0.0
+    try:
+        return float(raw)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _liquidity_metric(rows: list[dict[str, object]]) -> str:
+    if any("total_volume_usd" in row for row in rows):
+        return "total_volume_usd"
+    return "volume_usd"
 
 
 def _n_trades(row: dict[str, object]) -> int:
@@ -450,6 +524,26 @@ def _tokens(text: str) -> set[str]:
     }
 
 
+def _semantic_tokens(tokens: set[str]) -> set[str]:
+    return {token for token in tokens if not token.isdigit()}
+
+
+def _entity_matches(entity: str, haystack: str) -> bool:
+    cleaned_entity = _normalize_entity_text(entity)
+    if not cleaned_entity:
+        return False
+    normalized_haystack = _normalize_entity_text(haystack)
+    return re.search(
+        rf"(?<![a-z0-9]){re.escape(cleaned_entity)}(?![a-z0-9])",
+        normalized_haystack,
+    ) is not None
+
+
+def _normalize_entity_text(value: str) -> str:
+    normalized = value.lower().replace("u.s.", "us")
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
 def _to_string_list(value: object) -> list[str]:
     if value is None:
         return []
@@ -467,6 +561,13 @@ def _stringify(value: object) -> str:
     return str(value)
 
 
+def _clean_text(value: object) -> str:
+    text = _stringify(value).strip()
+    if text.lower() in {"", "nan", "none", "null"}:
+        return ""
+    return text
+
+
 def _dedupe(values: list[str]) -> list[str]:
     seen: set[str] = set()
     result: list[str] = []
@@ -482,6 +583,7 @@ def _dedupe(values: list[str]) -> list[str]:
 _STOPWORDS = {
     "and",
     "are",
+    "end",
     "for",
     "from",
     "has",
@@ -494,4 +596,5 @@ _STOPWORDS = {
     "their",
     "will",
     "with",
+    "unspecified",
 }
