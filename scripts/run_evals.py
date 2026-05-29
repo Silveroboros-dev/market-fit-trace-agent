@@ -257,7 +257,9 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
 def _load_v1_markets(path: Path) -> list[CandidateMarket]:
     markets: list[CandidateMarket] = []
     for item in _read_jsonl(path):
-        close_time = item.get("close_time") or ""
+        close_time = item.get("close_time") or item.get("close_date") or ""
+        known_fit_risks = list(item.get("known_fit_risks") or [])
+        known_fit_risks.extend(MARKET_FIT_RISKS.get(item["market_id"], []))
         markets.append(
             CandidateMarket(
                 market_id=item["market_id"],
@@ -267,9 +269,9 @@ def _load_v1_markets(path: Path) -> list[CandidateMarket]:
                 resolution_rules=item["resolution_rules"],
                 close_date=close_time.split("T")[0] if close_time else "unspecified",
                 outcomes=["Yes", "No"],
-                current_probability=item.get("yes_price"),
-                known_fit_risks=MARKET_FIT_RISKS.get(item["market_id"], []),
-                entity_tags=item.get("tags", []),
+                current_probability=item.get("yes_price", item.get("current_probability")),
+                known_fit_risks=known_fit_risks,
+                entity_tags=item.get("tags", item.get("entity_tags", [])),
             )
         )
     return markets

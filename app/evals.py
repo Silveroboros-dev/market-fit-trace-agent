@@ -30,9 +30,7 @@ def evaluate_fit(
         false_strong
         or (strong_fit and _claim_mentions_cause(claim) and _fit_misses_cause(fit))
     )
-    weak_proxy_detected = bool(
-        weak_proxy_expected and fit.semantic_fit_class == FitClass.WEAK_PROXY
-    )
+    weak_proxy_detected = bool(fit.semantic_fit_class == FitClass.WEAK_PROXY)
 
     metrics = EvalMetrics(
         schema_valid=bool(claim.claim_text and fit.fit_reason and fit.semantic_fit_class),

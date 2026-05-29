@@ -162,3 +162,50 @@ async def _missing_recommended_market_is_guarded_to_no_clean_expression(tmp_path
     assert result.eval.metrics.no_clean_expression_expected is True
     assert result.fit.rejected_markets[0].market_id == "pm_amazon_2026_capex_above"
     assert "not returned" in result.fit.rejected_markets[0].reason
+
+
+def test_composite_iran_package_is_weak_proxy(tmp_path):
+    asyncio.run(_composite_iran_package_is_weak_proxy(tmp_path))
+
+
+async def _composite_iran_package_is_weak_proxy(tmp_path):
+    store = LedgerStore(tmp_path / "ledger.json")
+    agent = MarketFitTraceAgent(
+        store=store,
+        adk_runtime=OfflineADKRuntime(),
+        markets=[
+            CandidateMarket(
+                market_id="2155023",
+                title=(
+                    "Will Donald Trump announce that the United States blockade of "
+                    "the Strait of Hormuz has been lifted by June 30, 2026?"
+                ),
+                venue="Polymarket",
+                description="Announcement market for lifting the US blockade of Hormuz.",
+                resolution_rules=(
+                    "This market resolves Yes if the US government officially announces "
+                    "the end of the United States blockade of the Strait of Hormuz. "
+                    "Whether maritime traffic resumes absent a qualifying announcement "
+                    "will not be considered."
+                ),
+                close_date="2026-06-30",
+                outcomes=["Yes", "No"],
+                current_probability=0.83,
+                known_fit_risks=["dynamic_polydata_retrieval"],
+                entity_tags=["Iran", "Strait of Hormuz", "US-Iran"],
+            )
+        ],
+    )
+
+    result = await agent.run(
+        thesis=(
+            "The US and Iran will extend a 60-day ceasefire, partially reopen the "
+            "Strait of Hormuz, unfreeze blocked assets, and ease sanctions by July 2026."
+        )
+    )
+
+    assert result.fit.semantic_fit_class == FitClass.WEAK_PROXY
+    assert result.fit.recommended_market_id == "2155023"
+    assert result.eval.metrics.weak_proxy_detected is True
+    assert result.eval.metrics.false_strong_recommendation is False
+    assert "asset unfreezing" in " ".join(result.fit.misses).lower()

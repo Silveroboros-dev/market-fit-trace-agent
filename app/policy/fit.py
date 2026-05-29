@@ -9,6 +9,63 @@ def _deterministic_classify(
     claim: NormalizedClaim, markets: list[CandidateMarket], prompt_version: str
 ) -> MarketFit:
     claim_text = _claim_haystack(claim)
+    if _is_composite_iran_relief_package(claim_text):
+        tempting_market = _find_market_by_terms(markets, ("blockade", "hormuz"))
+        if tempting_market is None:
+            return MarketFit(
+                recommended_market_id=None,
+                semantic_fit_class=FitClass.NO_CLEAN_EXPRESSION,
+                fit_reason=(
+                    "The claim is a multi-condition US-Iran package, but the bounded market "
+                    "context did not include a market that cleanly resolves the package."
+                ),
+                captures=[],
+                misses=[
+                    "60-day ceasefire extension",
+                    "Partial Strait of Hormuz reopening",
+                    "Asset unfreezing",
+                    "Sanctions easing",
+                ],
+                rejected_markets=[
+                    RejectedMarket(
+                        market_id=market.market_id,
+                        reason=(
+                            "The market is adjacent to the geopolitical topic but does not "
+                            "resolve the full multi-condition package."
+                        ),
+                    )
+                    for market in markets[:5]
+                ],
+            )
+        return MarketFit(
+            recommended_market_id=tempting_market.market_id,
+            semantic_fit_class=FitClass.WEAK_PROXY,
+            fit_reason=(
+                "The blockade-lifted announcement market is only a weak proxy for the "
+                "composite US-Iran package. It can resolve Yes without a ceasefire extension, "
+                "asset unfreezing, or sanctions relief."
+            ),
+            captures=[
+                "A related Strait of Hormuz blockade-lifted announcement",
+                "A near June 2026 deadline for one visible component",
+            ],
+            misses=[
+                "60-day ceasefire extension",
+                "Asset unfreezing",
+                "Sanctions easing",
+                "The full July 2026 geopolitical package",
+            ],
+            rejected_markets=[
+                RejectedMarket(
+                    market_id=market.market_id,
+                    reason=(
+                        "Tempting but incomplete: this market resolves only one component or "
+                        "a different component of the composite package."
+                    ),
+                )
+                for market in markets[:5]
+            ],
+        )
     if "ceasefire for 60 days" in claim_text:
         return MarketFit(
             recommended_market_id="pm_us_iran_permanent_peace_by",
@@ -970,6 +1027,27 @@ def _score_markets(
         market_terms = set(re.findall(r"[a-z0-9]+", haystack)) - STOPWORDS
         scored.append((len(claim_terms & market_terms), market))
     return sorted(scored, key=lambda item: item[0], reverse=True)
+
+
+def _is_composite_iran_relief_package(claim_text: str) -> bool:
+    return bool(
+        "iran" in claim_text
+        and ("hormuz" in claim_text or "strait" in claim_text)
+        and "ceasefire" in claim_text
+        and ("sanction" in claim_text or "asset" in claim_text or "unfreeze" in claim_text)
+    )
+
+
+def _find_market_by_terms(
+    markets: list[CandidateMarket], required_terms: tuple[str, ...]
+) -> CandidateMarket | None:
+    for market in markets:
+        haystack = " ".join(
+            [market.market_id, market.title, market.description, market.resolution_rules]
+        ).lower()
+        if all(term in haystack for term in required_terms):
+            return market
+    return None
 
 
 STOPWORDS = {

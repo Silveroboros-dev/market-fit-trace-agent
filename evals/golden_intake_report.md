@@ -4,8 +4,8 @@ This report validates eval fixture intake before candidate rows are promoted to 
 
 ## Summary
 
-- examples scanned: 47
-- packs scanned: 4
+- examples scanned: 49
+- packs scanned: 5
 - structural errors: 0
 - review warnings: 127
 
@@ -15,6 +15,7 @@ This report validates eval fixture intake before candidate rows are promoted to 
 | `market_fit_v2` | 7 |
 | `market_fit_v2_candidates` | 16 |
 | `market_fit_v3_candidates` | 14 |
+| `market_fit_v4_live_promoted` | 2 |
 
 ## Findings
 
@@ -153,4 +154,4 @@ This report validates eval fixture intake before candidate rows are promoted to 
 - Structural errors block promotion.
 - Grok-sourced rows remain candidates until the source text and market rules are independently checked.
 - Duplicate or near-duplicate rows should be merged, dropped, or justified before promotion.
-- Strict goldens must pass `make evals` or `make evals-v2` without `--allow-failures`.
+- Strict goldens must pass their pack-specific eval command, such as `make evals`, `make evals-v2`, or `make evals-v4-live-promoted`, without `--allow-failures`.

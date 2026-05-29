@@ -504,8 +504,9 @@ def render_report(records: list[ExampleRecord], findings: list[Finding]) -> str:
                 "before promotion."
             ),
             (
-                "- Strict goldens must pass `make evals` or `make evals-v2` without "
-                "`--allow-failures`."
+                "- Strict goldens must pass their pack-specific eval command, such as "
+                "`make evals`, `make evals-v2`, or `make evals-v4-live-promoted`, "
+                "without `--allow-failures`."
             ),
             "",
         ]
