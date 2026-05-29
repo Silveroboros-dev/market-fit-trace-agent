@@ -132,6 +132,50 @@ def test_experiment_metrics_include_no_clean_false_positive_behavior():
     ]
 
 
+def test_experiment_metrics_name_weak_proxy_case_share_separately():
+    rows = [
+        {
+            "case_id": "case-weak-proxy",
+            "expected_fit_class": "weak_proxy",
+            "actual_fit_class": "weak_proxy",
+            "expected_best_market_id": None,
+            "actual_market_id": "m1",
+            "acceptable_market_ids": [],
+            "adjacent_market_ids": ["m1"],
+            "false_strong_recommendation": False,
+            "weak_proxy_detected": True,
+            "unsupported_implication": False,
+        },
+        {
+            "case_id": "case-direct",
+            "expected_fit_class": "direct",
+            "actual_fit_class": "direct",
+            "expected_best_market_id": "m2",
+            "actual_market_id": "m2",
+            "acceptable_market_ids": [],
+            "adjacent_market_ids": [],
+            "false_strong_recommendation": False,
+            "weak_proxy_detected": False,
+            "unsupported_implication": False,
+        },
+    ]
+    for row in rows:
+        _score_row(row)
+
+    metrics = _metric_summary(rows)
+
+    assert "weak_proxy_detected_rate" not in metrics
+    assert metrics["weak_proxy_case_count"] == 1
+    assert metrics["weak_proxy_case_share"] == 0.5
+    assert metrics["weak_proxy_detected_count"] == 1
+    assert metrics["weak_proxy_detection_on_weak_proxy_cases"] == {
+        "expected_count": 1,
+        "detected_count": 1,
+        "rate": 1.0,
+        "missed_case_ids": [],
+    }
+
+
 def _write_json(path, payload):
     path.write_text(json.dumps(payload), encoding="utf-8")
 

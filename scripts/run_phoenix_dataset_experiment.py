@@ -463,6 +463,13 @@ def _metric_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     no_clean_false_positives = [
         row for row in no_clean_rows if row["no_clean_expression_false_positive"]
     ]
+    weak_proxy_rows = [
+        row for row in rows if row["expected_fit_class"] == FitClass.WEAK_PROXY.value
+    ]
+    weak_proxy_detected_rows = [row for row in rows if row["weak_proxy_detected"]]
+    weak_proxy_missed_rows = [
+        row for row in weak_proxy_rows if not row["weak_proxy_detected"]
+    ]
     return {
         "fit_class_accuracy": _mean(row["fit_class_passed"] for row in rows),
         "market_id_exact_match_rate": _mean(
@@ -473,7 +480,22 @@ def _metric_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "false_strong_recommendation_rate": _mean(
             row["false_strong_recommendation"] for row in rows
         ),
-        "weak_proxy_detected_rate": _mean(row["weak_proxy_detected"] for row in rows),
+        "weak_proxy_case_count": len(weak_proxy_rows),
+        "weak_proxy_case_share": len(weak_proxy_rows) / len(rows) if rows else 0.0,
+        "weak_proxy_detected_count": len(weak_proxy_detected_rows),
+        "weak_proxy_detection_on_weak_proxy_cases": {
+            "expected_count": len(weak_proxy_rows),
+            "detected_count": sum(
+                1 for row in weak_proxy_rows if row["weak_proxy_detected"]
+            ),
+            "rate": (
+                sum(1 for row in weak_proxy_rows if row["weak_proxy_detected"])
+                / len(weak_proxy_rows)
+                if weak_proxy_rows
+                else 0.0
+            ),
+            "missed_case_ids": [row["case_id"] for row in weak_proxy_missed_rows],
+        },
         "unsupported_implication_rate": _mean(
             row["unsupported_implication"] for row in rows
         ),
