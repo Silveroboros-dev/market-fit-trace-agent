@@ -84,6 +84,21 @@ def test_candidate_example_preserves_run_trace_and_review_metadata(tmp_path):
             },
         },
     )
+    _write_json(
+        candidate_dir / "llm_review_suggestion.json",
+        {
+            "candidate_id": "case-1",
+            "judge_version": "llm_candidate_triage_v0",
+            "review_priority": "high",
+            "suggested_review_status": "needs_more_rules",
+            "suggested_fit_risk": "likely_weak_proxy",
+            "likely_issues": ["missing_resolution_rules", "weak_proxy_risk"],
+            "markets_to_inspect": ["m2"],
+            "needs_human_check": True,
+            "triage_source": "google-adk",
+            "triaged_at_utc": "2026-05-29T12:00:00+00:00",
+        },
+    )
     (candidate_dir / "review_notes.md").write_text("Review me", encoding="utf-8")
 
     example = _candidate_example(candidate_dir)
@@ -113,6 +128,12 @@ def test_candidate_example_preserves_run_trace_and_review_metadata(tmp_path):
     assert example["metadata"]["rules_status"] == "present"
     assert example["metadata"]["rules_status_summary"] == {"present": 1}
     assert example["metadata"]["rules_status_source"] == "agent_market_rules_snapshots.jsonl"
+    assert example["metadata"]["llm_triage_present"] is True
+    assert example["metadata"]["llm_suggested_review_status"] == "needs_more_rules"
+    assert example["metadata"]["llm_likely_issues"] == [
+        "missing_resolution_rules",
+        "weak_proxy_risk",
+    ]
     _assert_no_strict_expected_labels(example)
 
 
@@ -145,6 +166,12 @@ def test_dry_run_summary_keeps_candidates_pending_without_expected_labels():
             "rules_status": "missing",
             "rules_status_summary": {"missing": 2},
             "rules_status_source": "market_rules_snapshots.jsonl",
+            "llm_triage_present": True,
+            "llm_review_priority": "high",
+            "llm_suggested_review_status": "needs_more_rules",
+            "llm_likely_issues": ["missing_resolution_rules"],
+            "llm_markets_to_inspect": ["m1"],
+            "llm_triage_source": "local_rule_fallback",
         },
     }
 
@@ -167,6 +194,8 @@ def test_dry_run_summary_keeps_candidates_pending_without_expected_labels():
     assert summary["rows"][0]["human_review_status"] == "pending"
     assert summary["rows"][0]["reviewer_note"] == ""
     assert summary["rows"][0]["rules_status_source"] == "market_rules_snapshots.jsonl"
+    assert summary["rows"][0]["llm_suggested_review_status"] == "needs_more_rules"
+    assert summary["rows"][0]["llm_likely_issues"] == ["missing_resolution_rules"]
     assert "expected_fit_class" not in summary["rows"][0]
     assert "expected_best_market_id" not in summary["rows"][0]
     _assert_no_strict_expected_labels(example)

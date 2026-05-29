@@ -1,0 +1,31 @@
+{
+  "candidate_dir": "evals/retrieval_candidates/2026-05-26/live-agentic-ai-workflow-no-clean",
+  "candidate_id": "live-agentic-ai-workflow-no-clean",
+  "canonical_truth": false,
+  "judge_rationale": "The retrieved markets are completely off-topic (focusing on Federal Reserve rate cuts) or entirely empty, offering zero relevance to the Agentic AI thesis.",
+  "judge_version": "llm_candidate_triage_v0",
+  "likely_issues": [
+    "off_topic_market",
+    "missing_resolution_rules"
+  ],
+  "markets_to_inspect": [
+    "616906",
+    "906973",
+    "2086885",
+    "2086888",
+    "2086878"
+  ],
+  "model": "google-adk:gemini-3.5-flash",
+  "must_not_promote_without": [
+    "frozen resolution rules",
+    "human adjudication"
+  ],
+  "needs_human_check": true,
+  "review_priority": "medium",
+  "schema_version": "candidate_triage_suggestion_v0",
+  "suggested_fit_risk": "likely_no_clean_expression",
+  "suggested_review_status": "reject",
+  "triage_source": "google-adk",
+  "triaged_at_utc": "2026-05-29T18:30:34.458994+00:00",
+  "writes_strict_expected_labels": false
+}

@@ -3,7 +3,7 @@
   "mode": "phoenix",
   "dataset_name": "market_fit_candidate_cases",
   "dataset_id": "RGF0YXNldDoz",
-  "dataset_version_id": "RGF0YXNldFZlcnNpb246MTA=",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246MTE=",
   "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoz",
   "missing_config": [],
   "phoenix_write_error": null,
@@ -64,6 +64,19 @@
         "present": 5
       },
       "rules_status_source": "agent_market_rules_snapshots.jsonl",
+      "llm_triage_present": true,
+      "llm_review_priority": "medium",
+      "llm_suggested_review_status": "promote",
+      "llm_likely_issues": [
+        "weak_proxy_risk",
+        "compound_thesis"
+      ],
+      "llm_markets_to_inspect": [
+        "2155023",
+        "1809560",
+        "2119130"
+      ],
+      "llm_triage_source": "google-adk",
       "recommended_action": "review"
     },
     {
@@ -109,6 +122,21 @@
         "missing": 3
       },
       "rules_status_source": "agent_market_rules_snapshots.jsonl",
+      "llm_triage_present": true,
+      "llm_review_priority": "medium",
+      "llm_suggested_review_status": "reject",
+      "llm_likely_issues": [
+        "off_topic_market",
+        "missing_resolution_rules"
+      ],
+      "llm_markets_to_inspect": [
+        "616906",
+        "906973",
+        "2086885",
+        "2086888",
+        "2086878"
+      ],
+      "llm_triage_source": "google-adk",
       "recommended_action": "needs_more_rules"
     },
     {
@@ -157,6 +185,21 @@
         "missing": 3
       },
       "rules_status_source": "agent_market_rules_snapshots.jsonl",
+      "llm_triage_present": true,
+      "llm_review_priority": "medium",
+      "llm_suggested_review_status": "reject",
+      "llm_likely_issues": [
+        "off_topic_market",
+        "missing_resolution_rules"
+      ],
+      "llm_markets_to_inspect": [
+        "616906",
+        "906973",
+        "2086885",
+        "2086888",
+        "2086878"
+      ],
+      "llm_triage_source": "google-adk",
       "recommended_action": "needs_more_rules"
     },
     {
@@ -204,6 +247,17 @@
         "present": 5
       },
       "rules_status_source": "agent_market_rules_snapshots.jsonl",
+      "llm_triage_present": true,
+      "llm_review_priority": "medium",
+      "llm_suggested_review_status": "promote",
+      "llm_likely_issues": [
+        "compound_thesis",
+        "weak_proxy_risk"
+      ],
+      "llm_markets_to_inspect": [
+        "2155023"
+      ],
+      "llm_triage_source": "google-adk",
       "recommended_action": "review"
     },
     {
@@ -250,6 +304,22 @@
         "missing": 5
       },
       "rules_status_source": "agent_market_rules_snapshots.jsonl",
+      "llm_triage_present": true,
+      "llm_review_priority": "medium",
+      "llm_suggested_review_status": "needs_more_rules",
+      "llm_likely_issues": [
+        "missing_resolution_rules",
+        "weak_proxy_risk",
+        "compound_thesis"
+      ],
+      "llm_markets_to_inspect": [
+        "2086878",
+        "2289144",
+        "553857",
+        "2086886",
+        "2087250"
+      ],
+      "llm_triage_source": "google-adk",
       "recommended_action": "needs_more_rules"
     }
   ]

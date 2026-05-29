@@ -1,0 +1,27 @@
+{
+  "candidate_dir": "evals/retrieval_candidates/2026-05-26/live-iran-sanctions-relief-package",
+  "candidate_id": "live-iran-sanctions-relief-package",
+  "canonical_truth": false,
+  "judge_rationale": "The thesis is highly compound, involving a ceasefire, reopening the Strait of Hormuz, unfreezing assets, and easing sanctions. The recommended market (2155023) only covers the blockade aspect, representing a weak proxy risk.",
+  "judge_version": "llm_candidate_triage_v0",
+  "likely_issues": [
+    "compound_thesis",
+    "weak_proxy_risk"
+  ],
+  "markets_to_inspect": [
+    "2155023"
+  ],
+  "model": "google-adk:gemini-3.5-flash",
+  "must_not_promote_without": [
+    "frozen resolution rules",
+    "human adjudication"
+  ],
+  "needs_human_check": true,
+  "review_priority": "medium",
+  "schema_version": "candidate_triage_suggestion_v0",
+  "suggested_fit_risk": "likely_weak_proxy",
+  "suggested_review_status": "promote",
+  "triage_source": "google-adk",
+  "triaged_at_utc": "2026-05-29T18:30:52.551689+00:00",
+  "writes_strict_expected_labels": false
+}

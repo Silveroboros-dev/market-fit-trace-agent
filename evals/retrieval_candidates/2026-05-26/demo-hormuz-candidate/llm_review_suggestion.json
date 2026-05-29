@@ -1,0 +1,29 @@
+{
+  "candidate_dir": "evals/retrieval_candidates/2026-05-26/demo-hormuz-candidate",
+  "candidate_id": "demo-hormuz-candidate",
+  "canonical_truth": false,
+  "judge_rationale": "The thesis is compound, requiring both a ceasefire extension and the reopening of the Strait of Hormuz. The recommended market (2155023) only covers Trump announcing the lifting of the US blockade, which is a weak proxy for the full bilateral agreement. Other transit-based markets are also partial proxies.",
+  "judge_version": "llm_candidate_triage_v0",
+  "likely_issues": [
+    "weak_proxy_risk",
+    "compound_thesis"
+  ],
+  "markets_to_inspect": [
+    "2155023",
+    "1809560",
+    "2119130"
+  ],
+  "model": "google-adk:gemini-3.5-flash",
+  "must_not_promote_without": [
+    "frozen resolution rules",
+    "human adjudication"
+  ],
+  "needs_human_check": true,
+  "review_priority": "medium",
+  "schema_version": "candidate_triage_suggestion_v0",
+  "suggested_fit_risk": "likely_weak_proxy",
+  "suggested_review_status": "promote",
+  "triage_source": "google-adk",
+  "triaged_at_utc": "2026-05-29T18:30:24.976994+00:00",
+  "writes_strict_expected_labels": false
+}

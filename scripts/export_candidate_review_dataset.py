@@ -111,6 +111,8 @@ def _candidate_example(path: Path) -> dict[str, Any]:
     agent_rules = _read_jsonl(path / "agent_market_rules_snapshots.jsonl")
     run_result = _read_optional_json(path / "run_result.json")
     review_decision = _read_optional_json(path / "review_decision.json") or {}
+    llm_review_suggestion = _read_optional_json(path / "llm_review_suggestion.json")
+    llm_triage = _llm_triage_metadata(llm_review_suggestion)
     review_notes = (path / "review_notes.md").read_text(encoding="utf-8")
     eval_metrics = (run_result or {}).get("eval", {}).get("metrics", {})
     fit = (run_result or {}).get("fit", {})
@@ -188,6 +190,13 @@ def _candidate_example(path: Path) -> dict[str, Any]:
                 if (path / "review_decision.json").exists()
                 else None
             ),
+            "llm_review_suggestion_path": (
+                str(path / "llm_review_suggestion.json")
+                if (path / "llm_review_suggestion.json").exists()
+                else None
+            ),
+            "llm_review_suggestion": llm_review_suggestion,
+            **llm_triage,
             "agent_run_status": "run_backed" if run_result else "retrieval_only",
         },
     }
@@ -244,6 +253,14 @@ def _summary(
             "rules_status": example["metadata"]["rules_status"],
             "rules_status_summary": example["metadata"]["rules_status_summary"],
             "rules_status_source": example["metadata"]["rules_status_source"],
+            "llm_triage_present": example["metadata"]["llm_triage_present"],
+            "llm_review_priority": example["metadata"]["llm_review_priority"],
+            "llm_suggested_review_status": example["metadata"][
+                "llm_suggested_review_status"
+            ],
+            "llm_likely_issues": example["metadata"]["llm_likely_issues"],
+            "llm_markets_to_inspect": example["metadata"]["llm_markets_to_inspect"],
+            "llm_triage_source": example["metadata"]["llm_triage_source"],
             "recommended_action": example["output"]["recommended_action"],
         }
         for example in examples
@@ -291,6 +308,34 @@ def _recommended_action(
     if eval_metrics.get("weak_proxy_detected"):
         return "review_for_weak_proxy_coverage"
     return "review"
+
+
+def _llm_triage_metadata(suggestion: dict[str, Any] | None) -> dict[str, Any]:
+    if not suggestion:
+        return {
+            "llm_triage_present": False,
+            "llm_judge_version": None,
+            "llm_review_priority": None,
+            "llm_suggested_review_status": None,
+            "llm_suggested_fit_risk": None,
+            "llm_likely_issues": [],
+            "llm_markets_to_inspect": [],
+            "llm_needs_human_check": None,
+            "llm_triage_source": None,
+            "llm_triaged_at_utc": None,
+        }
+    return {
+        "llm_triage_present": True,
+        "llm_judge_version": suggestion.get("judge_version"),
+        "llm_review_priority": suggestion.get("review_priority"),
+        "llm_suggested_review_status": suggestion.get("suggested_review_status"),
+        "llm_suggested_fit_risk": suggestion.get("suggested_fit_risk"),
+        "llm_likely_issues": suggestion.get("likely_issues", []),
+        "llm_markets_to_inspect": suggestion.get("markets_to_inspect", []),
+        "llm_needs_human_check": suggestion.get("needs_human_check"),
+        "llm_triage_source": suggestion.get("triage_source"),
+        "llm_triaged_at_utc": suggestion.get("triaged_at_utc"),
+    }
 
 
 def _rules_status_summary(rules: list[dict[str, Any]]) -> dict[str, int]:
