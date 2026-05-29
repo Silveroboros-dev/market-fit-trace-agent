@@ -1,8 +1,8 @@
 {
   "candidate_dir": "evals/retrieval_candidates/2026-05-26/live-iran-sanctions-relief-package",
   "case_id": "live-iran-sanctions-relief-package",
-  "human_review_status": "needs_more_rules",
-  "reviewed_at_utc": "2026-05-26T21:03:30.718523+00:00",
+  "human_review_status": "promote",
+  "reviewed_at_utc": "2026-05-29T10:51:44.444593+00:00",
   "reviewer": "local_reviewer",
-  "reviewer_note": "Rules missing; composite thesis."
+  "reviewer_note": "Promote as reviewed weak_proxy candidate. Market 2155023 captures only one component of a composite thesis: a US blockade-lifted announcement, not ceasefire extension, Strait reopening, asset unfreezing, and sanctions relief together."
 }

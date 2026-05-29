@@ -1,0 +1,8 @@
+{
+  "candidate_dir": "evals/retrieval_candidates/2026-05-26/live-ai-roi-capex-proxy",
+  "case_id": "live-ai-roi-capex-proxy",
+  "human_review_status": "needs_more_rules",
+  "reviewed_at_utc": "2026-05-29T10:51:44.444651+00:00",
+  "reviewer": "local_reviewer",
+  "reviewer_note": "Keep as needs_more_rules and regression-risk evidence. The current retrieval is mixed/noisy and is useful for testing retrieval-policy failure modes, not for promotion to a strict golden yet."
+}

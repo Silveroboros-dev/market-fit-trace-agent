@@ -1,0 +1,8 @@
+{
+  "candidate_dir": "evals/retrieval_candidates/2026-05-26/live-agentic-ai-workflow-no-clean",
+  "case_id": "live-agentic-ai-workflow-no-clean",
+  "human_review_status": "reject",
+  "reviewed_at_utc": "2026-05-29T10:51:44.444618+00:00",
+  "reviewer": "local_reviewer",
+  "reviewer_note": "Reject for now: retrieval is noisy and does not provide a clean decision-maker market set for this enterprise agentic-AI workflow thesis."
+}

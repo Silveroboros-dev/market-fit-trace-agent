@@ -3,7 +3,7 @@
   "mode": "phoenix",
   "dataset_name": "market_fit_candidate_cases",
   "dataset_id": "RGF0YXNldDoz",
-  "dataset_version_id": "RGF0YXNldFZlcnNpb246OQ==",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246MTA=",
   "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoz",
   "missing_config": [],
   "phoenix_write_error": null,
@@ -11,12 +11,13 @@
   "candidate_count": 5,
   "run_backed_count": 5,
   "retrieval_only_count": 0,
-  "pending_review_count": 4,
+  "pending_review_count": 0,
   "review_status_counts": {
-    "pending": 4,
+    "promote": 2,
+    "reject": 2,
     "needs_more_rules": 1
   },
-  "missing_rules_case_count": 5,
+  "missing_rules_case_count": 3,
   "rows": [
     {
       "case_id": "demo-hormuz-candidate",
@@ -42,10 +43,10 @@
         "2119130",
         "1796138"
       ],
-      "human_review_status": "pending",
-      "reviewer_note": "",
-      "reviewed_at_utc": null,
-      "reviewer": null,
+      "human_review_status": "promote",
+      "reviewer_note": "Promote as reviewed indirect candidate. Market 2155023 captures an adjacent operational signal around the Strait of Hormuz blockade/reopening, but the thesis asks for a broader ceasefire plus reopening package, so this is indirect rather than direct.",
+      "reviewed_at_utc": "2026-05-29T10:51:44.444602+00:00",
+      "reviewer": "local_reviewer",
       "agent_run_status": "run_backed",
       "run_id": "run_b6c695a677d7",
       "trace_id": "0167041582febac71c4898d20c4902f4",
@@ -58,11 +59,12 @@
       "weak_proxy_detected": false,
       "false_strong_recommendation": false,
       "unsupported_implication": false,
-      "rules_status": "missing",
+      "rules_status": "present",
       "rules_status_summary": {
-        "missing": 5
+        "present": 5
       },
-      "recommended_action": "needs_more_rules"
+      "rules_status_source": "agent_market_rules_snapshots.jsonl",
+      "recommended_action": "review"
     },
     {
       "case_id": "live-agentic-ai-workflow-no-clean",
@@ -85,10 +87,10 @@
         "2086878",
         "906973"
       ],
-      "human_review_status": "pending",
-      "reviewer_note": "",
-      "reviewed_at_utc": null,
-      "reviewer": null,
+      "human_review_status": "reject",
+      "reviewer_note": "Reject for now: retrieval is noisy and does not provide a clean decision-maker market set for this enterprise agentic-AI workflow thesis.",
+      "reviewed_at_utc": "2026-05-29T10:51:44.444618+00:00",
+      "reviewer": "local_reviewer",
       "agent_run_status": "run_backed",
       "run_id": "run_e7464e89cd90",
       "trace_id": "ea6dbc93ccc19bb3cf9314a58818d03d",
@@ -101,10 +103,12 @@
       "weak_proxy_detected": false,
       "false_strong_recommendation": false,
       "unsupported_implication": false,
-      "rules_status": "missing",
+      "rules_status": "mixed",
       "rules_status_summary": {
-        "missing": 5
+        "present": 2,
+        "missing": 3
       },
+      "rules_status_source": "agent_market_rules_snapshots.jsonl",
       "recommended_action": "needs_more_rules"
     },
     {
@@ -131,10 +135,10 @@
         "2086878",
         "906973"
       ],
-      "human_review_status": "pending",
-      "reviewer_note": "",
-      "reviewed_at_utc": null,
-      "reviewer": null,
+      "human_review_status": "needs_more_rules",
+      "reviewer_note": "Keep as needs_more_rules and regression-risk evidence. The current retrieval is mixed/noisy and is useful for testing retrieval-policy failure modes, not for promotion to a strict golden yet.",
+      "reviewed_at_utc": "2026-05-29T10:51:44.444651+00:00",
+      "reviewer": "local_reviewer",
       "agent_run_status": "run_backed",
       "run_id": "run_a5ae2a2e8eae",
       "trace_id": "4de1ef62e2b2bd400d1becd4f3583644",
@@ -147,10 +151,12 @@
       "weak_proxy_detected": false,
       "false_strong_recommendation": false,
       "unsupported_implication": false,
-      "rules_status": "missing",
+      "rules_status": "mixed",
       "rules_status_summary": {
-        "missing": 5
+        "present": 2,
+        "missing": 3
       },
+      "rules_status_source": "agent_market_rules_snapshots.jsonl",
       "recommended_action": "needs_more_rules"
     },
     {
@@ -177,9 +183,9 @@
         "1708086",
         "2111640"
       ],
-      "human_review_status": "needs_more_rules",
-      "reviewer_note": "Rules missing; composite thesis.",
-      "reviewed_at_utc": "2026-05-26T21:03:30.718523+00:00",
+      "human_review_status": "promote",
+      "reviewer_note": "Promote as reviewed weak_proxy candidate. Market 2155023 captures only one component of a composite thesis: a US blockade-lifted announcement, not ceasefire extension, Strait reopening, asset unfreezing, and sanctions relief together.",
+      "reviewed_at_utc": "2026-05-29T10:51:44.444593+00:00",
       "reviewer": "local_reviewer",
       "agent_run_status": "run_backed",
       "run_id": "run_a00456ecca12",
@@ -193,11 +199,12 @@
       "weak_proxy_detected": false,
       "false_strong_recommendation": false,
       "unsupported_implication": false,
-      "rules_status": "missing",
+      "rules_status": "present",
       "rules_status_summary": {
-        "missing": 5
+        "present": 5
       },
-      "recommended_action": "needs_more_rules"
+      "rules_status_source": "agent_market_rules_snapshots.jsonl",
+      "recommended_action": "review"
     },
     {
       "case_id": "live-solana-fundamentals-price-proxy",
@@ -222,10 +229,10 @@
         "2086886",
         "2087250"
       ],
-      "human_review_status": "pending",
-      "reviewer_note": "",
-      "reviewed_at_utc": null,
-      "reviewer": null,
+      "human_review_status": "reject",
+      "reviewer_note": "Reject for now: retrieval is noisy and mostly returns unrelated sports/crypto price markets, so this is not a good promotion candidate.",
+      "reviewed_at_utc": "2026-05-29T10:52:05.367352+00:00",
+      "reviewer": "local_reviewer",
       "agent_run_status": "run_backed",
       "run_id": "run_85efee67d1cf",
       "trace_id": "f1263a3e02e0e89d7c9bd34fd552174b",
@@ -242,6 +249,7 @@
       "rules_status_summary": {
         "missing": 5
       },
+      "rules_status_source": "agent_market_rules_snapshots.jsonl",
       "recommended_action": "needs_more_rules"
     }
   ]

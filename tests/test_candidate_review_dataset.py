@@ -40,6 +40,10 @@ def test_candidate_example_preserves_run_trace_and_review_metadata(tmp_path):
         candidate_dir / "market_rules_snapshots.jsonl",
         [{"market_id": "m1", "rules_status": "missing"}],
     )
+    _write_jsonl(
+        candidate_dir / "agent_market_rules_snapshots.jsonl",
+        [{"market_id": "m2", "rules_status": "present"}],
+    )
     _write_json(
         candidate_dir / "review_decision.json",
         {
@@ -87,7 +91,7 @@ def test_candidate_example_preserves_run_trace_and_review_metadata(tmp_path):
     assert example["input"]["case_id"] == "case-1"
     assert example["output"]["human_review_status"] == "needs_more_rules"
     assert example["output"]["reviewer_note"] == "Rules missing; composite thesis."
-    assert example["output"]["recommended_action"] == "needs_more_rules"
+    assert example["output"]["recommended_action"] == "review"
     assert "expected_fit_class" not in example["output"]
     assert "expected_best_market_id" not in example["output"]
     assert example["metadata"]["agent_run_status"] == "run_backed"
@@ -106,8 +110,9 @@ def test_candidate_example_preserves_run_trace_and_review_metadata(tmp_path):
     )
     assert example["metadata"]["proposed_fit_class"] == "indirect"
     assert example["metadata"]["fit_class_proposed"] == "indirect"
-    assert example["metadata"]["rules_status"] == "missing"
-    assert example["metadata"]["rules_status_summary"] == {"missing": 1}
+    assert example["metadata"]["rules_status"] == "present"
+    assert example["metadata"]["rules_status_summary"] == {"present": 1}
+    assert example["metadata"]["rules_status_source"] == "agent_market_rules_snapshots.jsonl"
     _assert_no_strict_expected_labels(example)
 
 
@@ -139,6 +144,7 @@ def test_dry_run_summary_keeps_candidates_pending_without_expected_labels():
             "unsupported_implication": False,
             "rules_status": "missing",
             "rules_status_summary": {"missing": 2},
+            "rules_status_source": "market_rules_snapshots.jsonl",
         },
     }
 
@@ -160,6 +166,7 @@ def test_dry_run_summary_keeps_candidates_pending_without_expected_labels():
     assert summary["review_status_counts"] == {"pending": 1}
     assert summary["rows"][0]["human_review_status"] == "pending"
     assert summary["rows"][0]["reviewer_note"] == ""
+    assert summary["rows"][0]["rules_status_source"] == "market_rules_snapshots.jsonl"
     assert "expected_fit_class" not in summary["rows"][0]
     assert "expected_best_market_id" not in summary["rows"][0]
     _assert_no_strict_expected_labels(example)

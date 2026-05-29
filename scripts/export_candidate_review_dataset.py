@@ -107,11 +107,11 @@ def _candidate_example(path: Path) -> dict[str, Any]:
     source = _read_json(path / "source.json")
     retrieval = _read_json(path / "retrieval_result.json")
     markets = _read_jsonl(path / "market_snapshots.jsonl")
-    rules = _read_jsonl(path / "market_rules_snapshots.jsonl")
+    source_rules = _read_jsonl(path / "market_rules_snapshots.jsonl")
+    agent_rules = _read_jsonl(path / "agent_market_rules_snapshots.jsonl")
     run_result = _read_optional_json(path / "run_result.json")
     review_decision = _read_optional_json(path / "review_decision.json") or {}
     review_notes = (path / "review_notes.md").read_text(encoding="utf-8")
-    rules_summary = _rules_status_summary(rules)
     eval_metrics = (run_result or {}).get("eval", {}).get("metrics", {})
     fit = (run_result or {}).get("fit", {})
     claim = (run_result or {}).get("claim", {})
@@ -125,6 +125,13 @@ def _candidate_example(path: Path) -> dict[str, Any]:
     source_market_ids = retrieval.get("market_ids_considered") or [
         market.get("market_id") for market in markets
     ]
+    review_rules = agent_rules if run_retrieval and agent_rules else source_rules
+    rules_status_source = (
+        "agent_market_rules_snapshots.jsonl"
+        if run_retrieval and agent_rules
+        else "market_rules_snapshots.jsonl"
+    )
+    rules_summary = _rules_status_summary(review_rules)
     rules_status = _overall_rules_status(rules_summary)
 
     return {
@@ -157,6 +164,7 @@ def _candidate_example(path: Path) -> dict[str, Any]:
             "returned_count": len(markets),
             "rules_status": rules_status,
             "rules_status_summary": rules_summary,
+            "rules_status_source": rules_status_source,
             "run_id": (run_result or {}).get("run_id"),
             "claim_id": (run_result or {}).get("claim_id"),
             "trace_id": trace_id,
@@ -235,6 +243,7 @@ def _summary(
             "unsupported_implication": example["metadata"]["unsupported_implication"],
             "rules_status": example["metadata"]["rules_status"],
             "rules_status_summary": example["metadata"]["rules_status_summary"],
+            "rules_status_source": example["metadata"]["rules_status_source"],
             "recommended_action": example["output"]["recommended_action"],
         }
         for example in examples

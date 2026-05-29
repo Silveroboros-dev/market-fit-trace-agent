@@ -1,0 +1,8 @@
+{
+  "candidate_dir": "evals/retrieval_candidates/2026-05-26/live-solana-fundamentals-price-proxy",
+  "case_id": "live-solana-fundamentals-price-proxy",
+  "human_review_status": "reject",
+  "reviewed_at_utc": "2026-05-29T10:52:05.367352+00:00",
+  "reviewer": "local_reviewer",
+  "reviewer_note": "Reject for now: retrieval is noisy and mostly returns unrelated sports/crypto price markets, so this is not a good promotion candidate."
+}
