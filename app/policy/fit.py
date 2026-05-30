@@ -798,7 +798,7 @@ def _deterministic_classify(
                 )
             ],
         )
-    if "anthropic" in claim_text and "valuation above $500b" in claim_text:
+    if _is_anthropic_500b_valuation_claim(claim_text):
         return MarketFit(
             recommended_market_id="polymarket_anthropic_500b_valuation_2026",
             semantic_fit_class=FitClass.DIRECT,
@@ -820,6 +820,26 @@ def _deterministic_classify(
                         "private valuation threshold."
                     ),
                 ),
+            ],
+        )
+    if _is_google_tpu_v7_ga_claim(claim_text):
+        return MarketFit(
+            recommended_market_id="pm-tpu-v7-ga-2026",
+            semantic_fit_class=FitClass.DIRECT,
+            fit_reason=(
+                "The market resolves on Google making TPU v7 generally available before "
+                "Jan 1, 2027, matching the claim's entity, event, and horizon."
+            ),
+            captures=["Google", "TPU v7 general availability", "before 2027 horizon"],
+            misses=[],
+            rejected_markets=[
+                RejectedMarket(
+                    market_id="pm-gemini-arena-2026",
+                    reason=(
+                        "Gemini leaderboard rank is a different claim from TPU v7 product "
+                        "availability."
+                    ),
+                )
             ],
         )
     if "tpu 8t" in claim_text or "tpu 8i" in claim_text or "3x performance" in claim_text:
@@ -1036,6 +1056,36 @@ def _is_composite_iran_relief_package(claim_text: str) -> bool:
         and "ceasefire" in claim_text
         and ("sanction" in claim_text or "asset" in claim_text or "unfreeze" in claim_text)
     )
+
+
+def _is_anthropic_500b_valuation_claim(claim_text: str) -> bool:
+    if "anthropic" not in claim_text or "valuation" not in claim_text:
+        return False
+    if "ipo momentum" in claim_text or "near-term ipo" in claim_text:
+        return False
+    return bool(
+        re.search(r"\$?\s*500\s*(?:b|bn|billion)\b", claim_text)
+        or "half trillion" in claim_text
+    )
+
+
+def _is_google_tpu_v7_ga_claim(claim_text: str) -> bool:
+    if "google" not in claim_text or "tpu" not in claim_text or "v7" not in claim_text:
+        return False
+    if "frontier" in claim_text or "model gap" in claim_text or "benchmark" in claim_text:
+        return False
+    has_ga_event = (
+        "generally available" in claim_text
+        or "general availability" in claim_text
+        or re.search(r"\bga\b", claim_text) is not None
+    )
+    has_2026_horizon = (
+        "before 2027" in claim_text
+        or "2026" in claim_text
+        or "jan 1, 2027" in claim_text
+        or "january 1, 2027" in claim_text
+    )
+    return has_ga_event and has_2026_horizon
 
 
 def _find_market_by_terms(

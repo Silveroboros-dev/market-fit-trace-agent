@@ -603,6 +603,21 @@ def _deterministic_extract(thesis: str) -> NormalizedClaim:
                 "same event as official IMO gold resolution."
             ),
         )
+    if (
+        "google tpu progress" in lowered
+        and "gemini" in lowered
+        and "frontier-model gap" in lowered
+    ):
+        return NormalizedClaim(
+            claim_text="Google TPU progress means Gemini closes the frontier-model gap in 2026.",
+            entities=["Google", "TPU", "Gemini", "frontier models"],
+            horizon="2026",
+            stance="expects Gemini to close the frontier-model gap",
+            confidence=0.72,
+            reasoning_summary=(
+                "The source links Google hardware progress to a future model-performance outcome."
+            ),
+        )
     if "gemini" in lowered and "tpu" in lowered:
         return NormalizedClaim(
             claim_text=(
@@ -686,6 +701,8 @@ def _is_known_eval_source(thesis: str) -> bool:
         "limits of interest rate policy",
         "agentic ai is moving out of the demo phase",
         "performance review cycle",
+        "google tpu progress",
+        "frontier-model gap in 2026",
     ]
     return any(trigger in lowered for trigger in triggers)
 

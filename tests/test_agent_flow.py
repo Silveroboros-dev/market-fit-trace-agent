@@ -28,6 +28,50 @@ class ProposalADKRuntime:
         return None
 
 
+class RephrasingExtractionADKRuntime:
+    runtime_name = "rephrasing-test-runtime"
+
+    async def generate_json(self, **kwargs):
+        if kwargs.get("task_name") == "claim_extraction":
+            return {
+                "claim_text": (
+                    "Google TPU progress will help Gemini close the performance gap with "
+                    "frontier models during 2026."
+                ),
+                "entities": ["Google", "TPU", "Gemini", "frontier models"],
+                "horizon": "2026",
+                "stance": "expects Gemini performance to improve relative to frontier models",
+                "confidence": 0.72,
+                "reasoning_summary": "Valid but visibly rephrased extraction.",
+            }
+        return None
+
+
+class AnthropicExtractionADKRuntime:
+    runtime_name = "google-adk:test-double"
+
+    async def generate_json(self, **kwargs):
+        if kwargs.get("task_name") == "claim_extraction":
+            return {
+                "claim_text": (
+                    "Anthropic will reach a valuation over 500 billion dollars in "
+                    "2026 based on private-market bids."
+                ),
+                "entities": ["Anthropic", "private valuation"],
+                "horizon": "2026",
+                "stance": "expects valuation over threshold",
+                "confidence": 0.77,
+                "reasoning_summary": "Valid ADK extraction using non-$500B wording.",
+            }
+        if kwargs.get("task_name") == "market_fit_proposal":
+            return {
+                "recommended_market_id": "polymarket_anthropic_no_ipo_june_30_2026",
+                "semantic_fit_class": "weak_proxy",
+                "fit_reason": "Model proposal should not override deterministic policy.",
+            }
+        return None
+
+
 class MissingRecommendationMarketProvider:
     name = "polydata"
 
@@ -65,15 +109,27 @@ def test_weak_proxy_first_run_then_improves(tmp_path):
     asyncio.run(_weak_proxy_first_run_then_improves(tmp_path))
 
 
+def test_known_tpu_demo_source_uses_stable_extraction(tmp_path):
+    asyncio.run(_known_tpu_demo_source_uses_stable_extraction(tmp_path))
+
+
+async def _known_tpu_demo_source_uses_stable_extraction(tmp_path):
+    store = LedgerStore(tmp_path / "ledger.json")
+    agent = MarketFitTraceAgent(store=store, adk_runtime=RephrasingExtractionADKRuntime())
+
+    thesis = "Google TPU progress means Gemini closes the frontier-model gap in 2026."
+    result = await agent.run(thesis=thesis, prompt_version="v1_lenient")
+
+    assert result.claim.claim_text == thesis
+
+
 async def _weak_proxy_first_run_then_improves(tmp_path):
     store = LedgerStore(tmp_path / "ledger.json")
     agent = MarketFitTraceAgent(store=store, adk_runtime=OfflineADKRuntime())
 
-    thesis = (
-        "Google TPU claims mean Gemini will close the gap with frontier models this year. "
-        "Find the best prediction-market expression and tell me whether the market is a clean fit."
-    )
+    thesis = "Google TPU progress means Gemini closes the frontier-model gap in 2026."
     first = await agent.run(thesis=thesis, prompt_version="v1_lenient")
+    assert first.claim.claim_text == thesis
     assert first.fit.semantic_fit_class == FitClass.INDIRECT
     assert first.eval.metrics.false_strong_recommendation is True
 
@@ -83,6 +139,7 @@ async def _weak_proxy_first_run_then_improves(tmp_path):
     assert improved.before_run_id == first.run_id
     assert improved.before_trace_id == first.phoenix_trace_id
     assert improved.before_fit == FitClass.INDIRECT
+    assert improved.after.claim.claim_text == thesis
     assert improved.after.fit.semantic_fit_class == FitClass.WEAK_PROXY
     assert improved.after_fit == FitClass.WEAK_PROXY
     assert improved.false_strong_recommendation_before is True
@@ -114,6 +171,83 @@ async def _direct_market_fit(tmp_path):
     assert any(event.event_type == "market_retrieval_run" for event in result.ledger.events)
 
 
+def test_anthropic_valuation_fixture_is_direct(tmp_path):
+    asyncio.run(_anthropic_valuation_fixture_is_direct(tmp_path))
+
+
+async def _anthropic_valuation_fixture_is_direct(tmp_path):
+    store = LedgerStore(tmp_path / "ledger.json")
+    agent = MarketFitTraceAgent(store=store, adk_runtime=OfflineADKRuntime())
+
+    result = await agent.run(
+        thesis=(
+            "Anthropic will achieve or has achieved a valuation above $500B in 2026, "
+            "based on private-market bids and reported revenue acceleration."
+        ),
+        prompt_version="v1_lenient",
+    )
+
+    assert result.fit.semantic_fit_class == FitClass.DIRECT
+    assert (
+        result.fit.recommended_market_id
+        == "polymarket_anthropic_500b_valuation_2026"
+    )
+    assert result.eval.metrics.no_clean_expression_expected is False
+    assert result.eval.metrics.false_strong_recommendation is False
+    assert result.market_retrieval is not None
+    assert (
+        "polymarket_anthropic_500b_valuation_2026"
+        in result.market_retrieval.market_ids_considered
+    )
+
+
+def test_anthropic_valuation_adk_extraction_wording_is_direct(tmp_path):
+    asyncio.run(_anthropic_valuation_adk_extraction_wording_is_direct(tmp_path))
+
+
+async def _anthropic_valuation_adk_extraction_wording_is_direct(tmp_path):
+    store = LedgerStore(tmp_path / "ledger.json")
+    agent = MarketFitTraceAgent(store=store, adk_runtime=AnthropicExtractionADKRuntime())
+
+    result = await agent.run(
+        thesis=(
+            "Anthropic will achieve or has achieved a valuation above $500B in 2026, "
+            "based on private-market bids and reported revenue acceleration."
+        ),
+        prompt_version="v1_lenient",
+    )
+
+    assert result.model == "google-adk:test-double"
+    assert "500 billion" in result.claim.claim_text
+    assert result.fit.semantic_fit_class == FitClass.DIRECT
+    assert (
+        result.fit.recommended_market_id
+        == "polymarket_anthropic_500b_valuation_2026"
+    )
+    assert result.eval.metrics.no_clean_expression_expected is False
+
+
+def test_tpu_v7_general_availability_is_direct(tmp_path):
+    asyncio.run(_tpu_v7_general_availability_is_direct(tmp_path))
+
+
+async def _tpu_v7_general_availability_is_direct(tmp_path):
+    store = LedgerStore(tmp_path / "ledger.json")
+    agent = MarketFitTraceAgent(store=store, adk_runtime=OfflineADKRuntime())
+
+    result = await agent.run(
+        thesis="Will Google make TPU v7 generally available before 2027?",
+        prompt_version="v1_lenient",
+    )
+
+    assert result.fit.semantic_fit_class == FitClass.DIRECT
+    assert result.fit.recommended_market_id == "pm-tpu-v7-ga-2026"
+    assert result.eval.metrics.false_strong_recommendation is False
+    assert result.eval.metrics.unsupported_implication is False
+    assert result.market_retrieval is not None
+    assert "pm-tpu-v7-ga-2026" in result.market_retrieval.market_ids_considered
+
+
 def test_model_fit_proposal_is_captured_but_policy_wins(tmp_path):
     asyncio.run(_model_fit_proposal_is_captured_but_policy_wins(tmp_path))
 
@@ -123,9 +257,7 @@ async def _model_fit_proposal_is_captured_but_policy_wins(tmp_path):
     agent = MarketFitTraceAgent(store=store, adk_runtime=ProposalADKRuntime())
 
     result = await agent.run(
-        thesis=(
-            "Google TPU claims mean Gemini will close the gap with frontier models this year."
-        ),
+        thesis="Google TPU progress means Gemini closes the frontier-model gap in 2026.",
         prompt_version="v2_trace_inspected",
     )
 

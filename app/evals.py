@@ -77,8 +77,8 @@ def _market_by_id(markets: list[CandidateMarket], market_id: str | None) -> Cand
 
 
 def _claim_mentions_cause(claim: NormalizedClaim) -> bool:
-    text = f"{claim.claim_text} {claim.reasoning_summary}".lower()
-    tokens = ["mean", "because", "cause", "driven by", "due to", "tpu"]
+    text = claim.claim_text.lower()
+    tokens = ["mean", "because", "cause", "driven by", "due to"]
     return any(token in text for token in tokens)
 
 

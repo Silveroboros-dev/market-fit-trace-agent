@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Callable
 from typing import Any
 
 from app.adk_runtime import ADKJsonRuntime
@@ -34,10 +35,12 @@ class MarketFitTraceAgent:
         adk_runtime: ADKJsonRuntime | None = None,
         markets: list[CandidateMarket] | None = None,
         market_provider: MarketProvider | None = None,
+        market_provider_resolver: Callable[[str], MarketProvider | None] | None = None,
     ) -> None:
         self.store = store or LedgerStore()
         self.adk_runtime = adk_runtime or ADKJsonRuntime()
         self.market_provider = market_provider or build_market_provider(markets=markets)
+        self.market_provider_resolver = market_provider_resolver
 
     async def run(
         self,
@@ -72,10 +75,10 @@ class MarketFitTraceAgent:
                 "market_retrieval_run",
                 {
                     "run_id": run_id,
-                    "market_data_mode": self.market_provider.name,
+                    "market_data_mode": self._market_provider_for(thesis).name,
                 },
             ):
-                retrieval = self.market_provider.retrieve(claim)
+                retrieval = self._market_provider_for(thesis).retrieve(claim)
                 markets = retrieval.markets
                 trace.set_current_span_attributes(
                     {
@@ -288,6 +291,11 @@ class MarketFitTraceAgent:
             except Exception:
                 pass
         return _deterministic_extract(thesis)
+
+    def _market_provider_for(self, thesis: str) -> MarketProvider:
+        if self.market_provider_resolver is None:
+            return self.market_provider
+        return self.market_provider_resolver(thesis) or self.market_provider
 
     async def classify_fit(
         self,

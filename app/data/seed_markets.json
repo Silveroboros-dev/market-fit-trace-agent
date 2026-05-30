@@ -31,6 +31,51 @@
     "entity_tags": ["Google", "TPU", "Google Cloud"]
   },
   {
+    "market_id": "polymarket_anthropic_500b_valuation_2026",
+    "title": "Anthropic $500B+ valuation in 2026?",
+    "venue": "Polymarket",
+    "description": "Market on whether Anthropic achieves a public valuation of at least $500B or raises a private round valuing it at least $500B in 2026.",
+    "resolution_rules": "Resolves Yes if Anthropic achieves a public valuation of $500B or more, or raises a private funding round valuing the company at $500B or more between market creation and December 31, 2026, 11:59 PM ET. Requires explicit confirmation by Anthropic or overwhelming consensus of credible reporting. Otherwise resolves No.",
+    "close_date": "2026-12-31",
+    "outcomes": ["Yes", "No"],
+    "current_probability": 0.96,
+    "known_fit_risks": [
+      "credible_reporting_allowed",
+      "valuation_confirmation_required"
+    ],
+    "entity_tags": ["AI", "Anthropic", "valuation", "private funding"]
+  },
+  {
+    "market_id": "polymarket_anthropic_no_ipo_june_30_2026",
+    "title": "No IPO by June 30, 2026",
+    "venue": "Polymarket",
+    "description": "Outcome in the market group 'Anthropic IPO Closing Market Cap'.",
+    "resolution_rules": "Resolves based on Anthropic's market capitalization at the closing price on its first day of trading. If no IPO occurs by June 30, 2026, 11:59 PM ET, the market resolves to 'No IPO by June 30, 2026'. Market capitalization is outstanding shares multiplied by closing share price on first trading day. If a value falls between brackets, the higher bracket resolves. Resolution uses the primary exchange official listing page or another reliable source if needed.",
+    "close_date": "2026-06-30",
+    "outcomes": ["Yes", "No"],
+    "current_probability": 0.971,
+    "known_fit_risks": [
+      "ipo_timing_not_valuation",
+      "bracketed_market"
+    ],
+    "entity_tags": ["AI", "Anthropic", "IPO", "market cap"]
+  },
+  {
+    "market_id": "polymarket_largest_ipo_2026_anthropic",
+    "title": "Will Anthropic have the highest IPO market cap in 2026?",
+    "venue": "Polymarket",
+    "description": "Outcome in the market group 'Largest IPO by market cap in 2026?'",
+    "resolution_rules": "Resolves to the company that achieves the highest market capitalization in U.S. dollars based on the official closing price on its first trading day in 2026. Eligible companies must complete an IPO between January 1 and December 31, 2026, 11:59 PM ET. Market capitalization is outstanding shares multiplied by closing share price on first trading day. Ties resolve alphabetically. Resolution uses the primary exchange official listing page, or another reliable source if unavailable. Foreign currency values are converted using the Federal Reserve H.10 reference rate.",
+    "close_date": "2026-12-31",
+    "outcomes": ["Yes", "No"],
+    "current_probability": 0.071,
+    "known_fit_risks": [
+      "comparative_market",
+      "ipo_completion_required"
+    ],
+    "entity_tags": ["IPO", "Anthropic", "market cap"]
+  },
+  {
     "market_id": "pm-fed-cut-sept-2026",
     "title": "Will the Fed cut rates by the September 2026 FOMC meeting?",
     "venue": "SnapshotMarket",
@@ -57,4 +102,3 @@
     "entity_tags": ["Federal Reserve", "rates", "FOMC", "July 2026"]
   }
 ]
-

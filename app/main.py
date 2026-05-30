@@ -9,7 +9,12 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.agent import MarketFitTraceAgent
+from app.candidate_review import (
+    load_candidate_review_detail,
+    load_candidate_review_summary,
+)
 from app.config import settings
+from app.golden_replay import list_strict_golden_options, resolve_strict_golden_provider
 from app.ledger import LedgerStore
 from app.market_data import load_markets
 from app.market_provider import PolyDataMarketProvider
@@ -22,7 +27,10 @@ from app.models import (
 )
 
 store = LedgerStore()
-agent = MarketFitTraceAgent(store=store)
+agent = MarketFitTraceAgent(
+    store=store,
+    market_provider_resolver=resolve_strict_golden_provider,
+)
 app = FastAPI(title="Market Fit Trace Agent", version="0.1.0")
 
 app.add_middleware(
@@ -75,6 +83,15 @@ def markets(
     return [market.model_dump() for market in load_markets()]
 
 
+@app.get("/api/strict-goldens")
+def strict_goldens() -> dict[str, object]:
+    goldens = list_strict_golden_options()
+    return {
+        "golden_count": len(goldens),
+        "goldens": goldens,
+    }
+
+
 @app.post("/api/runs", response_model=RunResult)
 async def create_run(payload: SourceInput) -> RunResult:
     return await agent.run(
@@ -109,6 +126,19 @@ def claim_trace(claim_id: str) -> dict[str, object]:
         return store.query_claim_trace(claim_id).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/api/retrieval-candidates")
+def retrieval_candidates() -> dict[str, object]:
+    return load_candidate_review_summary()
+
+
+@app.get("/api/retrieval-candidates/{case_id}")
+def retrieval_candidate(case_id: str) -> dict[str, object]:
+    try:
+        return load_candidate_review_detail(case_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown candidate: {case_id}") from exc
 
 
 @app.post("/api/runs/{run_id}/improve", response_model=ImprovementResult)

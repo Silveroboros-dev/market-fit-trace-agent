@@ -19,6 +19,11 @@ def test_root_agent_has_product_tools() -> None:
     policy = market_fit_policy()
 
     assert markets["markets"][0]["market_id"] == "pm-gemini-arena-2026"
+    assert {
+        "polymarket_anthropic_500b_valuation_2026",
+        "polymarket_anthropic_no_ipo_june_30_2026",
+        "polymarket_largest_ipo_2026_anthropic",
+    }.issubset({market["market_id"] for market in markets["markets"]})
     assert "weak_proxy" in policy["classes"]
     assert "Deterministic code" in policy["invariant"]
 

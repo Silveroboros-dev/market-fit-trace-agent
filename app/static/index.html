@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Market Fit Trace Agent</title>
-    <link rel="stylesheet" href="/static/styles.css?v=20260524-ui2" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260530-strict-golden-loader" />
   </head>
   <body>
     <main class="shell">
@@ -18,8 +18,15 @@
 
       <section class="workspace">
         <form class="panel input-panel" id="run-form">
+          <div class="golden-loader">
+            <label for="strict-golden-select">Load strict golden</label>
+            <select id="strict-golden-select" aria-label="Load strict golden">
+              <option value="">Loading strict goldens</option>
+            </select>
+            <p class="golden-note" id="strict-golden-note">Strict goldens fill the source text exactly; they do not auto-run.</p>
+          </div>
           <label for="thesis">Source text</label>
-          <textarea id="thesis" name="thesis" rows="14">Google TPU claims mean Gemini will close the gap with frontier models this year. Find the best prediction-market expression and tell me whether the market is a clean fit.</textarea>
+          <textarea id="thesis" name="thesis" rows="14">Google TPU progress means Gemini closes the frontier-model gap in 2026.</textarea>
           <div class="toolbar">
             <select id="prompt-version" name="prompt-version" aria-label="Prompt version">
               <option value="v1_lenient">First run</option>
@@ -47,7 +54,29 @@
           <div id="ledger-events"></div>
         </aside>
       </section>
+
+      <section class="candidate-workbench" aria-label="Existing candidate packets">
+        <div class="candidate-head">
+          <div>
+            <p class="eyebrow">Existing candidate queue</p>
+            <h2>Existing candidate packets</h2>
+          </div>
+          <div class="candidate-actions">
+            <select id="candidate-select" aria-label="Candidate packet">
+              <option value="">Loading packets</option>
+            </select>
+            <button type="button" id="candidate-refresh">Refresh</button>
+          </div>
+        </div>
+        <div class="candidate-stats" id="candidate-stats"></div>
+        <div class="workflow-board">
+          <div class="workflow-rail" id="workflow-rail" aria-live="polite"></div>
+          <article class="workflow-screen" id="workflow-screen" aria-live="polite">
+            <p class="empty">Loading candidate packet.</p>
+          </article>
+        </div>
+      </section>
     </main>
-    <script src="/static/app.js?v=20260524-ui2"></script>
+    <script src="/static/app.js?v=20260530-strict-golden-loader"></script>
   </body>
 </html>

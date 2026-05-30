@@ -13,8 +13,7 @@ st.title("Market Fit Trace Agent")
 st.caption("Arize track - OpenInference traces - Phoenix eval loop")
 
 default_thesis = (
-    "Google TPU claims mean Gemini will close the gap with frontier models this year. "
-    "Find the best prediction-market expression and tell me whether the market is a clean fit."
+    "Google TPU progress means Gemini closes the frontier-model gap in 2026."
 )
 
 left, center, right = st.columns([0.9, 1.25, 0.85])

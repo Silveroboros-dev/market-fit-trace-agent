@@ -317,9 +317,7 @@ http://127.0.0.1:8000
 Use the default demo thesis:
 
 ```text
-Google TPU claims mean Gemini will close the gap with frontier models this year.
-Find the best prediction-market expression and tell me whether the market is a
-clean fit.
+Google TPU progress means Gemini closes the frontier-model gap in 2026.
 ```
 
 Demo steps:
@@ -367,7 +365,7 @@ not passed. The fallback only proves offline reproducibility.
    thesis. Market Fit Trace Agent audits the thesis-to-market path by checking
    whether a real market measures the claim someone cares about.
 2. Start with the default thesis:
-   `Google TPU claims mean Gemini will close the gap with frontier models this year.`
+   `Google TPU progress means Gemini closes the frontier-model gap in 2026.`
 3. Click **Run agent**.
 4. Show the first run:
    normalized thesis, tempting related market, first-run fit classification, and

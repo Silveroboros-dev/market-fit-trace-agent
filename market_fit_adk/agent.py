@@ -33,6 +33,41 @@ def candidate_market_snapshots() -> dict[str, Any]:
                 ),
             },
             {
+                "market_id": "polymarket_anthropic_500b_valuation_2026",
+                "title": "Anthropic $500B+ valuation in 2026?",
+                "fit_risk": "direct_for_anthropic_private_or_public_valuation_threshold",
+                "why_it_is_tempting": (
+                    "It directly names Anthropic, the $500B valuation threshold, and a 2026 "
+                    "deadline."
+                ),
+                "why_it_is_not_clean": "",
+            },
+            {
+                "market_id": "polymarket_anthropic_no_ipo_june_30_2026",
+                "title": "No IPO by June 30, 2026",
+                "fit_risk": "ipo_timing_not_private_valuation",
+                "why_it_is_tempting": (
+                    "It mentions Anthropic and market capitalization, so it can look related "
+                    "to valuation hype."
+                ),
+                "why_it_is_not_clean": (
+                    "It resolves on IPO timing and first-day market-cap brackets, not whether "
+                    "Anthropic reaches a private or public $500B valuation in 2026."
+                ),
+            },
+            {
+                "market_id": "polymarket_largest_ipo_2026_anthropic",
+                "title": "Will Anthropic have the highest IPO market cap in 2026?",
+                "fit_risk": "comparative_ipo_ranking_not_valuation_threshold",
+                "why_it_is_tempting": (
+                    "A high Anthropic valuation could make this feel adjacent."
+                ),
+                "why_it_is_not_clean": (
+                    "It resolves on comparative IPO ranking, not a standalone Anthropic "
+                    "$500B valuation threshold."
+                ),
+            },
+            {
                 "market_id": "pm-direct-fed-cut-july-2026",
                 "title": "Will the Federal Reserve cut rates at the July 2026 FOMC meeting?",
                 "fit_risk": "direct_when_claim_mentions_july_2026_fomc_cut",
