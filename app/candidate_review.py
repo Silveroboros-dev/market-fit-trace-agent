@@ -13,10 +13,12 @@ DEFAULT_DATASET_EXPORT = (
 
 def load_candidate_review_summary(
     export_path: Path = DEFAULT_DATASET_EXPORT,
+    candidates_dir: Path | None = None,
 ) -> dict[str, Any]:
+    candidates_dir = candidates_dir or export_path.parent
     summary = _read_optional_json(export_path)
     if not summary:
-        return {
+        summary = {
             "status": "missing_export",
             "mode": "local",
             "dataset_name": "market_fit_candidate_cases",
@@ -31,6 +33,21 @@ def load_candidate_review_summary(
             "review_status_counts": {},
             "missing_rules_case_count": 0,
             "rows": [],
+        }
+    local_summary = _local_candidate_summary(
+        candidates_dir=candidates_dir,
+        dataset_name=summary.get("dataset_name", "market_fit_candidate_cases"),
+    )
+    if local_summary:
+        summary = {
+            **summary,
+            "candidate_count": local_summary["candidate_count"],
+            "run_backed_count": local_summary["run_backed_count"],
+            "retrieval_only_count": local_summary["retrieval_only_count"],
+            "pending_review_count": local_summary["pending_review_count"],
+            "review_status_counts": local_summary["review_status_counts"],
+            "missing_rules_case_count": local_summary["missing_rules_case_count"],
+            "rows": local_summary["rows"],
         }
     rows = sorted(summary.get("rows", []), key=_candidate_sort_key)
     return {**summary, "rows": rows}
@@ -99,6 +116,40 @@ def _candidate_sort_key(row: dict[str, Any]) -> tuple[int, str]:
     status_rank = {"promote": 0, "needs_more_rules": 1, "candidate_only": 2, "reject": 3}
     status = str(row.get("human_review_status") or "pending")
     return (status_rank.get(status, 4), str(row.get("case_id") or ""))
+
+
+def _local_candidate_summary(
+    *,
+    candidates_dir: Path,
+    dataset_name: str,
+) -> dict[str, Any] | None:
+    if not candidates_dir.exists():
+        return None
+    from scripts.export_candidate_review_dataset import (
+        _candidate_dirs,
+        _candidate_example,
+        _summary,
+    )
+
+    candidate_dirs = _candidate_dirs(candidates_dir)
+    if not candidate_dirs:
+        return None
+    examples = []
+    for path in candidate_dirs:
+        try:
+            examples.append(_candidate_example(path))
+        except FileNotFoundError:
+            continue
+    if not examples:
+        return None
+    return _summary(
+        dataset=None,
+        dataset_name=dataset_name,
+        examples=examples,
+        dry_run=True,
+        missing_config=[],
+        phoenix_write_error=None,
+    )
 
 
 def _read_json(path: Path) -> dict[str, Any]:

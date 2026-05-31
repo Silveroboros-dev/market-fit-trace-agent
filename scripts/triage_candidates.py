@@ -276,6 +276,9 @@ def _normalize_model_suggestion(
             ),
             "likely_issues": issues,
             "markets_to_inspect": markets_to_inspect,
+            "market_scores": _market_scores(
+                packet, markets_to_inspect=markets_to_inspect
+            ),
             "judge_rationale": rationale,
             "needs_human_check": True,
             "must_not_promote_without": _normalize_string_list(
@@ -333,6 +336,9 @@ def _local_rule_suggestion(packet: dict[str, Any]) -> dict[str, Any]:
             "suggested_fit_risk": _local_fit_risk(fit),
             "likely_issues": sorted(set(issues), key=issues.index),
             "markets_to_inspect": markets_to_inspect,
+            "market_scores": _market_scores(
+                packet, markets_to_inspect=markets_to_inspect
+            ),
             "judge_rationale": rationale,
             "needs_human_check": True,
             "must_not_promote_without": [
@@ -494,6 +500,42 @@ def _default_markets_to_inspect(packet: dict[str, Any]) -> list[str]:
     if recommended:
         return [str(recommended)]
     return [market["market_id"] for market in packet["markets"][:3]]
+
+
+def _market_scores(
+    packet: dict[str, Any], *, markets_to_inspect: list[str]
+) -> list[dict[str, Any]]:
+    source_tokens = _semantic_tokens(packet["source_text"])
+    recommended = packet["agent_proposed_fit"].get("recommended_market_id")
+    inspect_ids = set(markets_to_inspect)
+    rows = []
+    for market in packet["markets"]:
+        market_text = " ".join(
+            [
+                market.get("title") or "",
+                market.get("description") or "",
+                market.get("resolution_rules") or "",
+                " ".join(market.get("entity_tags") or []),
+            ]
+        )
+        market_tokens = _semantic_tokens(market_text)
+        overlap = len(source_tokens & market_tokens)
+        denominator = max(len(source_tokens), 1)
+        score = min(55, round((overlap / denominator) * 55))
+        if market["market_id"] == recommended:
+            score += 25
+        if market["market_id"] in inspect_ids:
+            score += 15
+        if market.get("rules_status") == "missing":
+            score -= 10
+        score = max(0, min(100, score))
+        rows.append(
+            {
+                "market_id": market["market_id"],
+                "review_score": score,
+            }
+        )
+    return sorted(rows, key=lambda row: row["review_score"], reverse=True)
 
 
 def _local_fit_risk(fit: dict[str, Any]) -> str:

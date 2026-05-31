@@ -288,6 +288,34 @@ class LedgerStore:
                 },
             )
 
+    def record_trace_repair_gate(
+        self,
+        *,
+        run_id: str,
+        claim_id: str | None,
+        previous_trace_id: str,
+        previous_failure_summary: str,
+        inspection_source: str,
+        recommended_market_id: str | None,
+    ) -> None:
+        with self._locked_store() as data:
+            self._append_event(
+                data,
+                run_id=run_id,
+                claim_id=claim_id,
+                event_type="trace_repair_gate_applied",
+                summary=(
+                    "Trace-informed false-strong cap downgraded the recommendation "
+                    "to weak_proxy."
+                ),
+                payload={
+                    "previous_trace_id": previous_trace_id,
+                    "previous_failure_summary": previous_failure_summary,
+                    "inspection_source": inspection_source,
+                    "recommended_market_id": recommended_market_id,
+                },
+            )
+
     def reset(self) -> None:
         with self._lock:
             self._write(_empty_store())

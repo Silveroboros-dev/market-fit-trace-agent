@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from typing import Any
 
@@ -20,9 +21,7 @@ class PhoenixMCPInspector:
         run = self.store.get_run(run_id)
         eval_record = self.store.get_latest_eval_for_run(run_id)
         phoenix_trace_id = run.get("phoenix_trace_id") or "local-trace-unset"
-        failure_summary = (
-            eval_record.get("failure_summary") if eval_record else None
-        ) or "No failed eval was recorded for this run."
+        failure_summary = _eval_failure_context(eval_record)
 
         if settings.phoenix_mcp_enabled:
             mcp_summary = await self._try_phoenix_mcp_summary(phoenix_trace_id, failure_summary)
@@ -68,6 +67,8 @@ class PhoenixMCPInspector:
                 env={
                     "PHOENIX_API_KEY": settings.phoenix_api_key or "",
                     "PHOENIX_BASE_URL": settings.phoenix_base_url or "",
+                    "PHOENIX_HOST": settings.phoenix_base_url or "",
+                    "PHOENIX_PROJECT": settings.phoenix_project_name,
                 },
             )
             async with stdio_client(params) as (read_stream, write_stream):
@@ -110,28 +111,77 @@ def _summarize_phoenix_mcp_result(
     result: Any, phoenix_trace_id: str, fallback_summary: str
 ) -> str:
     raw_text = _mcp_result_text(result)
+    if _looks_like_mcp_error(raw_text):
+        return ""
     lower = raw_text.lower()
-    signals = [
+    annotation_names = [
         name
         for name in [
             "fit_eval_run",
             "false_strong_recommendation",
             "weak_proxy_detected",
             "unsupported_implication",
+            "causal_mechanism_mismatch",
+            "resolution_target_mismatch",
+            "horizon_mismatch",
+            "entity_mismatch",
+            "trace_repair_candidate",
+            "trace_repair_gate_applied",
             "schema_valid",
         ]
         if name in lower
     ]
-    signal_text = ", ".join(signals) if signals else "trace data returned"
+    annotation_text = (
+        ", ".join(annotation_names) if annotation_names else "trace data returned"
+    )
     excerpt = _compact(raw_text, max_chars=800)
     summary = (
         "Phoenix MCP inspected the failed trace. "
         f"trace_id={phoenix_trace_id}. "
-        f"Signals found: {signal_text}. "
-        f"Prior eval failure: {fallback_summary}. "
+        f"Annotation names returned: {annotation_text}. "
+        f"Prior eval values: {fallback_summary}. "
         f"Compact trace excerpt: {excerpt}"
     )
     return _compact(summary, max_chars=MAX_TRACE_SUMMARY_CHARS)
+
+
+def _looks_like_mcp_error(raw_text: str) -> bool:
+    lower = raw_text.lower()
+    error_markers = (
+        "server version could not be determined",
+        "trace not found",
+        "error:",
+        '"iserror":true',
+    )
+    return any(marker in lower for marker in error_markers)
+
+
+def _eval_failure_context(eval_record: dict[str, Any] | None) -> str:
+    if not eval_record:
+        return "No failed eval was recorded for this run."
+    metrics = _metrics_from_eval_record(eval_record)
+    signals = [
+        "false_strong_recommendation",
+        "unsupported_implication",
+        "causal_mechanism_mismatch",
+        "resolution_target_mismatch",
+        "horizon_mismatch",
+        "entity_mismatch",
+        "trace_repair_candidate",
+        "trace_repair_gate_applied",
+    ]
+    signal_text = "; ".join(
+        f"{name}={str(bool(metrics.get(name))).lower()}" for name in signals
+    )
+    summary = eval_record.get("failure_summary") or "No failed eval was recorded."
+    return f"{signal_text}. {summary}"
+
+
+def _metrics_from_eval_record(eval_record: dict[str, Any]) -> dict[str, Any]:
+    try:
+        return json.loads(eval_record.get("metrics_json") or "{}")
+    except Exception:
+        return {}
 
 
 def _mcp_result_text(result: Any) -> str:

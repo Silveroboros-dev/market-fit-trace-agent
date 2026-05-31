@@ -15,6 +15,9 @@ REQUIRED_ANNOTATIONS = (
     "false_strong_recommendation",
     "weak_proxy_detected",
     "unsupported_implication",
+    "causal_mechanism_mismatch",
+    "resolution_target_mismatch",
+    "trace_repair_candidate",
 )
 
 

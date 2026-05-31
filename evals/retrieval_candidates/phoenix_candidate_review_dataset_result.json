@@ -3,7 +3,7 @@
   "mode": "phoenix",
   "dataset_name": "market_fit_candidate_cases",
   "dataset_id": "RGF0YXNldDoz",
-  "dataset_version_id": "RGF0YXNldFZlcnNpb246MTE=",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246MTI=",
   "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDoz",
   "missing_config": [],
   "phoenix_write_error": null,
@@ -73,8 +73,29 @@
       ],
       "llm_markets_to_inspect": [
         "2155023",
-        "1809560",
-        "2119130"
+        "1809560"
+      ],
+      "llm_market_scores": [
+        {
+          "market_id": "2155023",
+          "review_score": 79
+        },
+        {
+          "market_id": "1809560",
+          "review_score": 39
+        },
+        {
+          "market_id": "1708086",
+          "review_score": 39
+        },
+        {
+          "market_id": "2119130",
+          "review_score": 31
+        },
+        {
+          "market_id": "1796138",
+          "review_score": 16
+        }
       ],
       "llm_triage_source": "google-adk",
       "recommended_action": "review"
@@ -136,6 +157,28 @@
         "2086888",
         "2086878"
       ],
+      "llm_market_scores": [
+        {
+          "market_id": "616906",
+          "review_score": 17
+        },
+        {
+          "market_id": "906973",
+          "review_score": 15
+        },
+        {
+          "market_id": "2086885",
+          "review_score": 5
+        },
+        {
+          "market_id": "2086888",
+          "review_score": 5
+        },
+        {
+          "market_id": "2086878",
+          "review_score": 5
+        }
+      ],
       "llm_triage_source": "google-adk",
       "recommended_action": "needs_more_rules"
     },
@@ -194,10 +237,29 @@
       ],
       "llm_markets_to_inspect": [
         "616906",
-        "906973",
-        "2086885",
-        "2086888",
-        "2086878"
+        "906973"
+      ],
+      "llm_market_scores": [
+        {
+          "market_id": "616906",
+          "review_score": 15
+        },
+        {
+          "market_id": "906973",
+          "review_score": 15
+        },
+        {
+          "market_id": "2086885",
+          "review_score": 0
+        },
+        {
+          "market_id": "2086888",
+          "review_score": 0
+        },
+        {
+          "market_id": "2086878",
+          "review_score": 0
+        }
       ],
       "llm_triage_source": "google-adk",
       "recommended_action": "needs_more_rules"
@@ -255,7 +317,31 @@
         "weak_proxy_risk"
       ],
       "llm_markets_to_inspect": [
-        "2155023"
+        "2155023",
+        "1809560",
+        "2111640"
+      ],
+      "llm_market_scores": [
+        {
+          "market_id": "2155023",
+          "review_score": 60
+        },
+        {
+          "market_id": "1809560",
+          "review_score": 31
+        },
+        {
+          "market_id": "2111640",
+          "review_score": 23
+        },
+        {
+          "market_id": "2119130",
+          "review_score": 16
+        },
+        {
+          "market_id": "1708086",
+          "review_score": 12
+        }
       ],
       "llm_triage_source": "google-adk",
       "recommended_action": "review"
@@ -318,6 +404,28 @@
         "553857",
         "2086886",
         "2087250"
+      ],
+      "llm_market_scores": [
+        {
+          "market_id": "2086878",
+          "review_score": 5
+        },
+        {
+          "market_id": "2289144",
+          "review_score": 5
+        },
+        {
+          "market_id": "553857",
+          "review_score": 5
+        },
+        {
+          "market_id": "2086886",
+          "review_score": 5
+        },
+        {
+          "market_id": "2087250",
+          "review_score": 5
+        }
       ],
       "llm_triage_source": "google-adk",
       "recommended_action": "needs_more_rules"

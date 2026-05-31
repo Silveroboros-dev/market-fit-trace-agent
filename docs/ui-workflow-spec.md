@@ -13,12 +13,17 @@ The top workspace is bound only to the current `/api/runs` result.
 It may show:
 
 - the source text entered by the user;
+- source-assisted candidate rows loaded from staged eval candidate packs, where
+  the source text and provenance are the evidence anchor but proposed fit labels
+  are not canonical truth;
 - the normalized claim returned for that run;
 - the bounded retrieved market context for that run, using strict golden
   fixture context when the source text exactly matches a promoted golden;
 - the deterministic market-fit decision;
 - the Phoenix trace link, run ID, prompt version, and deterministic eval result;
-- run-level human verdict controls.
+- run-level human verdict controls;
+- an optional current-run candidate packet created explicitly from the current
+  run, if the user asks for LLM triage or promotion review.
 
 It must not show an LLM candidate triage suggestion unless a candidate packet is
 explicitly bound to the current run.
@@ -52,6 +57,16 @@ candidate packet.
    gate must say that candidate triage is unavailable for this run.
 6. Browsing existing candidate packets must be labeled as browsing an existing
    queue, not as triaging the current run.
+7. A current-run candidate packet is identified by `case_id` and must be created
+   explicitly from the active `run_id`; it is not inferred from the existing
+   candidate queue.
+8. Human review in the UI writes only candidate review status. A `promote`
+   review means eligible for later frozen strict-golden promotion; it does not
+   directly mutate strict expected labels.
+9. A source-assisted input row is identified by `source_case_key`
+   (`pack::example_id`) and may prefill source text and provenance only. Its
+   proposed expected fit is advisory until a current run, candidate packet, and
+   human review exist.
 
 ## Workflow Contract
 
@@ -59,9 +74,10 @@ The intended governance flow is:
 
 ```text
 current run source text
+-> optional source-assisted source/provenance row
 -> bounded retrieved markets shown on the run screen
 -> deterministic policy/eval shown on the run screen
--> optional export as candidate packet outside this UI
+-> optional export as current-run candidate packet
 -> optional llm_review_suggestion.json for that candidate packet
 -> Phoenix candidate Dataset metadata mirror
 -> human review_decision.json
@@ -132,3 +148,53 @@ The UI may offer a `Load strict golden` control that fills the source-text box
 with exact promoted-golden text. Selecting a golden must not auto-run the agent,
 open candidate triage, open human review, or promote anything. If the loaded text
 is edited, the UI must warn that exact golden replay may no longer apply.
+
+### AC-11: Trace-Inspected Runs Require Phoenix Inspection
+
+The normal UI must not let users choose `v2_trace_inspected` as a first run.
+Trace-inspected reruns must be created only through
+`/api/runs/{run_id}/improve`, after the first run has produced a trace and eval
+failure context. Developer-only controls may exist elsewhere, but the judge demo
+path is:
+
+```text
+Run agent -> inspect Phoenix trace -> rerun
+```
+
+### AC-12: Candidate Packet Shows Source, Normalization, Eval Trace
+
+Every candidate packet detail view must show the initial source text, normalized
+thesis, run ID, Phoenix trace ID or trace link, fit class, eval metrics, and
+failure summary when present. These fields must come from that packet's
+`run_result.json` or Dataset row, not from the active run unless the packet was
+explicitly created from that run.
+
+### AC-13: Current Run Can Create Advisory Candidate Triage
+
+After a current run completes, the UI may ask whether to create a candidate
+packet and run LLM triage. If the user says yes, the app must write a candidate
+packet for the active `run_id`, write `llm_review_suggestion.json`, bind the
+candidate workflow to the new `case_id`, and label the suggestion as advisory.
+
+### AC-14: LLM Triage Includes Market Ranking Scores
+
+The LLM triage view must show one numeric advisory ranking score per retrieved
+market. These scores are review-priority hints only and must not be rendered as
+strict fit labels, best-market truth, or CI pass/fail.
+
+### AC-15: Human Promotion Review Target Is Explicit
+
+When the UI asks whether to review a thesis for promotion, it must state that
+the review writes `review_decision.json` for the candidate packet. `promote`
+means eligible for a later explicit frozen strict-golden promotion; the UI must
+also state that it does not mutate `expected_outputs.jsonl`.
+
+### AC-16: Source-Assisted Candidate Loader Preserves Truth Boundary
+
+The UI may offer a `Load source-assisted candidate` control backed by staged
+candidate eval packs. Selecting a row must fill the source-text box with exact
+saved source text and show source provenance, but it must not auto-run the
+agent, open triage, open human review, or treat proposed expected labels as
+strict truth. If a source-assisted row is exported as a current-run candidate
+packet, `source.json` must preserve the source-assisted pack, `example_id`,
+provenance, and truth-scope metadata.

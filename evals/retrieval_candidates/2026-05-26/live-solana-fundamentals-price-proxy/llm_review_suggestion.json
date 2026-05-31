@@ -2,12 +2,34 @@
   "candidate_dir": "evals/retrieval_candidates/2026-05-26/live-solana-fundamentals-price-proxy",
   "candidate_id": "live-solana-fundamentals-price-proxy",
   "canonical_truth": false,
-  "judge_rationale": "All 5 retrieved markets are missing resolution rules, preventing a proper evaluation. Furthermore, the thesis is highly compound (covering UX, PMF, speed, and usage vs price), which suggests any simple price-based market would be a weak proxy.",
+  "judge_rationale": "All 5 retrieved markets are missing resolution rules. Additionally, the thesis is highly compound (covering speed, UX, usage, and PMF), meaning any simple price-based market would act as a weak proxy.",
   "judge_version": "llm_candidate_triage_v0",
   "likely_issues": [
     "missing_resolution_rules",
     "weak_proxy_risk",
     "compound_thesis"
+  ],
+  "market_scores": [
+    {
+      "market_id": "2086878",
+      "review_score": 5
+    },
+    {
+      "market_id": "2289144",
+      "review_score": 5
+    },
+    {
+      "market_id": "553857",
+      "review_score": 5
+    },
+    {
+      "market_id": "2086886",
+      "review_score": 5
+    },
+    {
+      "market_id": "2087250",
+      "review_score": 5
+    }
   ],
   "markets_to_inspect": [
     "2086878",
@@ -27,6 +49,6 @@
   "suggested_fit_risk": "likely_no_clean_expression",
   "suggested_review_status": "needs_more_rules",
   "triage_source": "google-adk",
-  "triaged_at_utc": "2026-05-29T18:31:00.955254+00:00",
+  "triaged_at_utc": "2026-05-30T16:50:39.576341+00:00",
   "writes_strict_expected_labels": false
 }

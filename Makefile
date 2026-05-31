@@ -1,4 +1,4 @@
-.PHONY: dev test lint format evals evals-v2 evals-v4-live-promoted evals-live evals-candidates evals-candidates-v3 intake-goldens export-retrieval-candidate backfill-candidate-rules triage-candidates export-candidate-dataset review-candidate phoenix-export-candidates phoenix-sync-goldens phoenix-experiment-goldens api ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
+.PHONY: dev test lint format evals evals-v2 evals-v4-live-promoted evals-live trace-repair evals-candidates evals-candidates-v3 intake-goldens export-retrieval-candidate backfill-candidate-rules triage-candidates export-candidate-dataset review-candidate phoenix-export-candidates phoenix-sync-goldens phoenix-experiment-goldens api ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
 
 api:
 	uv run --python 3.11 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
@@ -34,6 +34,9 @@ evals-v4-live-promoted:
 
 evals-live:
 	uv run --python 3.11 python scripts/run_evals.py --live
+
+trace-repair:
+	PHOENIX_MCP_ENABLED=true uv run --python 3.11 python scripts/run_trace_repair_eval.py
 
 evals-candidates:
 	uv run --python 3.11 python scripts/run_evals.py --allow-failures \

@@ -20,6 +20,12 @@ def test_ui_workflow_spec_defines_state_binding_acceptance_criteria():
         "AC-8",
         "AC-9",
         "AC-10",
+        "AC-11",
+        "AC-12",
+        "AC-13",
+        "AC-14",
+        "AC-15",
+        "AC-16",
     ):
         assert criterion in spec
     assert "current run is identified by `run_id`" in spec
@@ -30,14 +36,20 @@ def test_ui_workflow_spec_defines_state_binding_acceptance_criteria():
     assert "Dataset-wide and independent from the active run" in spec
     assert "Exact Golden Replay Uses Frozen Fixture Context" in spec
     assert "Strict Golden Loader Is Manual" in spec
+    assert "Trace-Inspected Runs Require Phoenix Inspection" in spec
+    assert "Current Run Can Create Advisory Candidate Triage" in spec
+    assert "LLM Triage Includes Market Ranking Scores" in spec
+    assert "Human Promotion Review Target Is Explicit" in spec
+    assert "Source-Assisted Candidate Loader Preserves Truth Boundary" in spec
+    assert "source_case_key" in spec
 
 
 def test_current_run_ui_does_not_open_existing_candidate_triage():
     app_js = APP_JS.read_text(encoding="utf-8")
 
-    assert "Candidate triage unavailable for this run" in app_js
-    assert "Browse existing candidate packets" in app_js
-    assert "data-scroll-candidate-queue" in app_js
+    assert "Run LLM triage suggestion?" in app_js
+    assert "data-create-run-triage" in app_js
+    assert "llm_review_suggestion.json with market ranking scores" in app_js
     assert "Yes, show triage" not in app_js
     assert "data-scroll-candidate-workflow" not in app_js
 
@@ -46,6 +58,7 @@ def test_current_run_ui_does_not_open_existing_candidate_triage():
     )[0]
     assert 'state.workflow.screen = "triage"' not in bind_run_governance
     assert "setTriageDecision" not in bind_run_governance
+    assert "/api/current-run-candidates" in app_js
 
 
 def test_candidate_queue_requires_explicit_case_selection():
@@ -78,12 +91,44 @@ def test_strict_golden_loader_fills_source_without_auto_run():
     assert "setReviewDecision" not in strict_golden_handler
 
 
+def test_source_assisted_loader_fills_source_without_auto_run_or_truth_claim():
+    app_js = APP_JS.read_text(encoding="utf-8")
+    index_html = INDEX_HTML.read_text(encoding="utf-8")
+
+    assert "Load source-assisted candidate" in index_html
+    assert "source-candidate-select" in index_html
+    assert "source-candidate-note" in index_html
+    assert 'api("/api/source-candidates")' in app_js
+    assert "Source-assisted row loaded" in app_js
+    assert "source_text_and_provenance_only" in app_js
+    assert "proposed fit labels are advisory" in index_html
+    assert "source_assisted: currentSourceAssistedRef()" in app_js
+
+    source_candidate_handler = app_js.split(
+        'sourceCandidateSelectEl.addEventListener("change"', 1
+    )[1].split('thesisEl.addEventListener("input"', 1)[0]
+    assert "/api/runs" not in source_candidate_handler
+    assert "setTriageDecision" not in source_candidate_handler
+    assert "setReviewDecision" not in source_candidate_handler
+
+
+def test_trace_inspected_mode_is_not_directly_selectable():
+    app_js = APP_JS.read_text(encoding="utf-8")
+    index_html = INDEX_HTML.read_text(encoding="utf-8")
+
+    assert 'value="v1_lenient"' in index_html
+    assert "Trace-inspected reruns use Phoenix MCP" in index_html
+    assert '<option value="v2_trace_inspected">' not in index_html
+    assert 'document.querySelector("#prompt-version").value' in app_js
+
+
 def test_current_run_clears_stale_candidate_selection_and_scopes_eval_metrics():
     app_js = APP_JS.read_text(encoding="utf-8")
 
     assert "function beginCurrentRun()" in app_js
     assert "function clearCandidateSelectionForRun()" in app_js
     assert "state.selectedCandidateId = null" in app_js
+    assert "state.activeRunCandidateId = null" in app_js
     assert 'candidateSelectEl.value = ""' in app_js
 
     submit_handler = app_js.split(
@@ -104,6 +149,11 @@ def test_current_run_clears_stale_candidate_selection_and_scopes_eval_metrics():
     assert 'meta("Trace ID", run.phoenix_trace_id)' in render_eval
     assert 'meta("Prompt", run.prompt_version)' in render_eval
     assert 'meta("Fit", run.fit.semantic_fit_class)' in render_eval
+    assert 'meta("Previous trace", metrics.previous_trace_id)' in render_eval
+    assert 'metric("Causal mismatch", metrics.causal_mechanism_mismatch, true)' in render_eval
+    assert (
+        'metric("Repair gate", metrics.trace_repair_gate_applied)' in render_eval
+    )
 
 
 def test_candidate_dataset_totals_are_labeled_global():
@@ -132,3 +182,22 @@ def test_current_run_market_rows_are_rendered_before_recommended_market_details(
         "${recommendedMarket(run)}"
     )
     assert "Found relevant markets" in app_js
+
+
+def test_candidate_packet_views_show_eval_trace_and_review_target():
+    app_js = APP_JS.read_text(encoding="utf-8")
+
+    assert "Initial source text" in app_js
+    assert "Normalized thesis" in app_js
+    assert "Eval trace" in app_js
+    assert "False strong" in app_js
+    assert "Promote means eligible for later frozen strict-golden promotion" in app_js
+    assert "No strict expected labels are written here" in app_js
+
+
+def test_candidate_triage_market_scores_are_rendered_as_advisory_rankings():
+    app_js = APP_JS.read_text(encoding="utf-8")
+
+    assert "market_scores" in app_js
+    assert "review_score" in app_js
+    assert "score ${score}" in app_js

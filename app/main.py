@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import replace
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.agent import MarketFitTraceAgent
 from app.candidate_review import (
+    DEFAULT_CANDIDATES_DIR,
     load_candidate_review_detail,
     load_candidate_review_summary,
 )
@@ -19,12 +21,18 @@ from app.ledger import LedgerStore
 from app.market_data import load_markets
 from app.market_provider import PolyDataMarketProvider
 from app.models import (
+    CandidateReviewInput,
+    CurrentRunCandidateInput,
     HumanVerdictInput,
     HumanVerdictResult,
     ImprovementResult,
     RunResult,
     SourceInput,
 )
+from app.run_candidates import export_current_run_candidate
+from app.source_candidates import list_source_candidate_rows
+from scripts.review_candidate import build_review_decision, find_candidate_dir
+from scripts.triage_candidates import OUTPUT_NAME, triage_candidate_dir
 
 store = LedgerStore()
 agent = MarketFitTraceAgent(
@@ -92,8 +100,21 @@ def strict_goldens() -> dict[str, object]:
     }
 
 
+@app.get("/api/source-candidates")
+def source_candidates() -> dict[str, object]:
+    return list_source_candidate_rows()
+
+
 @app.post("/api/runs", response_model=RunResult)
 async def create_run(payload: SourceInput) -> RunResult:
+    if payload.prompt_version != "v1_lenient":
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Trace-inspected runs must be created through "
+                "/api/runs/{run_id}/improve so Phoenix MCP supplies the prior trace context."
+            ),
+        )
     return await agent.run(
         thesis=payload.thesis,
         title=payload.title,
@@ -139,6 +160,53 @@ def retrieval_candidate(case_id: str) -> dict[str, object]:
         return load_candidate_review_detail(case_id)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=f"Unknown candidate: {case_id}") from exc
+
+
+@app.post("/api/current-run-candidates")
+def create_current_run_candidate(payload: CurrentRunCandidateInput) -> dict[str, object]:
+    return export_current_run_candidate(
+        source_text=payload.source_text,
+        run=payload.run,
+        case_id=payload.case_id,
+        source_assisted=payload.source_assisted,
+    )
+
+
+@app.post("/api/retrieval-candidates/{case_id}/triage")
+async def triage_retrieval_candidate(case_id: str) -> dict[str, object]:
+    candidate_dir = find_candidate_dir(DEFAULT_CANDIDATES_DIR, case_id)
+    if candidate_dir is None:
+        raise HTTPException(status_code=404, detail=f"Unknown candidate: {case_id}")
+    suggestion = await triage_candidate_dir(candidate_dir)
+    (candidate_dir / OUTPUT_NAME).write_text(
+        json.dumps(suggestion, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return load_candidate_review_detail(case_id)
+
+
+@app.post("/api/retrieval-candidates/{case_id}/review")
+def review_retrieval_candidate(
+    case_id: str, payload: CandidateReviewInput
+) -> dict[str, object]:
+    candidate_dir = find_candidate_dir(DEFAULT_CANDIDATES_DIR, case_id)
+    if candidate_dir is None:
+        raise HTTPException(status_code=404, detail=f"Unknown candidate: {case_id}")
+    try:
+        decision = build_review_decision(
+            case_id=case_id,
+            candidate_dir=candidate_dir,
+            status=payload.status,
+            note=payload.note,
+            reviewer=payload.reviewer,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    (candidate_dir / "review_decision.json").write_text(
+        json.dumps(decision, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return load_candidate_review_detail(case_id)
 
 
 @app.post("/api/runs/{run_id}/improve", response_model=ImprovementResult)

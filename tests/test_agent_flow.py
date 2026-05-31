@@ -5,7 +5,7 @@ import asyncio
 from app.agent import MarketFitTraceAgent
 from app.ledger import LedgerStore
 from app.market_provider import MarketRetrievalResult
-from app.models import CandidateMarket, FitClass, NormalizedClaim
+from app.models import CandidateMarket, FitClass, NormalizedClaim, PhoenixInspection
 
 
 class OfflineADKRuntime:
@@ -105,8 +105,33 @@ class MissingRecommendationMarketProvider:
         return self.retrieve(claim).markets
 
 
-def test_weak_proxy_first_run_then_improves(tmp_path):
-    asyncio.run(_weak_proxy_first_run_then_improves(tmp_path))
+class FakePhoenixMCPInspector:
+    def __init__(self, store: LedgerStore) -> None:
+        self.store = store
+
+    async def inspect_failed_run(self, run_id: str) -> PhoenixInspection:
+        run = self.store.get_run(run_id)
+        return PhoenixInspection(
+            run_id=run_id,
+            phoenix_trace_id=run["phoenix_trace_id"],
+            source="phoenix_mcp",
+            fallback_used=False,
+            summary=(
+                "Phoenix MCP inspected fit_eval_run and returned "
+                "false_strong_recommendation=true, unsupported_implication=true, "
+                "causal_mechanism_mismatch=true, resolution_target_mismatch=true."
+            ),
+            recommended_prompt_version="v2_trace_inspected",
+            mcp_configured=True,
+        )
+
+
+def test_local_fallback_does_not_apply_trace_repair_gate(tmp_path):
+    asyncio.run(_local_fallback_does_not_apply_trace_repair_gate(tmp_path))
+
+
+def test_phoenix_mcp_trace_context_applies_false_strong_cap(tmp_path):
+    asyncio.run(_phoenix_mcp_trace_context_applies_false_strong_cap(tmp_path))
 
 
 def test_known_tpu_demo_source_uses_stable_extraction(tmp_path):
@@ -123,7 +148,7 @@ async def _known_tpu_demo_source_uses_stable_extraction(tmp_path):
     assert result.claim.claim_text == thesis
 
 
-async def _weak_proxy_first_run_then_improves(tmp_path):
+async def _local_fallback_does_not_apply_trace_repair_gate(tmp_path):
     store = LedgerStore(tmp_path / "ledger.json")
     agent = MarketFitTraceAgent(store=store, adk_runtime=OfflineADKRuntime())
 
@@ -132,6 +157,8 @@ async def _weak_proxy_first_run_then_improves(tmp_path):
     assert first.claim.claim_text == thesis
     assert first.fit.semantic_fit_class == FitClass.INDIRECT
     assert first.eval.metrics.false_strong_recommendation is True
+    assert first.eval.metrics.causal_mechanism_mismatch is True
+    assert first.eval.metrics.trace_repair_candidate is True
 
     improved = await agent.improve_from_trace(first.run_id)
     assert improved.inspection_source == "local_eval_fallback"
@@ -140,13 +167,49 @@ async def _weak_proxy_first_run_then_improves(tmp_path):
     assert improved.before_trace_id == first.phoenix_trace_id
     assert improved.before_fit == FitClass.INDIRECT
     assert improved.after.claim.claim_text == thesis
+    assert improved.after.fit.semantic_fit_class == FitClass.INDIRECT
+    assert improved.after_fit == FitClass.INDIRECT
+    assert improved.false_strong_recommendation_before is True
+    assert improved.false_strong_recommendation_after is True
+    assert improved.after.eval.metrics.false_strong_recommendation is True
+    assert improved.after.eval.metrics.weak_proxy_detected is False
+    assert improved.after.eval.metrics.trace_repair_gate_applied is False
+    assert improved.after.eval.metrics.second_run_improvement is False
+
+
+async def _phoenix_mcp_trace_context_applies_false_strong_cap(tmp_path):
+    store = LedgerStore(tmp_path / "ledger.json")
+    agent = MarketFitTraceAgent(
+        store=store,
+        adk_runtime=OfflineADKRuntime(),
+        phoenix_inspector_factory=FakePhoenixMCPInspector,
+    )
+
+    thesis = "Google TPU progress means Gemini closes the frontier-model gap in 2026."
+    first = await agent.run(thesis=thesis, prompt_version="v1_lenient")
+    assert first.fit.semantic_fit_class == FitClass.INDIRECT
+    assert "closest retrieved adjacent signal" in first.fit.fit_reason
+    assert "best available expression" not in first.fit.fit_reason
+    assert first.eval.metrics.false_strong_recommendation is True
+    assert first.eval.metrics.causal_mechanism_mismatch is True
+    assert first.eval.metrics.resolution_target_mismatch is True
+
+    improved = await agent.improve_from_trace(first.run_id)
+
+    assert improved.inspection_source == "phoenix_mcp"
+    assert improved.fallback_used is False
     assert improved.after.fit.semantic_fit_class == FitClass.WEAK_PROXY
     assert improved.after_fit == FitClass.WEAK_PROXY
-    assert improved.false_strong_recommendation_before is True
     assert improved.false_strong_recommendation_after is False
-    assert improved.after.eval.metrics.false_strong_recommendation is False
     assert improved.after.eval.metrics.weak_proxy_detected is True
+    assert improved.after.eval.metrics.trace_repair_gate_applied is True
+    assert improved.after.eval.metrics.previous_trace_id == first.phoenix_trace_id
+    assert improved.after.eval.metrics.inspection_source == "phoenix_mcp"
     assert improved.after.eval.metrics.second_run_improvement is True
+    assert any(
+        event.event_type == "trace_repair_gate_applied"
+        for event in improved.after.ledger.events
+    )
 
 
 def test_direct_market_fit(tmp_path):
@@ -264,7 +327,8 @@ async def _model_fit_proposal_is_captured_but_policy_wins(tmp_path):
     run = store.get_run(result.run_id)
     assert run["model_fit_proposal_json"]
     assert "pm-gemini-arena-2026" in run["model_fit_proposal_json"]
-    assert result.fit.semantic_fit_class == FitClass.WEAK_PROXY
+    assert result.fit.semantic_fit_class == FitClass.INDIRECT
+    assert result.eval.metrics.trace_repair_gate_applied is False
     assert isinstance(result.eval.metrics.phoenix_annotations_written, bool)
 
 

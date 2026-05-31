@@ -20,7 +20,10 @@ left, center, right = st.columns([0.9, 1.25, 0.85])
 
 with left:
     thesis = st.text_area("Thesis / source", default_thesis, height=320)
-    prompt_version = st.selectbox("Prompt version", ["v1_lenient", "v2_trace_inspected"])
+    prompt_version = "v1_lenient"
+    st.caption(
+        "Trace-inspected reruns are available only through Inspect trace and rerun."
+    )
     run_clicked = st.button("Run agent", use_container_width=True)
 
 if "run" not in st.session_state:

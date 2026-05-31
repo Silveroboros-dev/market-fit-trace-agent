@@ -42,6 +42,8 @@ def test_triage_candidate_accepts_llm_suggestion_without_strict_labels(tmp_path)
     assert suggestion["suggested_fit_risk"] == "likely_weak_proxy"
     assert suggestion["likely_issues"] == ["weak_proxy_risk", "compound_thesis"]
     assert suggestion["markets_to_inspect"] == ["m1"]
+    assert suggestion["market_scores"][0]["market_id"] == "m1"
+    assert 0 <= suggestion["market_scores"][0]["review_score"] <= 100
     _assert_no_strict_expected_labels(suggestion)
 
 
@@ -65,6 +67,8 @@ def test_triage_candidate_falls_back_when_llm_outputs_strict_label(tmp_path):
     assert suggestion["triage_source"] == "local_rule_fallback"
     assert suggestion["writes_strict_expected_labels"] is False
     assert "missing_resolution_rules" in suggestion["likely_issues"]
+    assert suggestion["market_scores"][0]["market_id"] == "m1"
+    assert isinstance(suggestion["market_scores"][0]["review_score"], int)
     _assert_no_strict_expected_labels(suggestion)
 
 

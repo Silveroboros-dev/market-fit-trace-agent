@@ -923,38 +923,12 @@ def _deterministic_classify(
             ],
         )
     if "gemini" in claim_text and "tpu" in claim_text:
-        if prompt_version.startswith("v2"):
-            return MarketFit(
-                recommended_market_id="pm-gemini-arena-2026",
-                semantic_fit_class=FitClass.WEAK_PROXY,
-                fit_reason=(
-                    "The leaderboard market is adjacent to Gemini performance, but it does not "
-                    "resolve whether TPU progress caused Gemini to close a broad frontier gap."
-                ),
-                captures=[
-                    "A public signal about Gemini relative model standing",
-                    "A time-bounded 2026 outcome",
-                ],
-                misses=[
-                    "The causal TPU mechanism",
-                    "A broad definition of closing the frontier-model gap",
-                    "Non-leaderboard evidence of model quality",
-                ],
-                rejected_markets=[
-                    RejectedMarket(
-                        market_id="pm-tpu-v7-ga-2026",
-                        reason=(
-                            "TPU availability is hardware delivery, not Gemini model performance."
-                        ),
-                    )
-                ],
-            )
         return MarketFit(
             recommended_market_id="pm-gemini-arena-2026",
             semantic_fit_class=FitClass.INDIRECT,
             fit_reason=(
-                "The leaderboard market is the best available expression because it tracks whether "
-                "Gemini reaches the top of a public model ranking in 2026."
+                "The leaderboard market is the closest retrieved adjacent signal, but it "
+                "does not directly resolve the TPU-driven frontier-gap thesis."
             ),
             captures=[
                 "Gemini relative performance signal",

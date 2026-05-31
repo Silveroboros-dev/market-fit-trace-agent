@@ -25,6 +25,11 @@ retrieves the trace/eval context, and the second run downgrades the
 recommendation to `weak_proxy`. This proves Phoenix is not passive logging; it
 participates in the correction loop.
 
+The downgrade is not an LLM judgment and not a phrase-specific prompt trick. It
+is a deterministic `trace_informed_false_strong_cap` that can fire only when
+Phoenix MCP retrieved the prior failed trace/eval context and that context
+contains explicit failure and mismatch signals.
+
 **Golden governance**
 
 Phoenix also supports golden governance: to promote live market cases into
@@ -54,6 +59,8 @@ whether the policy actually improved.
 
 - Live replay command: `make evals-live`
 - Phoenix check command: `make phoenix-check`
+- Trace-repair proof command: `make trace-repair`
+- Trace-repair pack: `evals/trace_repair_v1`
 - Captured audit artifact: `evals/market_fit_v1/v1_trace_audit.md`
 - Phoenix MCP config example: `mcp/phoenix_mcp_config.example.json`
 - Phoenix Dataset/Experiment artifact:
@@ -132,6 +139,7 @@ messy thesis
 -> Phoenix/OpenInference trace
 -> trace-linked eval annotations
 -> Phoenix MCP trace inspection in live mode
+-> deterministic trace_informed_false_strong_cap when prior trace context qualifies
 -> improved second run
 -> ledger record of both attempts
 ```
@@ -148,6 +156,22 @@ The key architecture claim is:
 - Phoenix makes the failure visible and usable for improvement.
 - The ledger records the lifecycle.
 
+This proof does not depend on pretending the app is a multi-agent trading
+system. There is one deployable ADK/Gemini agent inside a code-owned workflow
+controller. The Arize value comes from product-level Phoenix/OpenInference spans
+and annotations that separate proposal behavior from retrieval, deterministic
+policy, eval, MCP inspection, and repair.
+
+## Failure-Mode Map
+
+| Failure mode | Phoenix signal | Repair / governance |
+|---|---|---|
+| Semantic retrieval mismatch | `market_retrieval_run` span and bounded candidate IDs | reject candidate, mark `needs_more_rules`, or classify as `weak_proxy` |
+| False strong fit | `false_strong_recommendation=true` on `fit_eval_run` | deterministic trace-informed cap |
+| Causal mechanism mismatch | `causal_mechanism_mismatch=true` | downgrade to `weak_proxy` unless the market resolves the mechanism |
+| Resolution target mismatch | `resolution_target_mismatch=true` | downgrade or reject the candidate market |
+| Missing resolution rules | candidate rules status is `missing` or `mixed` | human review status `needs_more_rules` |
+
 ## Pass Conditions
 
 The Phoenix value proof passes only if all are true:
@@ -157,16 +181,19 @@ The Phoenix value proof passes only if all are true:
 3. The trace has a visible `fit_eval_run` span or equivalent product-level eval
    span.
 4. The trace includes `schema_valid`, `false_strong_recommendation`,
-   `weak_proxy_detected`, and `unsupported_implication` annotations or verified
-   trace-linked eval fields.
+   `weak_proxy_detected`, `unsupported_implication`,
+   `causal_mechanism_mismatch`, `resolution_target_mismatch`, and
+   `trace_repair_candidate` annotations or verified trace-linked eval fields.
 5. The improve step reads trace/eval context through Phoenix MCP in live mode.
 6. The improve response reports `inspection_source: phoenix_mcp`.
 7. The improve response reports `fallback_used: false`.
-8. The second run changes an over-strong recommendation into `weak_proxy` on
+8. The deterministic trace-repair gate applies only after Phoenix MCP succeeds.
+9. The second run changes an over-strong recommendation into `weak_proxy` on
    the seed demo.
-9. The false-strong eval clears after the second run.
-10. The ledger records both the initial run and the trace-informed rerun.
-11. The same `run_id`, `trace_id`, and `case_id` are visible across the app
+10. The false-strong eval clears after the second run.
+11. The ledger records both the initial run and the trace-informed rerun,
+    including `trace_repair_gate_applied`.
+12. The same `run_id`, `trace_id`, and `case_id` are visible across the app
     response, Phoenix trace, `fit_eval_run` span, eval annotation record, ledger
     event, and `/api/runs/{run_id}/improve` response. For manual UI demos, use
     `manual_demo_seed` as the case identity.
@@ -181,6 +208,8 @@ The Phoenix value proof fails if any of the following are true:
 - Phoenix contains generic ADK/Gemini spans but no product-level eval span.
 - Required eval annotations are only present in local files and not visible
   through Phoenix or `make phoenix-check`.
+- The rerun uses `v2_trace_inspected` directly without `/api/runs/{run_id}/improve`.
+- `trace_repair_gate_applied` is false on the repaired run.
 - The second run changes text but does not change the fit classification or
   clear the false-strong eval.
 
@@ -196,6 +225,8 @@ GEMINI_MODEL=gemini-3.5-flash
 PHOENIX_PROJECT_NAME=market_fit_trace_agent
 PHOENIX_COLLECTOR_ENDPOINT=https://app.phoenix.arize.com/s/<space>/v1/traces
 PHOENIX_BASE_URL=https://app.phoenix.arize.com/s/<space>
+PHOENIX_HOST=https://app.phoenix.arize.com/s/<space>
+PHOENIX_PROJECT=market_fit_trace_agent
 PHOENIX_API_KEY=...
 PHOENIX_MCP_ENABLED=true
 ```
@@ -212,6 +243,11 @@ Phoenix uses two endpoint concepts in this repo:
 
 - `PHOENIX_BASE_URL`: Phoenix application/API base URL used for trace lookup,
   annotation setup, and Phoenix MCP.
+- `PHOENIX_HOST`: Phoenix MCP server base URL. The app passes
+  `PHOENIX_BASE_URL` into this environment variable when spawning
+  `@arizeai/phoenix-mcp`.
+- `PHOENIX_PROJECT`: Phoenix MCP default project. The app passes
+  `PHOENIX_PROJECT_NAME` into this environment variable.
 - `PHOENIX_COLLECTOR_ENDPOINT`: trace collection endpoint used by the tracing
   setup.
 

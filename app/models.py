@@ -70,6 +70,15 @@ class EvalMetrics(BaseModel):
     unsupported_implication: bool
     human_verification_required: bool
     no_clean_expression_expected: bool = False
+    causal_mechanism_mismatch: bool = False
+    resolution_target_mismatch: bool = False
+    horizon_mismatch: bool = False
+    entity_mismatch: bool = False
+    trace_repair_candidate: bool = False
+    trace_repair_gate_applied: bool = False
+    previous_trace_id: str | None = None
+    previous_failure_summary: str | None = None
+    inspection_source: str | None = None
     phoenix_annotations_written: bool = False
     second_run_improvement: bool | None = None
 
@@ -132,6 +141,19 @@ class HumanVerdictResult(BaseModel):
     verdict_id: str
     claim_status: str
     ledger: ClaimTrace
+
+
+class CurrentRunCandidateInput(BaseModel):
+    source_text: str = Field(min_length=8)
+    run: RunResult
+    case_id: str | None = None
+    source_assisted: dict[str, Any] | None = None
+
+
+class CandidateReviewInput(BaseModel):
+    status: str
+    note: str = ""
+    reviewer: str = "local_reviewer"
 
 
 class ImprovementRequest(BaseModel):

@@ -37,6 +37,48 @@ CONFIGS: list[dict[str, Any]] = [
         "values": [{"label": "pass", "score": 1}, {"label": "fail", "score": 0}],
         "description": "Fails when the explanation implies unsupported causal resolution.",
     },
+    {
+        "name": "causal_mechanism_mismatch",
+        "type": "CATEGORICAL",
+        "optimization_direction": "MAXIMIZE",
+        "values": [{"label": "true", "score": 1}, {"label": "false", "score": 0}],
+        "description": "The market can resolve for reasons unrelated to the thesis mechanism.",
+    },
+    {
+        "name": "resolution_target_mismatch",
+        "type": "CATEGORICAL",
+        "optimization_direction": "MAXIMIZE",
+        "values": [{"label": "true", "score": 1}, {"label": "false", "score": 0}],
+        "description": "The market resolves an adjacent target rather than the thesis.",
+    },
+    {
+        "name": "horizon_mismatch",
+        "type": "CATEGORICAL",
+        "optimization_direction": "MAXIMIZE",
+        "values": [{"label": "true", "score": 1}, {"label": "false", "score": 0}],
+        "description": "The market time horizon differs from the thesis horizon.",
+    },
+    {
+        "name": "entity_mismatch",
+        "type": "CATEGORICAL",
+        "optimization_direction": "MAXIMIZE",
+        "values": [{"label": "true", "score": 1}, {"label": "false", "score": 0}],
+        "description": "The market entity differs from the thesis entity.",
+    },
+    {
+        "name": "trace_repair_candidate",
+        "type": "CATEGORICAL",
+        "optimization_direction": "MAXIMIZE",
+        "values": [{"label": "true", "score": 1}, {"label": "false", "score": 0}],
+        "description": "The first run has a failure that can be repaired from trace context.",
+    },
+    {
+        "name": "trace_repair_gate_applied",
+        "type": "CATEGORICAL",
+        "optimization_direction": "MAXIMIZE",
+        "values": [{"label": "true", "score": 1}, {"label": "false", "score": 0}],
+        "description": "The deterministic Phoenix-MCP-gated repair cap fired on rerun.",
+    },
 ]
 
 

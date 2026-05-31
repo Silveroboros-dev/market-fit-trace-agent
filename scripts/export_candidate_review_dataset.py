@@ -114,6 +114,7 @@ def _candidate_example(path: Path) -> dict[str, Any]:
     llm_review_suggestion = _read_optional_json(path / "llm_review_suggestion.json")
     llm_triage = _llm_triage_metadata(llm_review_suggestion)
     review_notes = (path / "review_notes.md").read_text(encoding="utf-8")
+    source_assisted = source.get("source_assisted") or {}
     eval_metrics = (run_result or {}).get("eval", {}).get("metrics", {})
     fit = (run_result or {}).get("fit", {})
     claim = (run_result or {}).get("claim", {})
@@ -183,6 +184,12 @@ def _candidate_example(path: Path) -> dict[str, Any]:
             "weak_proxy_detected": eval_metrics.get("weak_proxy_detected"),
             "unsupported_implication": eval_metrics.get("unsupported_implication"),
             "review_notes_preview": review_notes[:1000],
+            "source_truth_scope": source.get("source_truth_scope"),
+            "source_assisted": source_assisted,
+            "source_assisted_case_key": source_assisted.get("source_case_key"),
+            "source_assisted_pack": source_assisted.get("pack"),
+            "source_assisted_example_id": source_assisted.get("example_id"),
+            "source_assisted_canonical_truth": source_assisted.get("canonical_truth"),
             "reviewed_at_utc": review_decision.get("reviewed_at_utc"),
             "reviewer": review_decision.get("reviewer"),
             "review_decision_path": (
@@ -253,6 +260,17 @@ def _summary(
             "rules_status": example["metadata"]["rules_status"],
             "rules_status_summary": example["metadata"]["rules_status_summary"],
             "rules_status_source": example["metadata"]["rules_status_source"],
+            "source_truth_scope": example["metadata"].get("source_truth_scope"),
+            "source_assisted_case_key": example["metadata"].get(
+                "source_assisted_case_key"
+            ),
+            "source_assisted_pack": example["metadata"].get("source_assisted_pack"),
+            "source_assisted_example_id": example["metadata"].get(
+                "source_assisted_example_id"
+            ),
+            "source_assisted_canonical_truth": example["metadata"].get(
+                "source_assisted_canonical_truth"
+            ),
             "llm_triage_present": example["metadata"]["llm_triage_present"],
             "llm_review_priority": example["metadata"]["llm_review_priority"],
             "llm_suggested_review_status": example["metadata"][
@@ -260,6 +278,7 @@ def _summary(
             ],
             "llm_likely_issues": example["metadata"]["llm_likely_issues"],
             "llm_markets_to_inspect": example["metadata"]["llm_markets_to_inspect"],
+            "llm_market_scores": example["metadata"].get("llm_market_scores", []),
             "llm_triage_source": example["metadata"]["llm_triage_source"],
             "recommended_action": example["output"]["recommended_action"],
         }
@@ -320,6 +339,7 @@ def _llm_triage_metadata(suggestion: dict[str, Any] | None) -> dict[str, Any]:
             "llm_suggested_fit_risk": None,
             "llm_likely_issues": [],
             "llm_markets_to_inspect": [],
+            "llm_market_scores": [],
             "llm_needs_human_check": None,
             "llm_triage_source": None,
             "llm_triaged_at_utc": None,
@@ -332,6 +352,7 @@ def _llm_triage_metadata(suggestion: dict[str, Any] | None) -> dict[str, Any]:
         "llm_suggested_fit_risk": suggestion.get("suggested_fit_risk"),
         "llm_likely_issues": suggestion.get("likely_issues", []),
         "llm_markets_to_inspect": suggestion.get("markets_to_inspect", []),
+        "llm_market_scores": suggestion.get("market_scores", []),
         "llm_needs_human_check": suggestion.get("needs_human_check"),
         "llm_triage_source": suggestion.get("triage_source"),
         "llm_triaged_at_utc": suggestion.get("triaged_at_utc"),

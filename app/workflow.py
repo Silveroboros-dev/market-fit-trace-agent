@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Any
 
 from app.adk_runtime import ADKJsonRuntime
@@ -11,6 +12,7 @@ from app.ledger import LedgerStore
 from app.market_provider import MarketProvider, build_market_provider
 from app.models import (
     CandidateMarket,
+    EvalMetrics,
     FitClass,
     ImprovementResult,
     MarketFit,
@@ -27,6 +29,18 @@ from app.prompts import build_claim_extraction_prompt, build_market_fit_prompt
 from app.tracing import TraceContext
 
 
+@dataclass(frozen=True)
+class TraceRepairContext:
+    previous_run_id: str
+    previous_trace_id: str
+    previous_recommended_market_id: str | None
+    previous_metrics: EvalMetrics
+    previous_failure_summary: str | None
+    inspection_source: str
+    fallback_used: bool
+    inspection_summary: str
+
+
 class MarketFitTraceAgent:
     def __init__(
         self,
@@ -36,11 +50,14 @@ class MarketFitTraceAgent:
         markets: list[CandidateMarket] | None = None,
         market_provider: MarketProvider | None = None,
         market_provider_resolver: Callable[[str], MarketProvider | None] | None = None,
+        phoenix_inspector_factory: Callable[[LedgerStore], PhoenixMCPInspector]
+        | None = None,
     ) -> None:
         self.store = store or LedgerStore()
         self.adk_runtime = adk_runtime or ADKJsonRuntime()
         self.market_provider = market_provider or build_market_provider(markets=markets)
         self.market_provider_resolver = market_provider_resolver
+        self.phoenix_inspector_factory = phoenix_inspector_factory or PhoenixMCPInspector
 
     async def run(
         self,
@@ -49,6 +66,7 @@ class MarketFitTraceAgent:
         title: str | None = None,
         prompt_version: str = "v1_lenient",
         prior_failure_summary: str | None = None,
+        trace_repair_context: TraceRepairContext | None = None,
     ) -> RunResult:
         trace = TraceContext()
         run = self.store.create_run(
@@ -62,6 +80,13 @@ class MarketFitTraceAgent:
             "model": self.adk_runtime.runtime_name,
             "prompt_version": prompt_version,
             "prior_failure_summary": prior_failure_summary or "",
+            "trace_repair.context_present": trace_repair_context is not None,
+            "trace_repair.previous_trace_id": (
+                trace_repair_context.previous_trace_id if trace_repair_context else ""
+            ),
+            "trace_repair.inspection_source": (
+                trace_repair_context.inspection_source if trace_repair_context else ""
+            ),
         }
 
         with trace.span("market_fit_trace_agent.run", attrs):
@@ -103,6 +128,11 @@ class MarketFitTraceAgent:
                     prompt_version=prompt_version,
                     prior_failure_summary=prior_failure_summary,
                 )
+                fit, trace_repair_gate_applied = self._trace_informed_false_strong_cap(
+                    fit=fit,
+                    markets=markets,
+                    context=trace_repair_context,
+                )
                 fit, missing_market_id = self._guard_recommended_market_in_context(
                     fit, markets
                 )
@@ -117,6 +147,17 @@ class MarketFitTraceAgent:
                         ),
                         "policy_guard.missing_recommended_market_id": (
                             missing_market_id or ""
+                        ),
+                        "trace_repair_gate.applied": trace_repair_gate_applied,
+                        "trace_repair_gate.previous_trace_id": (
+                            trace_repair_context.previous_trace_id
+                            if trace_repair_context
+                            else ""
+                        ),
+                        "trace_repair_gate.inspection_source": (
+                            trace_repair_context.inspection_source
+                            if trace_repair_context
+                            else ""
                         ),
                     }
                 )
@@ -164,6 +205,22 @@ class MarketFitTraceAgent:
                     fit=fit,
                     markets=markets,
                     phoenix_trace_id=phoenix_trace_id,
+                    trace_repair_gate_applied=trace_repair_gate_applied,
+                    previous_trace_id=(
+                        trace_repair_context.previous_trace_id
+                        if trace_repair_context
+                        else None
+                    ),
+                    previous_failure_summary=(
+                        trace_repair_context.previous_failure_summary
+                        if trace_repair_context
+                        else None
+                    ),
+                    inspection_source=(
+                        trace_repair_context.inspection_source
+                        if trace_repair_context
+                        else None
+                    ),
                 )
                 trace.set_current_span_attributes(
                     {
@@ -174,6 +231,26 @@ class MarketFitTraceAgent:
                         "eval.weak_proxy_detected": eval_result.metrics.weak_proxy_detected,
                         "eval.unsupported_implication": (
                             eval_result.metrics.unsupported_implication
+                        ),
+                        "eval.causal_mechanism_mismatch": (
+                            eval_result.metrics.causal_mechanism_mismatch
+                        ),
+                        "eval.resolution_target_mismatch": (
+                            eval_result.metrics.resolution_target_mismatch
+                        ),
+                        "eval.horizon_mismatch": eval_result.metrics.horizon_mismatch,
+                        "eval.entity_mismatch": eval_result.metrics.entity_mismatch,
+                        "eval.trace_repair_candidate": (
+                            eval_result.metrics.trace_repair_candidate
+                        ),
+                        "eval.trace_repair_gate_applied": (
+                            eval_result.metrics.trace_repair_gate_applied
+                        ),
+                        "eval.previous_trace_id": (
+                            eval_result.metrics.previous_trace_id or ""
+                        ),
+                        "eval.inspection_source": (
+                            eval_result.metrics.inspection_source or ""
                         ),
                         "eval.human_verification_required": (
                             eval_result.metrics.human_verification_required
@@ -206,6 +283,17 @@ class MarketFitTraceAgent:
                 metrics=eval_result.metrics.model_dump(),
                 failure_summary=eval_result.failure_summary,
             )
+            if trace_repair_gate_applied and trace_repair_context is not None:
+                self.store.record_trace_repair_gate(
+                    run_id=run_id,
+                    claim_id=claim_id,
+                    previous_trace_id=trace_repair_context.previous_trace_id,
+                    previous_failure_summary=(
+                        trace_repair_context.previous_failure_summary or ""
+                    ),
+                    inspection_source=trace_repair_context.inspection_source,
+                    recommended_market_id=fit.recommended_market_id,
+                )
             eval_result.eval_record_id = eval_ref["eval_record_id"]
             self.store.update_run(
                 run_id,
@@ -233,7 +321,7 @@ class MarketFitTraceAgent:
         )
 
     async def improve_from_trace(self, run_id: str) -> ImprovementResult:
-        inspector = PhoenixMCPInspector(self.store)
+        inspector = self.phoenix_inspector_factory(self.store)
         inspection = await inspector.inspect_failed_run(run_id)
         before = self._reconstruct_run_result(run_id)
         self.store.record_trace_inspection(
@@ -244,11 +332,22 @@ class MarketFitTraceAgent:
             source=inspection.source,
         )
         source = self.store.get_source(before.source_id)
+        trace_repair_context = TraceRepairContext(
+            previous_run_id=before.run_id,
+            previous_trace_id=before.phoenix_trace_id,
+            previous_recommended_market_id=before.fit.recommended_market_id,
+            previous_metrics=before.eval.metrics,
+            previous_failure_summary=before.eval.failure_summary,
+            inspection_source=inspection.source,
+            fallback_used=inspection.fallback_used,
+            inspection_summary=inspection.summary,
+        )
         after = await self.run(
             thesis=source["raw_text"],
             title=source.get("title"),
             prompt_version=inspection.recommended_prompt_version,
             prior_failure_summary=inspection.summary,
+            trace_repair_context=trace_repair_context,
         )
         improved = evaluate_improvement(before.eval, after.eval)
         after.eval.metrics.second_run_improvement = improved
@@ -321,6 +420,55 @@ class MarketFitTraceAgent:
         # ADK/Gemini is used for traceable proposal spans. Final fit decisions stay
         # deterministic so evals are reproducible and policy-owned by app code.
         return _deterministic_classify(claim, markets, prompt_version), model_fit_proposal
+
+    def _trace_informed_false_strong_cap(
+        self,
+        *,
+        fit: MarketFit,
+        markets: list[CandidateMarket],
+        context: TraceRepairContext | None,
+    ) -> tuple[MarketFit, bool]:
+        if context is None:
+            return fit, False
+        if context.inspection_source != "phoenix_mcp" or context.fallback_used:
+            return fit, False
+        if fit.semantic_fit_class not in {FitClass.DIRECT, FitClass.INDIRECT}:
+            return fit, False
+        if not _prior_trace_context_has_failure(context):
+            return fit, False
+        if not _prior_trace_context_has_mismatch(context):
+            return fit, False
+        if not _same_or_equivalent_market(
+            fit.recommended_market_id,
+            context.previous_recommended_market_id,
+            markets,
+        ):
+            return fit, False
+
+        capped_reason = (
+            "The leaderboard market is the best retrieved adjacent signal, but not a "
+            "clean expression of the thesis. Trace-informed cap: Phoenix MCP retrieved "
+            "the prior failed trace/eval context, which showed a false-strong "
+            "recommendation with an explicit mismatch signal. This market remains "
+            "useful only as a weak proxy unless its resolution directly expresses the "
+            "thesis mechanism."
+        )
+        misses = [
+            *fit.misses,
+            "Phoenix MCP prior trace exposed false-strong fit risk",
+            "Prior eval context contained causal or resolution-target mismatch",
+        ]
+        return (
+            MarketFit(
+                recommended_market_id=fit.recommended_market_id,
+                semantic_fit_class=FitClass.WEAK_PROXY,
+                fit_reason=capped_reason,
+                captures=fit.captures,
+                misses=_dedupe(misses),
+                rejected_markets=fit.rejected_markets,
+            ),
+            True,
+        )
 
     def _guard_recommended_market_in_context(
         self, fit: MarketFit, markets: list[CandidateMarket]
@@ -476,3 +624,64 @@ def _retrieval_provenance(retrieval: Any) -> MarketRetrievalProvenance:
         excluded_summary=retrieval.excluded_summary,
         market_ids_considered=[market.market_id for market in retrieval.markets],
     )
+
+
+def _prior_trace_context_has_failure(context: TraceRepairContext) -> bool:
+    summary = context.inspection_summary.lower()
+    return bool(
+        (
+            context.previous_metrics.false_strong_recommendation
+            or context.previous_metrics.unsupported_implication
+        )
+        and (
+            "false_strong_recommendation" in summary
+            or "unsupported_implication" in summary
+        )
+    )
+
+
+def _prior_trace_context_has_mismatch(context: TraceRepairContext) -> bool:
+    summary = context.inspection_summary.lower()
+    prior_mismatch = any(
+        (
+            context.previous_metrics.causal_mechanism_mismatch,
+            context.previous_metrics.resolution_target_mismatch,
+            context.previous_metrics.horizon_mismatch,
+            context.previous_metrics.entity_mismatch,
+        )
+    )
+    return bool(
+        prior_mismatch
+        and (
+            "causal_mechanism_mismatch" in summary
+            or "resolution_target_mismatch" in summary
+            or "horizon_mismatch" in summary
+            or "entity_mismatch" in summary
+            or "mismatch" in summary
+        )
+    )
+
+
+def _same_or_equivalent_market(
+    current_market_id: str | None,
+    previous_market_id: str | None,
+    markets: list[CandidateMarket],
+) -> bool:
+    if not current_market_id or not previous_market_id:
+        return False
+    if current_market_id == previous_market_id:
+        return True
+    current = next((market for market in markets if market.market_id == current_market_id), None)
+    previous = next((market for market in markets if market.market_id == previous_market_id), None)
+    return bool(current and previous and current.title.lower() == previous.title.lower())
+
+
+def _dedupe(items: list[str]) -> list[str]:
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        deduped.append(item)
+    return deduped

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Market Fit Trace Agent</title>
-    <link rel="stylesheet" href="/static/styles.css?v=20260530-strict-golden-loader" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260530-source-assisted" />
   </head>
   <body>
     <main class="shell">
@@ -25,13 +25,18 @@
             </select>
             <p class="golden-note" id="strict-golden-note">Strict goldens fill the source text exactly; they do not auto-run.</p>
           </div>
+          <div class="golden-loader">
+            <label for="source-candidate-select">Load source-assisted candidate</label>
+            <select id="source-candidate-select" aria-label="Load source-assisted candidate">
+              <option value="">Loading source-assisted candidates</option>
+            </select>
+            <p class="golden-note" id="source-candidate-note">Source-assisted rows preserve source text and provenance only; proposed fit labels are advisory.</p>
+          </div>
           <label for="thesis">Source text</label>
           <textarea id="thesis" name="thesis" rows="14">Google TPU progress means Gemini closes the frontier-model gap in 2026.</textarea>
           <div class="toolbar">
-            <select id="prompt-version" name="prompt-version" aria-label="Prompt version">
-              <option value="v1_lenient">First run</option>
-              <option value="v2_trace_inspected">Trace-inspected run</option>
-            </select>
+            <input type="hidden" id="prompt-version" name="prompt-version" value="v1_lenient" />
+            <p class="run-mode-note">First run only. Trace-inspected reruns use Phoenix MCP through the inspect button.</p>
             <button type="submit" id="run-button">Run agent</button>
           </div>
         </form>
@@ -77,6 +82,6 @@
         </div>
       </section>
     </main>
-    <script src="/static/app.js?v=20260530-strict-golden-loader"></script>
+    <script src="/static/app.js?v=20260530-source-assisted"></script>
   </body>
 </html>

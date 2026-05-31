@@ -62,6 +62,12 @@ make evals-live
 make phoenix-check
 ```
 
+Phoenix-MCP-gated trace repair proof:
+
+```bash
+make trace-repair
+```
+
 Draft eval-pack reports:
 
 ```bash
@@ -88,6 +94,7 @@ make export-retrieval-candidate
 | `evals/market_fit_v1` | Original 10-case baseline covering direct, indirect, weak proxy, and no-clean-expression cases. | Yes |
 | `evals/market_fit_v2` | Promoted second suite focused on weak proxies, no-clean-expression, horizon mismatch, and platform mismatch. | Yes |
 | `evals/market_fit_v4_live_promoted` | Reviewed live PolyData retrieval candidates with frozen agent-run market sets and backfilled resolution rules. | Yes |
+| `evals/trace_repair_v1` | Transition evals where the first run must fail, Phoenix MCP must retrieve trace/eval context, and the second run must repair through the deterministic trace cap. | No; separate repair proof |
 | `evals/market_fit_v2_candidates` | Draft eval pack for coverage review and promotion work. | No |
 | `evals/market_fit_v3_candidates` | Draft eval pack after deduplication. | No |
 
@@ -110,6 +117,26 @@ stores the gold behavior.
 
 Human judgment is required when promoting a draft row into a golden. Human
 judgment is not required before every production recommendation.
+
+## Eval Taxonomy
+
+Strict correctness goldens assert the final answer for a frozen fixture. They
+should pass on first deterministic replay.
+
+Trace-repair cases assert a before/after transition. The first run is expected
+to overstate fit in a specific, annotated way. Phoenix MCP inspection must
+retrieve the failed trace/eval context, and only then may the deterministic
+`trace_informed_false_strong_cap` downgrade the rerun to `weak_proxy`.
+
+Live retrieval candidates are non-canonical evidence packets. They may become
+strict goldens only after human review, frozen market snapshots, frozen rules,
+and expected labels are written.
+
+Source-assisted candidate rows in `evals/market_fit_v2_candidates` and
+`evals/market_fit_v3_candidates` provide a lighter evidence anchor for UI
+testing and review. Their source text and provenance can seed a fresh run, but
+their proposed fit labels are not canonical truth and cannot mutate promoted
+`expected_outputs.jsonl` files through the UI.
 
 ## Baseline Trace Replay
 

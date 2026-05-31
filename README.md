@@ -16,7 +16,9 @@ is the product mode and candidate-golden acquisition path.
 
 The Arize/Phoenix integration is not just logging. Phoenix/OpenInference traces expose
 why a market-fit judgment failed, and the improve step uses Phoenix MCP trace context
-to rerun the agent with that failure in context.
+to rerun the agent with that failure in context. A deterministic
+`trace_informed_false_strong_cap` may downgrade the rerun only when Phoenix MCP
+successfully retrieved prior trace/eval context with explicit mismatch signals.
 
 Market fit here means **prediction-market fit**: whether a market cleanly
 expresses the user's thesis.
@@ -41,10 +43,10 @@ A tempting prediction market appears relevant:
 > Gemini becomes #1 on a public model leaderboard.
 
 The first run overstates the fit by treating an adjacent market as stronger evidence
-than it deserves. A trace-linked eval flags the false strong recommendation. Under
-the hood, Phoenix traces show where the weak proxy entered the workflow and how the
-corrected run improved. The improve step uses Phoenix MCP inspection and reruns the
-mission. The second run correctly classifies the market as `weak_proxy`.
+than it deserves. A trace-linked eval flags the false strong recommendation and the
+causal-mechanism mismatch. Under the hood, Phoenix traces show where the weak proxy
+entered the workflow. The improve step uses Phoenix MCP inspection; only then does
+the deterministic repair gate cap the rerun to `weak_proxy`.
 
 ## Why It Matters
 
@@ -68,7 +70,7 @@ absent, records optional human review, and uses Phoenix traces to improve the ne
 6. Records optional human verdicts in a public-safe Ledger MCP lifecycle store.
 7. Sends ADK/Gemini and product-level OpenInference spans to Phoenix.
 8. Runs trace-linked deterministic evals for false strong recommendations and weak proxies.
-9. Uses Phoenix MCP trace inspection to improve a second run.
+9. Uses Phoenix MCP trace inspection to activate a deterministic repair gate on a second run.
 
 ## Why This Is An Agent, Not A Classifier
 
@@ -88,9 +90,12 @@ behavior.
 
 Phoenix MCP is the partner integration for the Arize track:
 
-- Phoenix/OpenInference traces capture Google ADK, Gemini, and product-level spans.
+- Phoenix/OpenInference traces capture Google ADK/Gemini proposal behavior and
+  product-level spans for extraction, retrieval, deterministic policy, eval, and
+  repair boundaries.
 - Phoenix span annotations record trace-linked evals such as `false_strong_recommendation`
-  and `weak_proxy_detected`.
+  `weak_proxy_detected`, `causal_mechanism_mismatch`, and
+  `resolution_target_mismatch`.
 - Phoenix MCP is used during the improve step to inspect failed trace/eval context.
 - The local Ledger MCP records claim lifecycle events and optional human verdicts;
   it is a project-local support tool, not the sponsor integration.
@@ -110,6 +115,21 @@ that explains whether the policy actually improved. See
 [docs/phoenix-value-proof.md](docs/phoenix-value-proof.md) for the full value
 proof.
 
+## Observed Failure Modes
+
+| Failure mode | Phoenix signal | Repair / governance |
+|---|---|---|
+| Semantic retrieval mismatch | `market_retrieval_run` span plus retrieved candidate IDs | reject candidate, mark `needs_more_rules`, or classify as `weak_proxy` |
+| False strong fit | `false_strong_recommendation=true` on `fit_eval_run` | deterministic trace-informed cap |
+| Causal mechanism mismatch | `causal_mechanism_mismatch=true` | downgrade to `weak_proxy` unless the market directly resolves the mechanism |
+| Resolution target mismatch | `resolution_target_mismatch=true` | downgrade or reject the candidate market |
+| Missing resolution rules | candidate rules status is `missing` or `mixed` | human review status `needs_more_rules` |
+
+This framing is intentional: the app is not a trading bot or multi-agent
+forecaster. It is an epistemic audit loop for prediction-market fit. Phoenix
+makes these failure modes observable; Phoenix MCP retrieves failed trace context;
+deterministic code owns the repair gate.
+
 ## Phoenix Value Proof: Pass Conditions
 
 The Arize/Phoenix proof passes if:
@@ -119,14 +139,29 @@ The Arize/Phoenix proof passes if:
 3. The trace contains ADK/Gemini spans and product-level market-fit spans.
 4. A `fit_eval_run` span or equivalent eval span is visible.
 5. The trace includes `schema_valid`, `false_strong_recommendation`,
-   `weak_proxy_detected`, and `unsupported_implication` annotations or verified
-   trace-linked eval fields.
+   `weak_proxy_detected`, `unsupported_implication`,
+   `causal_mechanism_mismatch`, `resolution_target_mismatch`, and
+   `trace_repair_candidate` annotations or verified trace-linked eval fields.
 6. The improve step uses Phoenix MCP trace context in live mode.
 7. The improve response reports `inspection_source: phoenix_mcp` and
    `fallback_used: false`.
-8. The second run downgrades the tempting market to `weak_proxy` and clears the
+8. The deterministic trace-repair gate applies after Phoenix MCP inspection.
+9. The second run downgrades the tempting market to `weak_proxy` and clears the
    false-strong eval.
-9. The ledger records both the initial run and the trace-informed rerun.
+10. The ledger records both the initial run and the trace-informed rerun.
+
+## Eval Taxonomy
+
+- **Strict correctness goldens**: frozen fixtures whose final answer should pass
+  on first deterministic replay.
+- **Trace-repair cases**: transition evals in `evals/trace_repair_v1`; first run
+  is expected to fail, Phoenix MCP inspection is required, and the second run
+  must correct through the deterministic repair gate.
+- **Live retrieval candidates**: non-canonical evidence packets for human review;
+  they become strict goldens only after promotion and frozen fixtures.
+- **Source-assisted candidates**: staged candidate eval rows whose source text
+  and provenance anchor review; their proposed fit labels remain advisory until
+  a fresh run, candidate packet, and human review exist.
 
 ## Project Artifacts
 
@@ -138,6 +173,9 @@ The Arize/Phoenix proof passes if:
 - Phoenix promoted-golden Dataset: `market_fit_promoted_goldens_v1`
 - Phoenix Experiment artifact:
   [market_fit_v1 experiment result](evals/market_fit_v1/phoenix_experiment_result.json)
+- Trace-repair eval pack: [evals/trace_repair_v1](evals/trace_repair_v1)
+- Trace-repair proof result:
+  [trace_repair_result.json](evals/trace_repair_v1/run_results/trace_repair_result.json)
 - Demo golden trio:
   [docs/demo-golden-trio.md](docs/demo-golden-trio.md)
 - Regression-risk audit:
@@ -214,6 +252,12 @@ ADK local runner against the real `root_agent`:
 make adk-run
 ```
 
+Phoenix-MCP-gated trace repair proof, with live Phoenix credentials:
+
+```bash
+make trace-repair
+```
+
 ADK web UI for local agent inspection:
 
 ```bash
@@ -248,6 +292,9 @@ Phoenix:
 PHOENIX_PROJECT_NAME=market_fit_trace_agent
 PHOENIX_COLLECTOR_ENDPOINT=https://app.phoenix.arize.com/s/your-space-name/v1/traces
 PHOENIX_BASE_URL=https://app.phoenix.arize.com/s/your-space-name
+# Optional for direct MCP clients; the app derives these when spawning Phoenix MCP.
+PHOENIX_HOST=https://app.phoenix.arize.com/s/your-space-name
+PHOENIX_PROJECT=market_fit_trace_agent
 PHOENIX_API_KEY=your-phoenix-api-key
 PHOENIX_MCP_ENABLED=true
 ```
@@ -363,6 +410,14 @@ Live data creates candidate evidence. Frozen snapshots create eval truth. Phoeni
 connects the two by making failures inspectable and promotable. Optional PolyData
 mode retrieves bounded current-market context; strict evals and the stable Phoenix
 proof path replay frozen fixtures.
+
+The demo UI also exposes source-assisted candidate rows from
+`evals/market_fit_v2_candidates` and `evals/market_fit_v3_candidates`. Loading
+one fills the source-text box with saved source text and provenance only. It does
+not auto-run, open triage, open review, or treat proposed fit labels as truth.
+If the user creates a candidate packet from that run, `source.json` preserves the
+source-assisted pack, `example_id`, provenance, and `source_text_and_provenance_only`
+truth scope.
 
 `make phoenix-export-candidates` mirrors live retrieval candidate packets into a
 Phoenix Dataset review queue named `market_fit_candidate_cases`. Those rows are

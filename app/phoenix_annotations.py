@@ -3,6 +3,16 @@ from __future__ import annotations
 from app.config import settings
 from app.models import EvalResult
 
+BOOLEAN_ANNOTATIONS = (
+    "weak_proxy_detected",
+    "causal_mechanism_mismatch",
+    "resolution_target_mismatch",
+    "horizon_mismatch",
+    "entity_mismatch",
+    "trace_repair_candidate",
+    "trace_repair_gate_applied",
+)
+
 
 def log_eval_annotations(*, span_id: str | None, eval_result: EvalResult) -> bool:
     if not span_id or not settings.phoenix_api_key:
@@ -33,14 +43,6 @@ def log_eval_annotations(*, span_id: str | None, eval_result: EvalResult) -> boo
         _annotation(
             SpanAnnotationData,
             span_id=span_id,
-            name="weak_proxy_detected",
-            label=str(eval_result.metrics.weak_proxy_detected).lower(),
-            score=1.0 if eval_result.metrics.weak_proxy_detected else 0.0,
-            metadata={"category": "market_fit_eval"},
-        ),
-        _annotation(
-            SpanAnnotationData,
-            span_id=span_id,
             name="unsupported_implication",
             label="fail" if eval_result.metrics.unsupported_implication else "pass",
             score=0.0 if eval_result.metrics.unsupported_implication else 1.0,
@@ -50,6 +52,17 @@ def log_eval_annotations(*, span_id: str | None, eval_result: EvalResult) -> boo
             },
         ),
     ]
+    annotations.extend(
+        _annotation(
+            SpanAnnotationData,
+            span_id=span_id,
+            name=name,
+            label=str(getattr(eval_result.metrics, name)).lower(),
+            score=1.0 if getattr(eval_result.metrics, name) else 0.0,
+            metadata={"category": "market_fit_eval"},
+        )
+        for name in BOOLEAN_ANNOTATIONS
+    )
     client = Client(base_url=settings.phoenix_base_url, api_key=settings.phoenix_api_key)
     try:
         client.spans.log_span_annotations(span_annotations=annotations, sync=True)
@@ -63,6 +76,14 @@ def log_eval_annotations(*, span_id: str | None, eval_result: EvalResult) -> boo
                 f"weak_proxy_detected={eval_result.metrics.weak_proxy_detected}; "
                 "unsupported_implication="
                 f"{eval_result.metrics.unsupported_implication}; "
+                "causal_mechanism_mismatch="
+                f"{eval_result.metrics.causal_mechanism_mismatch}; "
+                "resolution_target_mismatch="
+                f"{eval_result.metrics.resolution_target_mismatch}; "
+                "trace_repair_candidate="
+                f"{eval_result.metrics.trace_repair_candidate}; "
+                "trace_repair_gate_applied="
+                f"{eval_result.metrics.trace_repair_gate_applied}; "
                 f"failure_summary={eval_result.failure_summary or 'none'}"
             ),
         )
