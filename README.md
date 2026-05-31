@@ -490,8 +490,9 @@ See [docs/deploy-cloud-run.md](docs/deploy-cloud-run.md) for full commands.
 - The app audits fit quality; it does not give trading advice or execute trades.
 - Draft eval rows mined with external tools are not goldens until independently
   reviewed and promoted.
-- Phoenix MCP is the live sponsor path; the local fallback is only for offline
-  reproduction without Phoenix credentials.
+- Phoenix MCP is the live sponsor path; local fallback is an explicit
+  developer/test opt-in for offline reproduction, not the normal UI trace-repair
+  path.
 - Phoenix Datasets and Experiments are used for eval governance and regression
   comparison; they do not replace fixture-backed strict eval truth or make live
   fit decisions.

@@ -288,17 +288,39 @@ def _rank_rows(
         ]
     )
     query_tokens = _tokens(query_text)
-    scored: list[tuple[float, dict[str, object]]] = []
+    scored: list[tuple[float, int, dict[str, object]]] = []
     for row in rows:
-        score = _retrieval_score(row, query_tokens, claim.entities)
-        scored.append((score, row))
+        haystack = _row_haystack(row)
+        entity_match_count = _entity_match_count(claim.entities, haystack)
+        score = _retrieval_score(
+            row,
+            query_tokens,
+            claim.entities,
+            haystack=haystack,
+            entity_match_count=entity_match_count,
+        )
+        scored.append((score, entity_match_count, row))
 
-    ranked = [(score, row) for score, row in scored if score > 0.0]
+    positive = [(score, entity_count, row) for score, entity_count, row in scored if score > 0.0]
+    entity_matched = [
+        (score, entity_count, row)
+        for score, entity_count, row in positive
+        if entity_count > 0
+    ]
+    context_matched = [
+        item for item in entity_matched if _row_matches_claim_context(item[2], claim)
+    ]
+    ranked = context_matched or entity_matched or positive
     return [
         row
-        for _, row in sorted(
+        for _, _, row in sorted(
             ranked,
-            key=lambda item: (item[0], _volume_usd(item[1]), _n_trades(item[1])),
+            key=lambda item: (
+                item[0],
+                item[1],
+                _volume_usd(item[2]),
+                _n_trades(item[2]),
+            ),
             reverse=True,
         )
     ]
@@ -308,8 +330,32 @@ def _retrieval_score(
     row: dict[str, object],
     query_tokens: set[str],
     entities: list[str],
+    *,
+    haystack: str | None = None,
+    entity_match_count: int | None = None,
 ) -> float:
-    haystack = " ".join(
+    haystack = haystack if haystack is not None else _row_haystack(row)
+    haystack_tokens = _tokens(haystack)
+    query_semantic_tokens = _semantic_tokens(query_tokens)
+    semantic_overlap = _semantic_tokens(query_tokens & haystack_tokens)
+    if not query_semantic_tokens:
+        overlap_score = 0.0
+    else:
+        overlap_score = len(semantic_overlap) / len(query_semantic_tokens)
+
+    entity_match_count = (
+        entity_match_count
+        if entity_match_count is not None
+        else _entity_match_count(entities, haystack)
+    )
+    if entity_match_count == 0 and len(semantic_overlap) < 2:
+        return 0.0
+    entity_boost = entity_match_count * 0.08
+    return overlap_score + entity_boost
+
+
+def _row_haystack(row: dict[str, object]) -> str:
+    return " ".join(
         _stringify(row.get(field_name))
         for field_name in (
             "question",
@@ -323,19 +369,53 @@ def _retrieval_score(
             "agent_rationale",
         )
     )
-    haystack_tokens = _tokens(haystack)
-    query_semantic_tokens = _semantic_tokens(query_tokens)
-    semantic_overlap = _semantic_tokens(query_tokens & haystack_tokens)
-    if not query_semantic_tokens:
-        overlap_score = 0.0
-    else:
-        overlap_score = len(semantic_overlap) / len(query_semantic_tokens)
 
-    entity_match_count = sum(1 for entity in entities if _entity_matches(entity, haystack))
-    if entity_match_count == 0 and len(semantic_overlap) < 2:
-        return 0.0
-    entity_boost = entity_match_count * 0.08
-    return overlap_score + entity_boost
+
+def _entity_match_count(entities: list[str], haystack: str) -> int:
+    return sum(
+        1
+        for entity in entities
+        if _is_retrieval_entity_anchor(entity) and _entity_matches(entity, haystack)
+    )
+
+
+def _is_retrieval_entity_anchor(entity: str) -> bool:
+    normalized = _normalize_entity_text(entity)
+    if not normalized:
+        return False
+    if normalized in _NON_ENTITY_ANCHORS:
+        return False
+    if normalized in _STOPWORDS:
+        return False
+    if len(normalized) <= 2 and normalized not in _SHORT_ENTITY_ANCHORS:
+        return False
+    return True
+
+
+def _row_matches_claim_context(row: dict[str, object], claim: NormalizedClaim) -> bool:
+    claim_text = " ".join([claim.claim_text, claim.horizon, claim.stance]).lower()
+    row_text = _row_haystack(row).lower()
+    if _has_ipo_context(claim_text):
+        return _has_ipo_context(row_text)
+    return True
+
+
+def _has_ipo_context(text: str) -> bool:
+    return any(
+        token in text
+        for token in (
+            "ipo",
+            "initial public offering",
+            "public offering",
+            "direct listing",
+            "market cap",
+            "market capitalization",
+            "s-1",
+            "confidential filing",
+            "file confidentially",
+            "files confidentially",
+        )
+    )
 
 
 def _row_to_candidate_market(row: dict[str, object]) -> CandidateMarket:
@@ -597,4 +677,34 @@ _STOPWORDS = {
     "will",
     "with",
     "unspecified",
+}
+
+_SHORT_ENTITY_ANCHORS = {"ai", "eu", "uk", "us"}
+
+_NON_ENTITY_ANCHORS = {
+    "if",
+    "january",
+    "jan",
+    "february",
+    "feb",
+    "march",
+    "mar",
+    "april",
+    "apr",
+    "may",
+    "june",
+    "jun",
+    "july",
+    "jul",
+    "august",
+    "aug",
+    "september",
+    "sep",
+    "sept",
+    "october",
+    "oct",
+    "november",
+    "nov",
+    "december",
+    "dec",
 }

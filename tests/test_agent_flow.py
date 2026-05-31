@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import asyncio
 
-from app.agent import MarketFitTraceAgent
+import pytest
+
+from app.agent import MarketFitTraceAgent, TraceInspectionUnavailableError
 from app.ledger import LedgerStore
 from app.market_provider import MarketRetrievalResult
 from app.models import CandidateMarket, FitClass, NormalizedClaim, PhoenixInspection
@@ -160,7 +162,12 @@ async def _local_fallback_does_not_apply_trace_repair_gate(tmp_path):
     assert first.eval.metrics.causal_mechanism_mismatch is True
     assert first.eval.metrics.trace_repair_candidate is True
 
-    improved = await agent.improve_from_trace(first.run_id)
+    with pytest.raises(TraceInspectionUnavailableError):
+        await agent.improve_from_trace(first.run_id)
+
+    improved = await agent.improve_from_trace(
+        first.run_id, allow_local_fallback=True
+    )
     assert improved.inspection_source == "local_eval_fallback"
     assert improved.fallback_used is True
     assert improved.before_run_id == first.run_id

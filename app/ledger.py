@@ -134,6 +134,8 @@ class LedgerStore:
         captures: list[str],
         misses: list[str],
         rejected_markets: list[dict[str, Any]],
+        supporting_outcome: str | None = None,
+        polarity: str | None = None,
     ) -> dict[str, str]:
         with self._locked_store() as data:
             claim = self._find(data, "claims", claim_id)
@@ -143,6 +145,8 @@ class LedgerStore:
                 "recommended_market_id": recommended_market_id,
                 "semantic_fit_class": str(semantic_fit_class),
                 "fit_reason": fit_reason,
+                "supporting_outcome": supporting_outcome,
+                "polarity": getattr(polarity, "value", polarity),
                 "captures_json": json.dumps(captures),
                 "misses_json": json.dumps(misses),
                 "rejected_markets_json": json.dumps(rejected_markets),

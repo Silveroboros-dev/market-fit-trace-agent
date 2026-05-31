@@ -97,7 +97,9 @@ async def _agent_replays_strict_golden_market_context_before_and_after_trace(tmp
         assert first.market_retrieval.query_summary["example_id"] == case["example_id"]
         assert first_ids == expected_ids
 
-        improved = await agent.improve_from_trace(first.run_id)
+        improved = await agent.improve_from_trace(
+            first.run_id, allow_local_fallback=True
+        )
         second_ids = {market.market_id for market in improved.after.market_context}
         assert improved.after.market_retrieval is not None
         assert improved.after.market_retrieval.mode == "golden_fixture"

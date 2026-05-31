@@ -152,6 +152,92 @@ def test_polydata_provider_does_not_match_short_entities_as_substrings():
     assert [market.market_id for market in retrieval.markets] == ["related-us-market"]
 
 
+def test_polydata_provider_prefers_exact_entity_matches_over_generic_ipo_noise():
+    provider = PolyDataMarketProvider(
+        settings_obj=Settings(
+            market_provider="polydata",
+            poly_data_top_k=10,
+            poly_data_max_k=50,
+        )
+    )
+    provider._universe = [
+        {
+            "market_id": "openai-ipo",
+            "question": "Will OpenAI IPO by June 30 2026?",
+            "description": "This market resolves on OpenAI completing an IPO.",
+            "volume_usd": 10000,
+        },
+        {
+            "market_id": "spacex-ipo",
+            "question": "Will SpaceX raise between $70B and $80B in its IPO?",
+            "description": "This market resolves on IPO proceeds.",
+            "volume_usd": 1_000_000,
+        },
+        {
+            "market_id": "uk-politics",
+            "question": "Starmer out by June 30, 2026?",
+            "description": "This market resolves on a UK political outcome.",
+            "volume_usd": 900_000,
+        },
+    ]
+    claim = NormalizedClaim(
+        claim_text="OpenAI is preparing to file confidentially for an IPO in 2026.",
+        entities=["OpenAI"],
+        horizon="2026",
+        stance="preparing for IPO",
+    )
+
+    retrieval = provider.retrieve(claim)
+
+    assert [market.market_id for market in retrieval.markets] == ["openai-ipo"]
+
+
+def test_polydata_provider_ignores_bogus_extracted_entities_for_live_ranking():
+    provider = PolyDataMarketProvider(
+        settings_obj=Settings(
+            market_provider="polydata",
+            poly_data_top_k=10,
+            poly_data_max_k=50,
+        )
+    )
+    provider._universe = [
+        {
+            "market_id": "openai-ipo",
+            "question": "Will OpenAI IPO by June 30 2026?",
+            "description": "This market resolves if OpenAI completes an IPO.",
+            "volume_usd": 10000,
+        },
+        {
+            "market_id": "spacex-ipo",
+            "question": "Will SpaceX raise between $70B and $80B in its IPO?",
+            "description": "This market resolves if the company files in September.",
+            "volume_usd": 1_000_000,
+        },
+        {
+            "market_id": "uk-politics",
+            "question": "Starmer out by June 30, 2026?",
+            "description": "This market resolves if the UK prime minister leaves office.",
+            "volume_usd": 900_000,
+        },
+        {
+            "market_id": "openai-gpt",
+            "question": "Will GPT-6 be released by June 30, 2026?",
+            "description": "This OpenAI market resolves if the model is released.",
+            "volume_usd": 800_000,
+        },
+    ]
+    claim = NormalizedClaim(
+        claim_text="OpenAI is preparing to file confidentially for an IPO in 2026.",
+        entities=["OpenAI", "If", "September"],
+        horizon="2026",
+        stance="preparing for IPO",
+    )
+
+    retrieval = provider.retrieve(claim)
+
+    assert [market.market_id for market in retrieval.markets] == ["openai-ipo"]
+
+
 def test_polydata_provider_maps_description_to_resolution_rules():
     provider = PolyDataMarketProvider(
         settings_obj=Settings(

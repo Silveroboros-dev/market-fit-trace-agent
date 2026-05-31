@@ -1,6 +1,7 @@
 const state = {
   currentRun: null,
   activeRunCandidateId: null,
+  activeRunCandidateDetail: null,
   marketsById: {},
   candidateSummary: null,
   selectedCandidateId: null,
@@ -47,7 +48,14 @@ async function api(path, options = {}) {
   });
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(text || `HTTP ${response.status}`);
+    let message = text || `HTTP ${response.status}`;
+    try {
+      const parsed = JSON.parse(text);
+      message = parsed.detail || message;
+    } catch {
+      // Keep the raw body when the response is not JSON.
+    }
+    throw new Error(message);
   }
   return response.json();
 }
@@ -293,28 +301,43 @@ function renderRun(run) {
       ${list("Misses", run.fit.misses)}
       ${list("Rejected markets", run.fit.rejected_markets.map((item) => `${item.market_id}: ${item.reason}`))}
     </div>
-    <div class="verdicts" data-claim-id="${run.claim_id}">
-      <span class="label">Human review decision</span>
-      <button type="button" data-verdict="verify">Verify</button>
-      <button type="button" data-verdict="reject">Reject</button>
-      <button type="button" data-verdict="needs_review">Needs review</button>
-      <button type="button" data-verdict="corrected">Correct to weak proxy</button>
-    </div>
+    ${reviewerRecommendationDraft(run)}
   `;
-  bindVerdicts();
+  bindReviewerRecommendations(run);
   bindRunGovernance();
   renderEval(run);
   renderLedger(run.ledger);
   renderWorkflow();
 }
 
+function reviewerRecommendationDraft(run) {
+  return `
+    <div class="verdicts reviewer-draft" data-reviewer-draft-run-id="${escapeHtml(run.run_id)}">
+      <span class="label">Reviewer recommendation (read-only draft)</span>
+      <textarea id="reviewer-recommendation-note" rows="4" placeholder="Write a local recommendation for this run. Example: market 1439555 is inverse-directional because No supports the normalized thesis, but horizon and resolution target still need review."></textarea>
+      <div class="run-gate-actions">
+        <button type="button" data-reviewer-template="inverse_market">Inverse market note</button>
+        <button type="button" data-reviewer-template="needs_rules">Needs rules</button>
+        <button type="button" data-reviewer-template="weak_proxy">Weak proxy</button>
+      </div>
+      <p class="trace" data-reviewer-draft-status>
+        Draft only for run ${escapeHtml(run.run_id)}. No ledger event, candidate review file, Phoenix Dataset metadata, or expected_outputs.jsonl mutation is written from this note.
+      </p>
+    </div>
+  `;
+}
+
 function renderImprovement(improved) {
   const before = improved.before;
   const after = improved.after;
   indexRunMarkets(after);
+  const inspectionLabel =
+    improved.inspection_source === "phoenix_mcp"
+      ? "Phoenix MCP inspection"
+      : "Trace inspection fallback";
   resultEl.innerHTML = `
     <div class="inspection">
-      <span class="label">Phoenix MCP inspection</span>
+      <span class="label">${escapeHtml(inspectionLabel)}</span>
       <p>${escapeHtml(improved.inspection.summary)}</p>
       <p class="trace">source=${escapeHtml(improved.inspection_source)} fallback=${escapeHtml(improved.fallback_used)} trace=${escapeHtml(improved.before_trace_id)}</p>
     </div>
@@ -325,6 +348,7 @@ function renderImprovement(improved) {
     <span class="label">Revised normalized thesis</span>
     <p class="claim-text">${escapeHtml(after.claim.claim_text)}</p>
     ${fitClassScale(after.fit.semantic_fit_class)}
+    ${retrievedMarketContext(after)}
     ${recommendedMarket(after)}
     <div class="market">
       <span class="label">Revised fit reason</span>
@@ -422,6 +446,7 @@ function resetWorkflowChoices() {
 function beginCurrentRun() {
   state.currentRun = null;
   state.activeRunCandidateId = null;
+  state.activeRunCandidateDetail = null;
   clearCandidateSelectionForRun();
   resultEl.innerHTML = `<p class="empty">Running current thesis through bounded retrieval, deterministic policy, and Phoenix eval logging.</p>`;
   evalEl.innerHTML = `<p class="empty">Waiting for current run eval.</p>`;
@@ -431,6 +456,7 @@ function beginCurrentRun() {
 function resetCurrentRunForLoadedGolden(golden) {
   state.currentRun = null;
   state.activeRunCandidateId = null;
+  state.activeRunCandidateDetail = null;
   improveButton.disabled = true;
   clearCandidateSelectionForRun();
   resultEl.innerHTML = `<p class="empty">Strict golden loaded. Click Run agent to replay the frozen fixture context.</p>`;
@@ -445,6 +471,7 @@ function resetCurrentRunForLoadedGolden(golden) {
 function resetCurrentRunForLoadedSourceCandidate(row) {
   state.currentRun = null;
   state.activeRunCandidateId = null;
+  state.activeRunCandidateDetail = null;
   improveButton.disabled = true;
   clearCandidateSelectionForRun();
   resultEl.innerHTML = `<p class="empty">Source-assisted candidate loaded from ${escapeHtml(row.pack)} / ${escapeHtml(row.example_id)}. Click Run agent to create a fresh run, trace, and deterministic eval.</p>`;
@@ -1128,11 +1155,17 @@ function recommendedMarket(run) {
               ${meta("Close", market.close_date)}
               ${meta("Outcomes", market.outcomes.join(" / "))}
               ${meta("Probability", market.current_probability === null || market.current_probability === undefined ? "n/a" : market.current_probability)}
+              ${run.fit.supporting_outcome ? meta("Supporting outcome", run.fit.supporting_outcome) : ""}
+              ${run.fit.polarity ? meta("Polarity", statusLabel(run.fit.polarity)) : ""}
             </div>
-            <span class="label">Resolution rules</span>
             ${
               resolutionRules
-                ? `<p>${escapeHtml(resolutionRules)}</p>`
+                ? `
+                  <details class="rules-details">
+                    <summary>Resolution rules</summary>
+                    <p>${escapeHtml(resolutionRules)}</p>
+                  </details>
+                `
                 : `<p class="flag-warn">Rules unavailable from provider; treated as fit-risk.</p>`
             }
             ${riskTags(market.known_fit_risks)}
@@ -1150,18 +1183,32 @@ function retrievedMarketContext(run) {
   const rejectedById = Object.fromEntries(
     (run.fit.rejected_markets || []).map((item) => [item.market_id, item.reason])
   );
+  const scoreById = currentRunScoreById();
+  const hasScores = Object.keys(scoreById).length > 0;
+  const orderedMarkets = hasScores
+    ? markets
+        .map((market, index) => ({ market, index }))
+        .sort(
+          (left, right) =>
+            (scoreById[right.market.market_id] ?? -1) -
+              (scoreById[left.market.market_id] ?? -1) || left.index - right.index
+        )
+        .map((item) => item.market)
+    : markets;
   return `
     <section class="run-market-context">
-      <span class="label">Found relevant markets (${markets.length})</span>
-      ${markets
-        .map((market) => runMarketRow(market, recommendedId, rejectedById))
+      <span class="label">${hasScores ? "Retrieved candidate markets with advisory scores" : "Retrieved candidate markets"} (${markets.length})</span>
+      ${orderedMarkets
+        .map((market) => runMarketRow(market, recommendedId, rejectedById, scoreById))
         .join("")}
     </section>
   `;
 }
 
-function runMarketRow(market, recommendedId, rejectedById) {
+function runMarketRow(market, recommendedId, rejectedById, scoreById = {}) {
+  const score = scoreById[market.market_id];
   const markers = [
+    score === undefined ? null : `score ${score}`,
     market.market_id === recommendedId ? "recommended" : null,
     rejectedById[market.market_id] ? "rejected" : null,
     ...(market.known_fit_risks || []).slice(0, 2).map((risk) => risk.replaceAll("_", " ")),
@@ -1195,6 +1242,13 @@ function runMarketRow(market, recommendedId, rejectedById) {
   `;
 }
 
+function currentRunScoreById() {
+  const detail = state.activeRunCandidateDetail;
+  if (!detail || detail.case_id !== state.activeRunCandidateId) return {};
+  const scores = detail.llm_review_suggestion?.market_scores || [];
+  return Object.fromEntries(scores.map((row) => [row.market_id, row.review_score]));
+}
+
 function runGovernancePrompt() {
   const hasCandidate = Boolean(state.activeRunCandidateId);
   return `
@@ -1202,12 +1256,12 @@ function runGovernancePrompt() {
       <span class="label">Workflow gates</span>
       <div class="run-question-grid">
         <div class="run-question-card">
-          <strong>${hasCandidate ? "LLM triage suggestion is bound" : "Run LLM triage suggestion?"}</strong>
-          <p>${hasCandidate ? `Current run is bound to candidate packet ${escapeHtml(state.activeRunCandidateId)}.` : "Create a candidate packet from this run and write advisory llm_review_suggestion.json with market ranking scores."}</p>
+          <strong>${hasCandidate ? "LLM triage scores are bound" : "Run LLM triage suggestion?"}</strong>
+          <p>${hasCandidate ? `Advisory scores from candidate packet ${escapeHtml(state.activeRunCandidateId)} are shown on the retrieved market rows below.` : "Create a candidate packet from this run and write advisory llm_review_suggestion.json with market ranking scores."}</p>
           <div class="run-gate-actions">
             ${
               hasCandidate
-                ? `<button type="button" data-open-active-candidate="triage">Open triage</button>`
+                ? `<button type="button" data-scroll-run-markets>Show scored markets</button>`
                 : `<button type="button" data-create-run-triage>Yes, score markets</button>`
             }
             <button type="button" data-run-gate-skip>No</button>
@@ -1255,6 +1309,14 @@ function bindRunGovernance() {
       });
     });
   });
+  document.querySelectorAll("[data-scroll-run-markets]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const markets = document.querySelector(".run-market-context");
+      if (markets) {
+        markets.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
   document.querySelectorAll("[data-scroll-candidate-queue]").forEach((button) => {
     button.addEventListener("click", () => {
       const workbench = document.querySelector(".candidate-workbench");
@@ -1272,20 +1334,6 @@ function bindRunGovernance() {
       const note = document.querySelector("#run-gate-note");
       if (note) {
         note.textContent = "Skipped advisory triage. The deterministic run and Phoenix eval remain visible above.";
-      }
-    });
-  });
-  document.querySelectorAll("[data-run-review-open]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const verdicts = document.querySelector(".verdicts");
-      if (verdicts) {
-        verdicts.scrollIntoView({ behavior: "smooth", block: "center" });
-        verdicts.classList.add("is-highlighted");
-        setTimeout(() => verdicts.classList.remove("is-highlighted"), 1800);
-      }
-      const note = document.querySelector("#run-gate-note");
-      if (note) {
-        note.textContent = "Opened run-level human review controls. Promotion still requires candidate review status in the promotion workflow.";
       }
     });
   });
@@ -1320,13 +1368,25 @@ async function createCandidateFromCurrentRun({ runTriage, openScreen }) {
     });
   }
   state.activeRunCandidateId = detail.case_id;
-  bindCandidateDetail(detail, {
-    triageDecision: runTriage ? "yes" : "no",
-    reviewDecision: openScreen === "review" ? "yes" : null,
-    screen: openScreen,
-  });
-  if (note) {
-    note.textContent = `Bound current run to candidate packet ${detail.case_id}. Review status controls promotion eligibility only.`;
+  state.activeRunCandidateDetail = detail;
+  if (openScreen === "review") {
+    ensureCandidateOption(detail.case_id);
+    bindCandidateDetail(detail, {
+      triageDecision: runTriage ? "yes" : "no",
+      reviewDecision: "yes",
+      screen: "review",
+    });
+  } else if (state.currentRun) {
+    state.selectedCandidateId = null;
+    if (candidateSelectEl) {
+      candidateSelectEl.value = "";
+    }
+    resetWorkflowChoices();
+    renderRun(state.currentRun);
+    const updatedNote = document.querySelector("#run-gate-note");
+    if (updatedNote) {
+      updatedNote.textContent = `Bound current run to candidate packet ${detail.case_id}. Advisory scores are shown on the retrieved market rows; promotion review is still unopened.`;
+    }
   }
 }
 
@@ -1378,25 +1438,23 @@ function ensureCandidateOption(caseId) {
   candidateSelectEl.appendChild(option);
 }
 
-function bindVerdicts() {
-  document.querySelectorAll("[data-verdict]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const claimId = button.parentElement.dataset.claimId;
-      const verdict = button.dataset.verdict;
-      const payload = {
-        claim_id: claimId,
-        verdict,
-        corrected_fit_class: verdict === "corrected" ? "weak_proxy" : null,
-        reviewer_note:
-          verdict === "corrected"
-            ? "Human reviewer downgraded the tempting market to a weak proxy."
-            : "Human reviewer recorded a verdict from the demo UI.",
-      };
-      const response = await api("/api/verdicts", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
-      renderLedger(response.ledger);
+function bindReviewerRecommendations(run) {
+  const draft = document.querySelector("[data-reviewer-draft-run-id]");
+  if (!draft) return;
+  const note = draft.querySelector("#reviewer-recommendation-note");
+  const status = draft.querySelector("[data-reviewer-draft-status]");
+  const normalizedThesis = run.claim?.claim_text || "the normalized thesis";
+  const templates = {
+    inverse_market: `Recommendation draft: inspect whether one retrieved market is an inverse expression of "${normalizedThesis}". If the market's No outcome supports the thesis and the inverted market directly matches the normalized thesis, record semantic_fit_class=direct, polarity=inverse, and supporting_outcome=No.`,
+    needs_rules: `Recommendation draft: keep this as needs_more_rules until the market resolution text proves the same entity, event, horizon, and polarity as "${normalizedThesis}".`,
+    weak_proxy: `Recommendation draft: classify the recommended market as weak_proxy if it is adjacent evidence but can resolve for reasons unrelated to "${normalizedThesis}".`,
+  };
+  draft.querySelectorAll("[data-reviewer-template]").forEach((button) => {
+    button.addEventListener("click", () => {
+      note.value = templates[button.dataset.reviewerTemplate] || "";
+      if (status) {
+        status.textContent = "Draft updated locally only. Use candidate promotion review to persist a human decision.";
+      }
     });
   });
 }

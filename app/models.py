@@ -21,6 +21,11 @@ class HumanVerdict(StrEnum):
     CORRECTED = "corrected"
 
 
+class MarketPolarity(StrEnum):
+    ALIGNED = "aligned"
+    INVERSE = "inverse"
+
+
 class SourceInput(BaseModel):
     thesis: str = Field(min_length=8)
     title: str | None = None
@@ -58,6 +63,8 @@ class MarketFit(BaseModel):
     recommended_market_id: str | None
     semantic_fit_class: FitClass
     fit_reason: str
+    supporting_outcome: str | None = None
+    polarity: MarketPolarity | None = None
     captures: list[str] = Field(default_factory=list)
     misses: list[str] = Field(default_factory=list)
     rejected_markets: list[RejectedMarket] = Field(default_factory=list)

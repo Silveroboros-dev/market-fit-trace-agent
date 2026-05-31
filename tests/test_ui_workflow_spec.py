@@ -8,6 +8,7 @@ INDEX_HTML = ROOT / "app" / "static" / "index.html"
 
 def test_ui_workflow_spec_defines_state_binding_acceptance_criteria():
     spec = SPEC.read_text(encoding="utf-8")
+    spec_inline = " ".join(spec.split())
 
     for criterion in (
         "AC-1",
@@ -26,6 +27,10 @@ def test_ui_workflow_spec_defines_state_binding_acceptance_criteria():
         "AC-14",
         "AC-15",
         "AC-16",
+        "AC-17",
+        "AC-18",
+        "AC-19",
+        "AC-20",
     ):
         assert criterion in spec
     assert "current run is identified by `run_id`" in spec
@@ -41,6 +46,12 @@ def test_ui_workflow_spec_defines_state_binding_acceptance_criteria():
     assert "LLM Triage Includes Market Ranking Scores" in spec
     assert "Human Promotion Review Target Is Explicit" in spec
     assert "Source-Assisted Candidate Loader Preserves Truth Boundary" in spec
+    assert "Missing Phoenix MCP Is a Visible Failed Dependency" in spec
+    assert "Candidate Review Console Requires Explicit Review Yes" in spec
+    assert "Current-Run Reviewer Notes Are Read-Only Drafts" in spec
+    assert "Inverse Direct Markets Show Supporting Outcome" in spec
+    assert "must not silently use `local_eval_fallback`" in spec_inline
+    assert "must not call `/api/verdicts`" in spec
     assert "source_case_key" in spec
 
 
@@ -54,7 +65,7 @@ def test_current_run_ui_does_not_open_existing_candidate_triage():
     assert "data-scroll-candidate-workflow" not in app_js
 
     bind_run_governance = app_js.split("function bindRunGovernance()", 1)[1].split(
-        "function bindVerdicts()", 1
+        "async function createCandidateFromCurrentRun", 1
     )[0]
     assert 'state.workflow.screen = "triage"' not in bind_run_governance
     assert "setTriageDecision" not in bind_run_governance
@@ -120,6 +131,7 @@ def test_trace_inspected_mode_is_not_directly_selectable():
     assert "Trace-inspected reruns use Phoenix MCP" in index_html
     assert '<option value="v2_trace_inspected">' not in index_html
     assert 'document.querySelector("#prompt-version").value' in app_js
+    assert "parsed.detail" in app_js
 
 
 def test_current_run_clears_stale_candidate_selection_and_scopes_eval_metrics():
@@ -181,7 +193,9 @@ def test_current_run_market_rows_are_rendered_before_recommended_market_details(
     assert render_run.index("${retrievedMarketContext(run)}") < render_run.index(
         "${recommendedMarket(run)}"
     )
-    assert "Found relevant markets" in app_js
+    assert "Retrieved candidate markets" in app_js
+    assert 'meta("Supporting outcome", run.fit.supporting_outcome)' in app_js
+    assert 'meta("Polarity", statusLabel(run.fit.polarity))' in app_js
 
 
 def test_candidate_packet_views_show_eval_trace_and_review_target():
@@ -201,3 +215,44 @@ def test_candidate_triage_market_scores_are_rendered_as_advisory_rankings():
     assert "market_scores" in app_js
     assert "review_score" in app_js
     assert "score ${score}" in app_js
+    assert "currentRunScoreById" in app_js
+    assert "Retrieved candidate markets with advisory scores" in app_js
+    assert "orderedMarkets" in app_js
+    assert "scoreById[right.market.market_id]" in app_js
+
+
+def test_current_run_triage_does_not_auto_open_candidate_review_console():
+    app_js = APP_JS.read_text(encoding="utf-8")
+    index_html = INDEX_HTML.read_text(encoding="utf-8")
+
+    assert "activeRunCandidateDetail" in app_js
+    assert "promotion review is still unopened" in app_js
+    assert "data-scroll-run-markets" in app_js
+    assert "20260531-inverse-direct" in index_html
+
+    create_candidate = app_js.split(
+        "async function createCandidateFromCurrentRun", 1
+    )[1].split("function currentSourceAssistedRef", 1)[0]
+    assert 'openScreen === "review"' in create_candidate
+    assert "state.selectedCandidateId = null" in create_candidate
+    assert 'candidateSelectEl.value = ""' in create_candidate
+    assert "resetWorkflowChoices();" in create_candidate
+    assert "renderRun(state.currentRun)" in create_candidate
+
+
+def test_current_run_reviewer_recommendation_is_read_only_draft():
+    app_js = APP_JS.read_text(encoding="utf-8")
+
+    render_run = app_js.split("function renderRun(run)", 1)[1].split(
+        "function renderImprovement", 1
+    )[0]
+    assert "${reviewerRecommendationDraft(run)}" in render_run
+    assert "bindReviewerRecommendations(run)" in render_run
+    assert "Reviewer recommendation (read-only draft)" in app_js
+    assert "Draft only for run" in app_js
+    assert "No ledger event, candidate review file, Phoenix Dataset metadata" in app_js
+    assert "Inverse market note" in app_js
+    assert "supporting_outcome=No" in app_js
+    assert "/api/verdicts" not in app_js
+    assert "data-verdict" not in app_js
+    assert "human_verdict_recorded" not in app_js

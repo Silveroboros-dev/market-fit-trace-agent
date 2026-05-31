@@ -41,6 +41,10 @@ class TraceRepairContext:
     inspection_summary: str
 
 
+class TraceInspectionUnavailableError(RuntimeError):
+    """Raised when a trace-inspected rerun lacks real Phoenix MCP context."""
+
+
 class MarketFitTraceAgent:
     def __init__(
         self,
@@ -181,6 +185,8 @@ class MarketFitTraceAgent:
                     recommended_market_id=fit.recommended_market_id,
                     semantic_fit_class=fit.semantic_fit_class,
                     fit_reason=fit.fit_reason,
+                    supporting_outcome=fit.supporting_outcome,
+                    polarity=fit.polarity,
                     captures=fit.captures,
                     misses=fit.misses,
                     rejected_markets=[item.model_dump() for item in fit.rejected_markets],
@@ -198,6 +204,8 @@ class MarketFitTraceAgent:
                     "claim_id": claim_id,
                     "semantic_fit_class": fit.semantic_fit_class.value,
                     "recommended_market_id": fit.recommended_market_id or "",
+                    "supporting_outcome": fit.supporting_outcome or "",
+                    "market_polarity": fit.polarity or "",
                 },
             ):
                 eval_result = evaluate_fit(
@@ -320,10 +328,18 @@ class MarketFitTraceAgent:
             ledger=self.store.query_claim_trace(claim_id),
         )
 
-    async def improve_from_trace(self, run_id: str) -> ImprovementResult:
+    async def improve_from_trace(
+        self, run_id: str, *, allow_local_fallback: bool = False
+    ) -> ImprovementResult:
         inspector = self.phoenix_inspector_factory(self.store)
         inspection = await inspector.inspect_failed_run(run_id)
         before = self._reconstruct_run_result(run_id)
+        if inspection.fallback_used and not allow_local_fallback:
+            raise TraceInspectionUnavailableError(
+                "Phoenix MCP inspection is unavailable for this run. "
+                "The UI will not create a trace-inspected rerun from local fallback; "
+                "enable Phoenix MCP or use an explicit developer fallback path."
+            )
         self.store.record_trace_inspection(
             run_id=run_id,
             claim_id=before.claim_id,
@@ -463,6 +479,8 @@ class MarketFitTraceAgent:
                 recommended_market_id=fit.recommended_market_id,
                 semantic_fit_class=FitClass.WEAK_PROXY,
                 fit_reason=capped_reason,
+                supporting_outcome=fit.supporting_outcome,
+                polarity=fit.polarity,
                 captures=fit.captures,
                 misses=_dedupe(misses),
                 rejected_markets=fit.rejected_markets,
@@ -553,6 +571,8 @@ class MarketFitTraceAgent:
             recommended_market_id=fit_row["recommended_market_id"],
             semantic_fit_class=FitClass(fit_row["semantic_fit_class"]),
             fit_reason=fit_row["fit_reason"],
+            supporting_outcome=fit_row.get("supporting_outcome"),
+            polarity=fit_row.get("polarity"),
             captures=json.loads(fit_row["captures_json"]),
             misses=json.loads(fit_row["misses_json"]),
             rejected_markets=[

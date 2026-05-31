@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.agent import MarketFitTraceAgent
+from app.agent import MarketFitTraceAgent, TraceInspectionUnavailableError
 from app.candidate_review import (
     DEFAULT_CANDIDATES_DIR,
     load_candidate_review_detail,
@@ -215,3 +215,5 @@ async def improve_run(run_id: str) -> ImprovementResult:
         return await agent.improve_from_trace(run_id)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except TraceInspectionUnavailableError as exc:
+        raise HTTPException(status_code=424, detail=str(exc)) from exc

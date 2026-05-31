@@ -20,8 +20,12 @@ It may show:
 - the bounded retrieved market context for that run, using strict golden
   fixture context when the source text exactly matches a promoted golden;
 - the deterministic market-fit decision;
+- supporting outcome and polarity when the recommended binary market is an
+  inverse expression of the thesis, e.g. `supporting_outcome=No`;
 - the Phoenix trace link, run ID, prompt version, and deterministic eval result;
-- run-level human verdict controls;
+- a run-level reviewer recommendation draft that is local/read-only and does
+  not write ledger events, Dataset rows, candidate review files, or strict
+  expected labels;
 - an optional current-run candidate packet created explicitly from the current
   run, if the user asks for LLM triage or promotion review.
 
@@ -60,13 +64,18 @@ candidate packet.
 7. A current-run candidate packet is identified by `case_id` and must be created
    explicitly from the active `run_id`; it is not inferred from the existing
    candidate queue.
-8. Human review in the UI writes only candidate review status. A `promote`
-   review means eligible for later frozen strict-golden promotion; it does not
-   directly mutate strict expected labels.
+8. Human review in the UI writes only candidate review status after the
+   explicit candidate review gate. A `promote` review means eligible for later
+   frozen strict-golden promotion; it does not directly mutate strict expected
+   labels.
 9. A source-assisted input row is identified by `source_case_key`
    (`pack::example_id`) and may prefill source text and provenance only. Its
    proposed expected fit is advisory until a current run, candidate packet, and
    human review exist.
+10. A current-run reviewer recommendation is identified by the active `run_id`
+    only and is a local draft. It must not call `/api/verdicts`, write
+    `human_verdict_recorded`, create `review_decision.json`, or affect
+    promotion eligibility.
 
 ## Workflow Contract
 
@@ -111,9 +120,9 @@ details, LLM triage, or review console content appears.
 
 ### AC-5: Human Review Authority
 
-Run-level verdict controls are not promotion decisions. Candidate promotion
-status is shown only in the existing candidate queue and is derived from
-candidate human review status.
+Run-level reviewer recommendations are read-only drafts, not persisted human
+verdicts or promotion decisions. Candidate promotion status is shown only in the
+existing candidate queue and is derived from candidate human review status.
 
 ### AC-6: Strict Eval Boundary
 
@@ -154,8 +163,9 @@ is edited, the UI must warn that exact golden replay may no longer apply.
 The normal UI must not let users choose `v2_trace_inspected` as a first run.
 Trace-inspected reruns must be created only through
 `/api/runs/{run_id}/improve`, after the first run has produced a trace and eval
-failure context. Developer-only controls may exist elsewhere, but the judge demo
-path is:
+failure context and Phoenix MCP can inspect that trace. The normal UI must not
+silently use `local_eval_fallback` as if it were sponsor trace inspection.
+Developer-only controls may exist elsewhere, but the judge demo path is:
 
 ```text
 Run agent -> inspect Phoenix trace -> rerun
@@ -174,7 +184,8 @@ explicitly created from that run.
 After a current run completes, the UI may ask whether to create a candidate
 packet and run LLM triage. If the user says yes, the app must write a candidate
 packet for the active `run_id`, write `llm_review_suggestion.json`, bind the
-candidate workflow to the new `case_id`, and label the suggestion as advisory.
+advisory scores to the active current-run market rows, and label the suggestion
+as advisory. This action must not open the candidate promotion-review console.
 
 ### AC-14: LLM Triage Includes Market Ranking Scores
 
@@ -198,3 +209,35 @@ agent, open triage, open human review, or treat proposed expected labels as
 strict truth. If a source-assisted row is exported as a current-run candidate
 packet, `source.json` must preserve the source-assisted pack, `example_id`,
 provenance, and truth-scope metadata.
+
+### AC-17: Missing Phoenix MCP Is a Visible Failed Dependency
+
+If `/api/runs/{run_id}/improve` cannot obtain real Phoenix MCP inspection, the
+normal UI must show an explicit unavailable/error state and must not create a
+second `v2_trace_inspected` run from `local_eval_fallback`. Offline fallback may
+exist only as an explicit developer/test opt-in, never as the default user path.
+
+### AC-18: Candidate Review Console Requires Explicit Review Yes
+
+The current-run LLM triage question and the candidate promotion-review question
+are separate gates. Answering yes to `Run LLM triage suggestion?` may score the
+retrieved candidate markets, but it must not auto-scroll to or display the
+candidate review console. The candidate queue/review workflow may open only
+after the user answers yes to `Review candidate for promotion?`.
+
+### AC-19: Current-Run Reviewer Notes Are Read-Only Drafts
+
+The current-run workspace may let a user write a reviewer recommendation note
+for reasoning during the demo, including inverse-market observations such as
+`No` supporting a thesis. This note is local to the browser surface and must not
+POST to `/api/verdicts`, append `human_verdict_recorded`, create
+`review_decision.json`, or mutate Phoenix Dataset metadata. Persisted human
+review happens only in the candidate review console after the explicit
+promotion-review gate.
+
+### AC-20: Inverse Direct Markets Show Supporting Outcome
+
+If deterministic policy classifies an inverse binary market as `direct`, the UI
+must show the `supporting_outcome` and `polarity` next to the recommended
+market. A `No`-supports-thesis market must not be downgraded to `indirect`
+solely because its displayed Yes outcome is the opposite of the thesis.

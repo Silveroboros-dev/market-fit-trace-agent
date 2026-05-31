@@ -209,6 +209,16 @@ button:disabled {
   flex: 1 0 100%;
 }
 
+.reviewer-draft textarea {
+  flex: 1 0 100%;
+  min-height: 96px;
+  box-sizing: border-box;
+}
+
+.reviewer-draft .run-gate-actions {
+  flex: 1 0 100%;
+}
+
 .result-panel,
 .eval-panel {
   min-height: 520px;
@@ -292,15 +302,25 @@ button:disabled {
   line-height: 1.4;
 }
 
-.run-market-row details {
+.run-market-row details,
+.recommended-market .rules-details {
   margin-top: 8px;
   color: var(--muted);
 }
 
-.run-market-row summary {
+.run-market-row summary,
+.recommended-market .rules-details summary {
   cursor: pointer;
   color: var(--brass);
   font-size: 13px;
+}
+
+.run-market-row details p,
+.market-row details p,
+.recommended-market .rules-details p {
+  max-height: 220px;
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .run-gate {

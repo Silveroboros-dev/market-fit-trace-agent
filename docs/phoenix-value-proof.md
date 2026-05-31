@@ -445,9 +445,10 @@ and Phoenix MCP trace inspection for the live improve step.
 The local fallback is only an offline reproduction path.
 
 If `PHOENIX_MCP_ENABLED=true` and Phoenix MCP returns trace data, the inspection
-source is `phoenix_mcp`. If a reviewer cannot configure Phoenix MCP locally, the
-app can still replay the trace-linked eval record as `local_eval_fallback` so the
-UI and eval path remain reproducible.
+source is `phoenix_mcp`. If a reviewer cannot configure Phoenix MCP locally,
+developer scripts/tests can explicitly opt into replaying the trace-linked eval
+record as `local_eval_fallback` for offline reproduction. The normal UI does not
+silently create a trace-inspected rerun from fallback context.
 
 Do not present the fallback as equivalent sponsor integration. The submission
 proof path is Phoenix MCP in live mode.
