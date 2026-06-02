@@ -11,8 +11,10 @@ stance, and target outcome. The app retrieves a bounded set of relevant current
 Polymarket markets from recent snapshots, then deterministic policy code classifies
 the fit as `direct`, `indirect`, `weak_proxy`, or `no_clean_expression`.
 
-The stable proof path and strict evals remain fixture-backed; PolyData live retrieval
-is the product mode and candidate-golden acquisition path.
+The stable proof path and strict evals remain fixture-backed. PolyData live retrieval
+is the product-mode evidence source and candidate-golden acquisition path: it
+brings current market context into the harness without letting live retrieval mutate
+strict eval truth.
 
 The Arize/Phoenix integration is not just logging. Phoenix/OpenInference traces expose
 why a market-fit judgment failed, and the improve step uses Phoenix MCP trace context
@@ -57,6 +59,32 @@ repair loop by retrieving failed trace/eval context; humans decide which reviewe
 candidates become deterministic goldens. The final trust boundary stays explicit:
 Gemini proposes, Phoenix makes the failure observable, and deterministic policy
 owns the repair gate and fixture promotion path.
+
+## Live Market Evidence: PolyData
+
+PolyData is not the Arize partner integration; Phoenix remains the sponsor-track
+proof path. PolyData is the live market-evidence layer from the broader Epistemic
+Ledger project. It gives Market Fit Trace Agent a bounded current-market inventory
+instead of only hand-picked fixtures.
+
+In live mode, the app uses PolyData to retrieve recent Polymarket market context
+with snapshot provenance, taxonomy/category metadata, current price, VWAP, volume,
+trade count, and close timing. That makes the demo evidence-driven: the agent can
+inspect real candidate markets, expose retrieval failures, export candidate packets,
+and later freeze reviewed cases into deterministic eval fixtures.
+
+The boundary is deliberate:
+
+```text
+PolyData retrieves bounded real-market evidence.
+Gemini proposes normalized claims and candidate interpretations.
+Deterministic policy decides market-fit class.
+Phoenix traces failures and powers repair.
+Humans decide what becomes canonical golden truth.
+```
+
+PolyData retrieval success is not market-fit correctness. Live rows are candidate
+evidence until human review and fixture promotion.
 
 ## Why It Matters
 
@@ -109,6 +137,9 @@ Phoenix MCP is the partner integration for the Arize track:
 - Phoenix MCP is used during the improve step to inspect failed trace/eval context.
 - The local Ledger MCP records claim lifecycle events and optional human verdicts;
   it is a project-local support tool, not the sponsor integration.
+- PolyData is the live market-evidence source, not the Arize sponsor integration.
+  Phoenix/Phoenix MCP remains the partner proof path for observability, trace
+  inspection, eval context, and repair.
 - Phoenix also supports eval governance: trace-backed live failures become
   candidate Dataset rows, reviewed fixture goldens are mirrored into a promoted
   Dataset, and Phoenix Experiments compare current policy output against expected
@@ -183,6 +214,10 @@ The Arize/Phoenix proof passes if:
 - Phoenix promoted-golden Dataset: `market_fit_promoted_goldens_v1`
 - Architecture loop visual:
   [Market Fit Trace Agent closes the loop](docs/assets/mfta-closes-the-loop.png)
+- PolyData provider contract:
+  [docs/poly-data-provider-contract.md](docs/poly-data-provider-contract.md)
+- Live retrieval promotion process:
+  [docs/golden-promotion.md](docs/golden-promotion.md)
 - Phoenix Experiment artifact:
   [market_fit_v1 experiment result](evals/market_fit_v1/phoenix_experiment_result.json)
 - Trace-repair eval pack: [evals/trace_repair_v1](evals/trace_repair_v1)
@@ -200,7 +235,7 @@ The Arize/Phoenix proof passes if:
 thesis / source text
   -> Google ADK / Gemini proposal
   -> schema validation
-  -> bounded Polymarket market retrieval
+  -> bounded market retrieval (fixtures for strict evals; PolyData for live evidence)
   -> deterministic market-fit policy
   -> optional human verdict
   -> Ledger MCP lifecycle record
@@ -238,6 +273,7 @@ judgment.
 | Layer | Responsibility | Does not do |
 |---|---|---|
 | Google ADK / Gemini | Drafts normalized claim, entities, horizon, stance, and market-fit proposal | Final trust decision |
+| PolyData API | Provides bounded current Polymarket inventory, taxonomy, market state, and snapshot provenance | Market-fit judgment, strict labels, or trace repair |
 | Deterministic policy | Classifies fit, scores evals, enforces weak-proxy logic | Open-ended reasoning |
 | Phoenix / OpenInference | Captures traces, spans, annotations, and failure context | Policy enforcement |
 | Phoenix MCP | Retrieves failed trace/eval context for improvement | Guarantees correctness by itself |
