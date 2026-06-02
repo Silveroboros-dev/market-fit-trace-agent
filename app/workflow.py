@@ -126,12 +126,34 @@ class MarketFitTraceAgent:
                     }
                 )
             with trace.span("market_fit_classified", attrs):
-                fit, model_fit_proposal = await self.classify_fit(
+                model_fit_proposal = await self.propose_fit(
                     claim=claim,
                     markets=markets,
                     prompt_version=prompt_version,
                     prior_failure_summary=prior_failure_summary,
                 )
+                with trace.span(
+                    "deterministic_market_fit_policy",
+                    {
+                        "run_id": run_id,
+                        "prompt_version": prompt_version,
+                        "retrieved_market_count": len(markets),
+                    },
+                ):
+                    fit = self.apply_deterministic_fit_policy(
+                        claim=claim,
+                        markets=markets,
+                        prompt_version=prompt_version,
+                    )
+                    trace.set_current_span_attributes(
+                        {
+                            "policy_decision_source": "deterministic_policy",
+                            "semantic_fit_class": fit.semantic_fit_class.value,
+                            "recommended_market_id": fit.recommended_market_id or "",
+                            "supporting_outcome": fit.supporting_outcome or "",
+                            "market_polarity": fit.polarity.value if fit.polarity else "",
+                        }
+                    )
                 fit, trace_repair_gate_applied = self._trace_informed_false_strong_cap(
                     fit=fit,
                     markets=markets,
@@ -420,6 +442,29 @@ class MarketFitTraceAgent:
         prompt_version: str,
         prior_failure_summary: str | None,
     ) -> tuple[MarketFit, dict[str, Any] | list[Any] | str | None]:
+        model_fit_proposal = await self.propose_fit(
+            claim=claim,
+            markets=markets,
+            prompt_version=prompt_version,
+            prior_failure_summary=prior_failure_summary,
+        )
+        return (
+            self.apply_deterministic_fit_policy(
+                claim=claim,
+                markets=markets,
+                prompt_version=prompt_version,
+            ),
+            model_fit_proposal,
+        )
+
+    async def propose_fit(
+        self,
+        *,
+        claim: NormalizedClaim,
+        markets: list[CandidateMarket],
+        prompt_version: str,
+        prior_failure_summary: str | None,
+    ) -> dict[str, Any] | list[Any] | str | None:
         model_fit_proposal = await self.adk_runtime.generate_json(
             prompt=build_market_fit_prompt(
                 claim=claim,
@@ -433,9 +478,18 @@ class MarketFitTraceAgent:
                 "Use only direct, indirect, weak_proxy, or no_clean_expression."
             ),
         )
+        return model_fit_proposal
+
+    def apply_deterministic_fit_policy(
+        self,
+        *,
+        claim: NormalizedClaim,
+        markets: list[CandidateMarket],
+        prompt_version: str,
+    ) -> MarketFit:
         # ADK/Gemini is used for traceable proposal spans. Final fit decisions stay
         # deterministic so evals are reproducible and policy-owned by app code.
-        return _deterministic_classify(claim, markets, prompt_version), model_fit_proposal
+        return _deterministic_classify(claim, markets, prompt_version)
 
     def _trace_informed_false_strong_cap(
         self,

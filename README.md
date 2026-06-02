@@ -48,6 +48,16 @@ causal-mechanism mismatch. Under the hood, Phoenix traces show where the weak pr
 entered the workflow. The improve step uses Phoenix MCP inspection; only then does
 the deterministic repair gate cap the rerun to `weak_proxy`.
 
+## Trace Repair Loop
+
+![Market Fit Trace Agent closes the loop](docs/assets/mfta-closes-the-loop.png)
+
+Live market evidence becomes trace-backed eval evidence. Phoenix MCP powers the
+repair loop by retrieving failed trace/eval context; humans decide which reviewed
+candidates become deterministic goldens. The final trust boundary stays explicit:
+Gemini proposes, Phoenix makes the failure observable, and deterministic policy
+owns the repair gate and fixture promotion path.
+
 ## Why It Matters
 
 Prediction markets are useful only when the market cleanly expresses the thesis.
@@ -171,6 +181,8 @@ The Arize/Phoenix proof passes if:
   [latest checked trace](https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507)
 - Phoenix candidate Dataset: `market_fit_candidate_cases`
 - Phoenix promoted-golden Dataset: `market_fit_promoted_goldens_v1`
+- Architecture loop visual:
+  [Market Fit Trace Agent closes the loop](docs/assets/mfta-closes-the-loop.png)
 - Phoenix Experiment artifact:
   [market_fit_v1 experiment result](evals/market_fit_v1/phoenix_experiment_result.json)
 - Trace-repair eval pack: [evals/trace_repair_v1](evals/trace_repair_v1)
@@ -337,12 +349,13 @@ For the exact Phoenix proof path, see [docs/phoenix-value-proof.md](docs/phoenix
    thesis.
 2. Use the default TPU/Gemini thesis.
 3. Click **Run agent**.
-4. Show the first-run market-fit judgment and trace-linked eval warning.
-5. After the failure is visible, open the Phoenix trace and show the eval
-   span/annotations.
-6. Click **Inspect trace and rerun**.
-7. Show the second run downgrades the market to `weak_proxy`.
-8. Show ledger events for initial run, trace inspection, and improved run.
+4. Show the first run overstates the fit: `false_strong_recommendation=true`.
+5. Open the Phoenix trace and show the eval span/annotations that explain the
+   mismatch.
+6. Click **Inspect trace and rerun** and show the improve response:
+   `inspection_source=phoenix_mcp`, `fallback_used=false`.
+7. Show the second run downgrades the tempting market to `weak_proxy`.
+8. Show ledger events for initial run, Phoenix trace inspection, and improved run.
 9. Use the Arize close: Phoenix turns one failed recommendation into a corrected
    second run, a trace-backed candidate golden, and an experiment result. The
    full reference is [docs/phoenix-value-proof.md](docs/phoenix-value-proof.md).
