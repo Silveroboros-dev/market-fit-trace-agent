@@ -1,0 +1,10 @@
+{
+  "case_id": "ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1",
+  "created_at_utc": "2026-06-06T11:26:16.515264+00:00",
+  "source_assisted": null,
+  "source_run_id": "run_df1370c14034",
+  "source_text": "OpenAI is preparing to file confidentially for an initial public offering in the coming weeks... \n",
+  "source_trace_id": "04018ff23d3a8531d83044ca126f9cc0",
+  "source_truth_scope": "manual_source_text_only",
+  "source_type": "ui_current_run_candidate"
+}

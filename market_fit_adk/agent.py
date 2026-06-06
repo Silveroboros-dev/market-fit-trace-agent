@@ -93,6 +93,12 @@ def market_fit_policy() -> dict[str, Any]:
             "Gemini may draft, extract, explain, or propose. Deterministic code performs "
             "final fit checks, eval flags, and ledger writes."
         ),
+        "advisory_checks": {
+            "inverse_market_check": (
+                "Flag when a binary market's opposite outcome may support the thesis. "
+                "This is a human-review cue, not a final fit decision."
+            )
+        },
     }
 
 
@@ -105,6 +111,8 @@ Core behavior:
 - Compare claims to candidate market expressions.
 - Treat tempting adjacent markets as weak proxies when their resolution rules do not
   directly express the thesis.
+- Flag possible inverse-market checks as advisory review cues when a binary market's
+  No outcome may support the thesis better than the title's Yes outcome.
 - Never provide trading execution advice, wallet actions, or guaranteed-edge language.
 - When asked for JSON, return strict JSON only and no prose outside the JSON object.
 

@@ -2,14 +2,18 @@
 
 _A Gemini + Phoenix agent that audits whether a thesis has a clean prediction-market expression._
 
-Market Fit Trace Agent helps analysts test whether a messy investment, technology, or
-market thesis can be expressed through an existing prediction market without creating
-a false sense of precision.
+Market Fit Trace Agent is the market-fit harness inside the broader Epistemic
+Ledger project. Epistemic Ledger helps users collect evidence from prediction
+markets and keep an auditable trail of claims, traces, candidate reviews, and
+promoted goldens. The harness's north star is keeping false positives close to
+zero: a related market must not be mistaken for clean thesis evidence.
 
 Gemini, running through Google ADK, drafts a normalized claim: entities, horizon,
-stance, and target outcome. The app retrieves a bounded set of relevant current
-Polymarket markets from recent snapshots, then deterministic policy code classifies
-the fit as `direct`, `indirect`, `weak_proxy`, or `no_clean_expression`.
+stance, and target outcome. The fixture-backed proof path retrieves bounded
+replay markets for deterministic evaluation. The explicit live path retrieves
+PolyData market snapshots as candidate evidence. In both modes, deterministic
+policy code classifies the fit as `direct`, `indirect`, `weak_proxy`, or
+`no_clean_expression`.
 
 The stable proof path and strict evals remain fixture-backed. PolyData live retrieval
 is the product-mode evidence source and candidate-golden acquisition path: it
@@ -30,11 +34,21 @@ Selected Rapid track: **Arize**.
 ## Demo Story
 
 Market Fit Trace Agent checks whether a prediction market actually measures the
-claim someone cares about. Prediction markets turn beliefs about the world into
-testable probabilities, but that power breaks when a related market gets mistaken
-for a clean expression of the thesis. This agent audits the thesis-to-market path:
-it normalizes a messy claim, checks candidate markets, flags weak proxies, and
-makes the correction traceable.
+claim someone cares about. Prediction markets develop epistemic rationality by
+forcing vague beliefs into resolvable claims and public probabilities. That power
+breaks when a related market gets mistaken for a clean expression of the thesis.
+This harness audits the thesis-to-market path: it normalizes a messy claim,
+checks candidate markets, flags weak proxies, and makes the correction traceable.
+
+The demo is deliberately ordered around the trust boundary:
+
+1. Trace repair: a TPU/Gemini case first overstates a weak proxy as `indirect`;
+   Phoenix trace/eval context plus Phoenix MCP enables a deterministic downgrade
+   to `weak_proxy`.
+2. Candidate review: Phoenix-backed candidate packets expose metadata, advisory
+   triage, and review status; humans decide what is eligible for later promotion.
+3. Explicit live mode: `make api-live` retrieves PolyData snapshots, normalizes
+   with Gemini, and evaluates real market candidates as evidence, not truth.
 
 The seed demo starts with this thesis:
 
@@ -101,28 +115,36 @@ absent, records optional human review, and uses Phoenix traces to improve the ne
 1. Accepts a messy thesis or source text.
 2. Uses Google ADK/Gemini to normalize the claim: entities, horizon, stance, and
    target outcome.
-3. Retrieves a bounded set of relevant current Polymarket markets from recent
-   market snapshots.
+3. Retrieves a bounded market set: frozen fixtures for proof/evals, or PolyData
+   snapshots for explicit live candidate-evidence mode.
 4. Classifies fit as `direct`, `indirect`, `weak_proxy`, or `no_clean_expression`.
 5. Explains tempting rejected markets so adjacency is not mistaken for clean exposure.
-6. Records optional human verdicts in a public-safe Ledger MCP lifecycle store.
-7. Sends ADK/Gemini and product-level OpenInference spans to Phoenix.
-8. Runs trace-linked deterministic evals for false strong recommendations and weak proxies.
-9. Uses Phoenix MCP trace inspection to activate a deterministic repair gate on a second run.
+6. Lets Gemini/candidate triage flag advisory inverse-market checks when a
+   market's opposite outcome may be worth human inspection.
+7. Records optional human verdicts in a public-safe Ledger MCP lifecycle store.
+8. Sends ADK/Gemini and product-level OpenInference spans to Phoenix.
+9. Runs trace-linked deterministic evals for false strong recommendations and weak proxies.
+10. Uses Phoenix MCP trace inspection to activate a deterministic repair gate on a second run.
 
-## Why This Is An Agent, Not A Classifier
+## Why This Is An Agent Harness, Not A Classifier
 
-The workflow is iterative and stateful, not a single labeler call. Gemini
-proposes a normalized claim, the controller retrieves bounded market context,
-deterministic policy classifies fit, Phoenix records eval-linked failure
-context, and the improve step uses Phoenix MCP to rerun with that context.
+Market Fit Trace Agent is not a single labeler call. It is a constrained,
+stateful workflow harness around Gemini/ADK, deterministic policy, Phoenix trace
+inspection, and Ledger recording.
 
-The workflow controller acts as the code router: it chooses extraction,
-retrieval, policy classification, eval, trace inspection, rerun, and recording
-based on run state and eval outcome. The action space is deliberately
-constrained: extract, retrieve, classify, evaluate, inspect trace, rerun, and
-record. Reliability comes from a mapped solution space, not open-ended ReAct
-behavior.
+A run has fixed stages: Gemini proposes a normalized claim, the controller
+retrieves bounded market context, deterministic policy classifies market fit,
+Phoenix records trace-linked eval signals, and the Ledger records the claim
+lifecycle. When an eval flags a false-strong recommendation, the improve step can
+use Phoenix MCP to retrieve the failed trace/eval context and rerun with that
+context.
+
+The controller does not do open-ended ReAct planning. It orchestrates a mapped
+solution space and branches only on run state, retrieved evidence, eval outcome,
+and trace-inspection availability. The constrained action space is: extract,
+retrieve, classify, evaluate, inspect trace, rerun, and record. Reliability comes
+from explicit boundaries: Gemini proposes, Phoenix observes, humans review, and
+deterministic code owns final market-fit decisions.
 
 ## Partner Integration
 
@@ -272,7 +294,7 @@ judgment.
 
 | Layer | Responsibility | Does not do |
 |---|---|---|
-| Google ADK / Gemini | Drafts normalized claim, entities, horizon, stance, and market-fit proposal | Final trust decision |
+| Google ADK / Gemini | Drafts normalized claim, entities, horizon, stance, market-fit proposal, and advisory inverse-market review cues | Final trust decision |
 | PolyData API | Provides bounded current Polymarket inventory, taxonomy, market state, and snapshot provenance | Market-fit judgment, strict labels, or trace repair |
 | Deterministic policy | Classifies fit, scores evals, enforces weak-proxy logic | Open-ended reasoning |
 | Phoenix / OpenInference | Captures traces, spans, annotations, and failure context | Policy enforcement |
@@ -293,6 +315,22 @@ make api
 ```
 
 Open [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+`make api` is the fixture-backed proof path. It is the default for replayable
+demo behavior and deterministic eval inspection, and it enables Phoenix MCP so
+the **Inspect trace and rerun** button uses real trace context rather than local
+fallback.
+
+Explicit live PolyData candidate-evidence mode:
+
+```bash
+make api-live
+```
+
+Live mode is useful for discovering and reviewing current market candidates, but
+those rows are not canonical truth until human review and frozen-fixture promotion.
+It also enables Phoenix MCP for trace-inspected reruns; the only difference from
+`make api` is that market retrieval uses PolyData live evidence.
 
 ADK local runner against the real `root_agent`:
 
@@ -395,6 +433,14 @@ For the exact Phoenix proof path, see [docs/phoenix-value-proof.md](docs/phoenix
 9. Use the Arize close: Phoenix turns one failed recommendation into a corrected
    second run, a trace-backed candidate golden, and an experiment result. The
    full reference is [docs/phoenix-value-proof.md](docs/phoenix-value-proof.md).
+
+Optional live-candidate extension: use `make api-live` with the OpenAI IPO
+filing/preparation source in
+`evals/retrieval_candidates/2026-06-06/ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1`.
+This shows PolyData returning real OpenAI IPO markets while human review keeps
+the key boundary intact: IPO filing/preparation is only indirectly expressed by
+IPO-completion timing markets. See
+[docs/demo-golden-trio.md](docs/demo-golden-trio.md) for the promotion blockers.
 
 ## Evals
 

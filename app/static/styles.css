@@ -260,10 +260,69 @@ button:disabled {
 .recommended-market,
 .event,
 .inspection {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 10px;
   background: #121211;
+}
+
+.meta-value,
+.truncate {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta-value-row,
+.inspection-meta,
+.copy-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.meta-value-row .meta-value,
+.copy-inline .trace {
+  flex: 1 1 auto;
+}
+
+.inspection-short {
+  display: -webkit-box;
+  margin: 12px 0 10px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.inspection-details {
+  margin: 8px 0 12px;
+}
+
+.inspection-details summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #181713;
+  color: var(--brass);
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.inspection-details p {
+  max-height: 300px;
+  overflow: auto;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .recommended-market {
@@ -481,10 +540,65 @@ li {
 }
 
 .trace {
-  word-break: break-all;
+  overflow-wrap: anywhere;
   color: var(--muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
+}
+
+.copy-button {
+  position: relative;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #181713;
+  cursor: pointer;
+}
+
+.copy-button::before,
+.copy-button::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--muted);
+  border-radius: 2px;
+}
+
+.copy-button::before {
+  top: 10px;
+  left: 8px;
+}
+
+.copy-button::after {
+  top: 7px;
+  left: 11px;
+  background: #181713;
+}
+
+.copy-button:hover,
+.copy-button.copied {
+  border-color: var(--brass);
+}
+
+.copy-button:hover::before,
+.copy-button:hover::after,
+.copy-button.copied::before,
+.copy-button.copied::after {
+  border-color: var(--brass);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .trace a {

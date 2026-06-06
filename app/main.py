@@ -59,8 +59,16 @@ def index() -> FileResponse:
 
 
 @app.get("/api/health")
-def health() -> dict[str, str]:
-    return {"status": "ok", "service": "market-fit-trace-agent"}
+def health() -> dict[str, object]:
+    return {
+        "status": "ok",
+        "service": "market-fit-trace-agent",
+        "market_provider": settings.market_provider,
+        "market_data_mode": (
+            "polydata_live" if settings.market_provider == "polydata" else "fixture"
+        ),
+        "phoenix_mcp_enabled": settings.phoenix_mcp_enabled,
+    }
 
 
 @app.get("/api/markets")

@@ -30,6 +30,7 @@ LIKELY_ISSUES = (
     "weak_proxy_risk",
     "resolution_risk",
     "compound_thesis",
+    "inverse_market_check",
     "clean_candidate",
 )
 FORBIDDEN_OUTPUT_KEYS = {
@@ -161,13 +162,16 @@ and a human can make a defensible promotion decision from the frozen evidence.
 Use needs_more_rules when resolution rules are missing or insufficient.
 Use reject when the retrieval appears off-topic or not useful for market-fit governance.
 Use candidate_only when it is useful evidence but should not be promoted yet.
+Use inverse_market_check when a binary market's opposite outcome may support the
+source thesis better than the market title's Yes outcome. This is an advisory
+review cue only; do not convert it into strict expected labels.
 
 Required JSON shape:
 {{
   "review_priority": "high | medium | low",
   "suggested_review_status": "promote | reject | needs_more_rules | candidate_only",
   "suggested_fit_risk": "likely_weak_proxy | likely_no_clean_expression | unclear",
-  "likely_issues": ["off_topic_market"],
+  "likely_issues": ["off_topic_market", "inverse_market_check"],
   "markets_to_inspect": ["market_id"],
   "judge_rationale": "short explanation for a human reviewer",
   "needs_human_check": true,

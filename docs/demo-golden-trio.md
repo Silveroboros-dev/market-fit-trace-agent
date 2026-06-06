@@ -101,11 +101,55 @@ For a three-minute video:
 4. Flash `eval_003`.
    Show that the app refuses tempting benchmark proxies when no clean market
    exists.
+5. Optional, if there is time: show the OpenAI IPO filing live candidate.
+   Start `make api-live`, paste the source text, and show that PolyData retrieves
+   real OpenAI IPO markets while the review note preserves the key boundary:
+   IPO filing/preparation is not the same event stage as IPO completion.
 
 Use this closing line:
 
 > The product is not trying to find any related market. It is deciding whether
 > the market actually expresses the thesis.
+
+## Optional Live Candidate: OpenAI IPO Filing vs IPO Completion
+
+Use this only after the main Phoenix repair proof is clear. It demonstrates the
+candidate-governance path, not a strict golden that already belongs in CI.
+
+- Candidate packet:
+  `evals/retrieval_candidates/2026-06-06/ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1`
+- Source text: OpenAI is preparing to file confidentially for an initial public
+  offering in the coming weeks.
+- Retrieval mode: PolyData live snapshot
+  `polydata_polymarket_2026-06-06 09:00:00+00:00`
+- Human review status: `promote`, meaning eligible for later frozen strict
+  promotion, not canonical truth yet.
+- Current policy class: `indirect`
+- Demo line: "PolyData found real OpenAI IPO markets, but the harness separates
+  filing/preparation evidence from markets that resolve on completed IPO
+  timing."
+
+Markets to show:
+
+| Market | Demo role |
+|---|---|
+| `2314379` - Will OpenAI IPO by September 30 2026? | Best visual adjacent market: relevant, but still IPO completion rather than filing/preparation. |
+| `656312` - Will OpenAI IPO by December 31 2026? | Broader adjacent market the live run recommended. Useful for discussing best-market adjudication before strict promotion. |
+| `2321571` - Will OpenAI file for an IPO by June 5, 2026? | Stage-aligned market, but stale/wrong horizon for the source. Shows why resolution target and horizon both matter. |
+| OpenAI valuation threshold markets | Wrong metric; reject as valuation rather than filing or IPO completion. |
+
+Promotion blockers before making this strict:
+
+- attach source provenance;
+- freeze the normalized thesis instead of relying on fallback extraction;
+- adjudicate whether `2314379` or `656312` should be the expected best adjacent
+  market;
+- add the promoted fixture through the normal intake process rather than
+  editing `expected_outputs.jsonl` directly.
+
+Arize/Phoenix value for this example is governance, not repair: the live run is
+traceable, the candidate packet is reviewable, and human review decides whether
+the case is worth turning into a deterministic golden.
 
 ## Alternates
 

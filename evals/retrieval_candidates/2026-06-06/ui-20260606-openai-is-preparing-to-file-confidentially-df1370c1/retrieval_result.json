@@ -1,0 +1,51 @@
+{
+  "as_of_ts": "2026-06-06 09:00:00+00:00",
+  "excluded_summary": {
+    "after_provider_filters": 840,
+    "excluded_closed_or_inactive": 36,
+    "not_returned_after_ranking": 823,
+    "rules_status_summary": {
+      "present": 17
+    }
+  },
+  "market_ids_considered": [
+    "656312",
+    "2314379",
+    "2314378",
+    "2299990",
+    "2299992",
+    "2299988",
+    "2299989",
+    "2299986",
+    "2299987",
+    "2299991",
+    "2299985",
+    "2298771",
+    "2299995",
+    "2298768",
+    "2298770",
+    "2298775",
+    "2321571"
+  ],
+  "mode": "polydata",
+  "query_summary": {
+    "claim_text": "OpenAI is preparing to file confidentially for an initial public offering in the coming weeks...",
+    "entities": [
+      "OpenAI"
+    ],
+    "horizon": "unspecified",
+    "l1_allowlist": [],
+    "liquidity_metric": "total_volume_usd",
+    "min_taxonomy_confidence": 0.85,
+    "min_volume_usd": 5000,
+    "returned_count": 17,
+    "rules_status_summary": {
+      "present": 17
+    },
+    "top_k": 20,
+    "universe_count": 840
+  },
+  "raw_markets": [],
+  "retrieval_id": "retr_19aa7fe0b6260b12",
+  "snapshot_id": "polydata_polymarket_2026-06-06 09:00:00+00:00"
+}

@@ -25,9 +25,16 @@ def test_triage_candidate_accepts_llm_suggestion_without_strict_labels(tmp_path)
                     "review_priority": "high",
                     "suggested_review_status": "candidate_only",
                     "suggested_fit_risk": "likely_weak_proxy",
-                    "likely_issues": ["weak_proxy_risk", "compound_thesis"],
+                    "likely_issues": [
+                        "weak_proxy_risk",
+                        "compound_thesis",
+                        "inverse_market_check",
+                    ],
                     "markets_to_inspect": ["m1"],
-                    "judge_rationale": "The market is relevant but incomplete.",
+                    "judge_rationale": (
+                        "The market is relevant but incomplete; inspect whether an "
+                        "inverse outcome matters."
+                    ),
                     "needs_human_check": True,
                     "must_not_promote_without": ["human adjudication"],
                 }
@@ -40,7 +47,11 @@ def test_triage_candidate_accepts_llm_suggestion_without_strict_labels(tmp_path)
     assert suggestion["model"] == "static-test-runtime"
     assert suggestion["suggested_review_status"] == "candidate_only"
     assert suggestion["suggested_fit_risk"] == "likely_weak_proxy"
-    assert suggestion["likely_issues"] == ["weak_proxy_risk", "compound_thesis"]
+    assert suggestion["likely_issues"] == [
+        "weak_proxy_risk",
+        "compound_thesis",
+        "inverse_market_check",
+    ]
     assert suggestion["markets_to_inspect"] == ["m1"]
     assert suggestion["market_scores"][0]["market_id"] == "m1"
     assert 0 <= suggestion["market_scores"][0]["review_score"] <= 100

@@ -26,6 +26,8 @@ def test_root_agent_has_product_tools() -> None:
     }.issubset({market["market_id"] for market in markets["markets"]})
     assert "weak_proxy" in policy["classes"]
     assert "Deterministic code" in policy["invariant"]
+    assert "inverse_market_check" in policy["advisory_checks"]
+    assert "human-review cue" in policy["advisory_checks"]["inverse_market_check"]
 
 
 def test_adk_runtime_imports_deployable_root_agent() -> None:

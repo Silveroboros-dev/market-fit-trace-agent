@@ -31,6 +31,7 @@ def test_ui_workflow_spec_defines_state_binding_acceptance_criteria():
         "AC-18",
         "AC-19",
         "AC-20",
+        "AC-21",
     ):
         assert criterion in spec
     assert "current run is identified by `run_id`" in spec
@@ -49,7 +50,8 @@ def test_ui_workflow_spec_defines_state_binding_acceptance_criteria():
     assert "Missing Phoenix MCP Is a Visible Failed Dependency" in spec
     assert "Candidate Review Console Requires Explicit Review Yes" in spec
     assert "Current-Run Reviewer Notes Are Read-Only Drafts" in spec
-    assert "Inverse Direct Markets Show Supporting Outcome" in spec
+    assert "Inverse-Market Checks Stay Advisory" in spec
+    assert "Phoenix MCP Inspection Is Collapsible" in spec
     assert "must not silently use `local_eval_fallback`" in spec_inline
     assert "must not call `/api/verdicts`" in spec
     assert "source_case_key" in spec
@@ -157,15 +159,54 @@ def test_current_run_clears_stale_candidate_selection_and_scopes_eval_metrics():
         "function renderLedger", 1
     )[0]
     assert "Current run Phoenix eval" in render_eval
-    assert 'meta("Run ID", run.run_id)' in render_eval
-    assert 'meta("Trace ID", run.phoenix_trace_id)' in render_eval
+    assert 'copyableMeta("Run ID", run.run_id)' in render_eval
+    assert 'copyableMeta("Trace ID", run.phoenix_trace_id)' in render_eval
     assert 'meta("Prompt", run.prompt_version)' in render_eval
     assert 'meta("Fit", run.fit.semantic_fit_class)' in render_eval
-    assert 'meta("Previous trace", metrics.previous_trace_id)' in render_eval
+    assert 'copyableMeta("Previous trace", metrics.previous_trace_id)' in render_eval
     assert 'metric("Causal mismatch", metrics.causal_mechanism_mismatch, true)' in render_eval
     assert (
         'metric("Repair gate", metrics.trace_repair_gate_applied)' in render_eval
     )
+
+
+def test_trace_ids_are_truncated_and_copyable():
+    app_js = APP_JS.read_text(encoding="utf-8")
+    styles = (ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
+
+    assert "function copyableMeta" in app_js
+    assert "data-copy-value" in app_js
+    assert "navigator.clipboard" in app_js
+    assert "text-overflow: ellipsis" in styles
+    assert ".copy-button::before" in styles
+    assert ".copy-button::after" in styles
+
+
+def test_ui_exposes_manual_retrieval_mode_from_health():
+    app_js = APP_JS.read_text(encoding="utf-8")
+    index_html = INDEX_HTML.read_text(encoding="utf-8")
+
+    assert "state.serviceHealth = health" in app_js
+    assert "Service online ·" in app_js
+    assert "function retrievalModeNote" in app_js
+    assert "PolyData live market snapshots" in app_js
+    assert "fixture mode" in app_js
+    assert "make api-live" in app_js
+    assert "20260606-provider-mode" in index_html
+
+
+def test_phoenix_mcp_inspection_summary_is_collapsible():
+    app_js = APP_JS.read_text(encoding="utf-8")
+    index_html = INDEX_HTML.read_text(encoding="utf-8")
+    render_improvement = app_js.split("function renderImprovement(improved)", 1)[1].split(
+        "async function loadCandidates", 1
+    )[0]
+
+    assert "inspectionSummaryBlock(improved)" in render_improvement
+    assert "compactInspectionSummary" in app_js
+    assert "Expand full inspection report" in app_js
+    assert "<details" in app_js
+    assert "20260606-provider-mode" in index_html
 
 
 def test_candidate_dataset_totals_are_labeled_global():
@@ -228,7 +269,7 @@ def test_current_run_triage_does_not_auto_open_candidate_review_console():
     assert "activeRunCandidateDetail" in app_js
     assert "promotion review is still unopened" in app_js
     assert "data-scroll-run-markets" in app_js
-    assert "20260531-inverse-direct" in index_html
+    assert "20260606-provider-mode" in index_html
 
     create_candidate = app_js.split(
         "async function createCandidateFromCurrentRun", 1
@@ -252,7 +293,20 @@ def test_current_run_reviewer_recommendation_is_read_only_draft():
     assert "Draft only for run" in app_js
     assert "No ledger event, candidate review file, Phoenix Dataset metadata" in app_js
     assert "Inverse market note" in app_js
-    assert "supporting_outcome=No" in app_js
+    assert "advisory review cue only" in app_js
+    assert "do not write semantic_fit_class, polarity, or supporting_outcome" in app_js
     assert "/api/verdicts" not in app_js
     assert "data-verdict" not in app_js
     assert "human_verdict_recorded" not in app_js
+
+
+def test_ui_contract_keeps_inverse_market_checks_advisory():
+    spec = SPEC.read_text(encoding="utf-8")
+    spec_inline = " ".join(spec.split())
+    app_js = APP_JS.read_text(encoding="utf-8")
+
+    assert "AC-20: Inverse-Market Checks Stay Advisory" in spec
+    assert "review cues, not deterministic truth" in spec
+    assert "Only a human-reviewed candidate" in spec_inline
+    assert "advisory review cue only" in app_js
+    assert "record semantic_fit_class=direct" not in app_js

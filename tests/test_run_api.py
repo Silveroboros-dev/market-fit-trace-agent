@@ -45,6 +45,20 @@ def test_api_rejects_direct_trace_inspected_run():
     assert "Phoenix MCP" in response.json()["detail"]
 
 
+def test_health_exposes_market_provider_mode():
+    client = TestClient(main_module.app)
+
+    response = client.get("/api/health")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "ok"
+    assert payload["service"] == "market-fit-trace-agent"
+    assert payload["market_provider"]
+    assert payload["market_data_mode"] in {"fixture", "polydata_live"}
+    assert isinstance(payload["phoenix_mcp_enabled"], bool)
+
+
 def test_source_candidates_endpoint_exposes_source_assisted_rows_without_truth_labels():
     client = TestClient(main_module.app)
 

@@ -26,6 +26,12 @@ class ProposalADKRuntime:
                 "recommended_market_id": "pm-gemini-arena-2026",
                 "semantic_fit_class": "direct",
                 "fit_reason": "model proposal intentionally overstates fit",
+                "advisory_inverse_market_check": {
+                    "could_be_useful": True,
+                    "candidate_market_ids": ["pm-gemini-arena-2026"],
+                    "supporting_outcome": "No",
+                    "rationale": "Advisory only; human review should inspect inverse polarity.",
+                },
             }
         return None
 
@@ -334,7 +340,9 @@ async def _model_fit_proposal_is_captured_but_policy_wins(tmp_path):
     run = store.get_run(result.run_id)
     assert run["model_fit_proposal_json"]
     assert "pm-gemini-arena-2026" in run["model_fit_proposal_json"]
+    assert "advisory_inverse_market_check" in run["model_fit_proposal_json"]
     assert result.fit.semantic_fit_class == FitClass.INDIRECT
+    assert result.fit.supporting_outcome is None
     assert result.eval.metrics.trace_repair_gate_applied is False
     assert isinstance(result.eval.metrics.phoenix_annotations_written, bool)
 

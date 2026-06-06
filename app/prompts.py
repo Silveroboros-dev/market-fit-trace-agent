@@ -27,7 +27,21 @@ def build_market_fit_prompt(
 Classify which prediction-market expression best fits the normalized claim.
 Allowed semantic_fit_class values: direct, indirect, weak_proxy, no_clean_expression.
 Do not overclaim adjacent markets. Return only JSON matching this shape:
-recommended_market_id, semantic_fit_class, fit_reason, captures, misses, rejected_markets.
+recommended_market_id, semantic_fit_class, fit_reason, captures, misses, rejected_markets,
+advisory_inverse_market_check.
+
+The `advisory_inverse_market_check` field is review guidance, not a truth label.
+Use it when a binary market's opposite outcome may express the thesis better than
+the market title's Yes outcome. For example, a thesis about the Fed holding rates
+steady may make a rate-cut market worth inspecting because the No outcome could be
+thesis-supporting. Do not use this advisory field to force semantic_fit_class to
+direct. Shape:
+{{
+  "could_be_useful": true | false,
+  "candidate_market_ids": ["market_id"],
+  "supporting_outcome": "No | n/a",
+  "rationale": "short human-review note"
+}}
 Prompt version: {prompt_version}
 Prior failed trace summary: {prior_failure_summary or "none"}
 Claim: {claim.model_dump_json()}

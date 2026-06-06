@@ -9,6 +9,7 @@ const state = {
   selectedGolden: null,
   sourceCandidates: [],
   selectedSourceCandidate: null,
+  serviceHealth: null,
   workflow: {
     detail: null,
     triageDecision: null,
@@ -63,8 +64,13 @@ async function api(path, options = {}) {
 async function checkHealth() {
   try {
     const health = await api("/api/health");
-    statusEl.textContent = health.status === "ok" ? "Service online" : "Service unavailable";
+    state.serviceHealth = health;
+    const mode = health.market_data_mode === "polydata_live" ? "PolyData live" : "fixture";
+    statusEl.textContent = health.status === "ok" ? `Service online · ${mode}` : "Service unavailable";
+    updateStrictGoldenNote();
+    updateSourceCandidateNote();
   } catch {
+    state.serviceHealth = null;
     statusEl.textContent = "Service unavailable";
   }
 }
@@ -254,6 +260,20 @@ improveButton.addEventListener("click", async () => {
   }
 });
 
+document.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-copy-value]");
+  if (!button) return;
+  const value = button.dataset.copyValue || "";
+  await copyText(value);
+  const previousLabel = button.getAttribute("aria-label") || "Copy";
+  button.classList.add("copied");
+  button.setAttribute("aria-label", "Copied");
+  window.setTimeout(() => {
+    button.classList.remove("copied");
+    button.setAttribute("aria-label", previousLabel);
+  }, 1200);
+});
+
 candidateSelectEl.addEventListener("change", async () => {
   state.selectedCandidateId = candidateSelectEl.value;
   if (state.selectedCandidateId !== state.activeRunCandidateId) {
@@ -314,7 +334,7 @@ function reviewerRecommendationDraft(run) {
   return `
     <div class="verdicts reviewer-draft" data-reviewer-draft-run-id="${escapeHtml(run.run_id)}">
       <span class="label">Reviewer recommendation (read-only draft)</span>
-      <textarea id="reviewer-recommendation-note" rows="4" placeholder="Write a local recommendation for this run. Example: market 1439555 is inverse-directional because No supports the normalized thesis, but horizon and resolution target still need review."></textarea>
+      <textarea id="reviewer-recommendation-note" rows="4" placeholder="Write a local recommendation for this run. Example: inspect whether market 1439555 has an opposite outcome that supports the normalized thesis; keep it advisory until human review."></textarea>
       <div class="run-gate-actions">
         <button type="button" data-reviewer-template="inverse_market">Inverse market note</button>
         <button type="button" data-reviewer-template="needs_rules">Needs rules</button>
@@ -338,8 +358,11 @@ function renderImprovement(improved) {
   resultEl.innerHTML = `
     <div class="inspection">
       <span class="label">${escapeHtml(inspectionLabel)}</span>
-      <p>${escapeHtml(improved.inspection.summary)}</p>
-      <p class="trace">source=${escapeHtml(improved.inspection_source)} fallback=${escapeHtml(improved.fallback_used)} trace=${escapeHtml(improved.before_trace_id)}</p>
+      ${inspectionSummaryBlock(improved)}
+      <div class="inspection-meta">
+        <span class="trace">source=${escapeHtml(improved.inspection_source)} fallback=${escapeHtml(improved.fallback_used)}</span>
+        ${copyableInline("trace", improved.before_trace_id)}
+      </div>
     </div>
     <div class="meta-grid">
       ${meta("Before", `${before.fit.semantic_fit_class} / false strong: ${before.eval.metrics.false_strong_recommendation}`)}
@@ -359,6 +382,32 @@ function renderImprovement(improved) {
   renderEval(after);
   renderLedger(after.ledger);
   renderWorkflow();
+}
+
+function inspectionSummaryBlock(improved) {
+  const summary = improved.inspection?.summary || "No inspection summary returned.";
+  const compact = compactInspectionSummary(summary);
+  return `
+    <p class="inspection-short">${escapeHtml(compact)}</p>
+    <details class="inspection-details">
+      <summary>Expand full inspection report</summary>
+      <p>${escapeHtml(summary)}</p>
+    </details>
+  `;
+}
+
+function compactInspectionSummary(summary) {
+  const text = String(summary || "").replace(/\s+/g, " ").trim();
+  if (!text) return "No inspection summary returned.";
+  const signals = [];
+  if (text.includes("false_strong_recommendation=true")) signals.push("false strong");
+  if (text.includes("causal_mechanism_mismatch=true")) signals.push("causal mismatch");
+  if (text.includes("resolution_target_mismatch=true")) signals.push("target mismatch");
+  if (text.includes("trace_repair_candidate=true")) signals.push("repair candidate");
+  if (signals.length > 0) {
+    return `Phoenix MCP inspected the failed trace and returned eval context. Signals: ${signals.join(", ")}.`;
+  }
+  return text.length > 220 ? `${text.slice(0, 217)}...` : text;
 }
 
 async function loadCandidates() {
@@ -515,7 +564,7 @@ function updateStrictGoldenNote() {
     return;
   }
 
-  strictGoldenNoteEl.textContent = "Manual source text. Unknown or edited theses use the normal retrieval path.";
+  strictGoldenNoteEl.textContent = manualRetrievalNote();
   strictGoldenNoteEl.className = "golden-note";
 }
 
@@ -542,8 +591,23 @@ function updateSourceCandidateNote() {
     return;
   }
 
-  sourceCandidateNoteEl.textContent = "Manual source text. No source-assisted provenance is attached.";
+  sourceCandidateNoteEl.textContent = `Manual source text. No source-assisted provenance is attached. ${retrievalModeNote()}`;
   sourceCandidateNoteEl.className = "golden-note";
+}
+
+function manualRetrievalNote() {
+  return `Manual source text. ${retrievalModeNote()}`;
+}
+
+function retrievalModeNote() {
+  const mode = state.serviceHealth?.market_data_mode;
+  if (mode === "polydata_live") {
+    return "Unknown or edited theses use PolyData live market snapshots.";
+  }
+  if (mode === "fixture") {
+    return "Current server is fixture mode; unknown or edited theses use the demo seed market list. Restart with make api-live for PolyData live snapshots.";
+  }
+  return "Retrieval mode is loading.";
 }
 
 function sourceCandidateNote(row) {
@@ -1445,7 +1509,7 @@ function bindReviewerRecommendations(run) {
   const status = draft.querySelector("[data-reviewer-draft-status]");
   const normalizedThesis = run.claim?.claim_text || "the normalized thesis";
   const templates = {
-    inverse_market: `Recommendation draft: inspect whether one retrieved market is an inverse expression of "${normalizedThesis}". If the market's No outcome supports the thesis and the inverted market directly matches the normalized thesis, record semantic_fit_class=direct, polarity=inverse, and supporting_outcome=No.`,
+    inverse_market: `Recommendation draft: inspect whether one retrieved binary market has an opposite outcome that supports "${normalizedThesis}". Treat this as an advisory review cue only; do not write semantic_fit_class, polarity, or supporting_outcome as canonical labels from this current-run note.`,
     needs_rules: `Recommendation draft: keep this as needs_more_rules until the market resolution text proves the same entity, event, horizon, and polarity as "${normalizedThesis}".`,
     weak_proxy: `Recommendation draft: classify the recommended market as weak_proxy if it is adjacent evidence but can resolve for reasons unrelated to "${normalizedThesis}".`,
   };
@@ -1464,11 +1528,11 @@ function renderEval(run) {
   evalEl.innerHTML = `
     <div class="run-eval-context">
       <span class="label">Current run Phoenix eval</span>
-      ${meta("Run ID", run.run_id)}
-      ${meta("Trace ID", run.phoenix_trace_id)}
+      ${copyableMeta("Run ID", run.run_id)}
+      ${copyableMeta("Trace ID", run.phoenix_trace_id)}
       ${meta("Prompt", run.prompt_version)}
       ${meta("Fit", run.fit.semantic_fit_class)}
-      ${metrics.previous_trace_id ? meta("Previous trace", metrics.previous_trace_id) : ""}
+      ${metrics.previous_trace_id ? copyableMeta("Previous trace", metrics.previous_trace_id) : ""}
       ${metrics.inspection_source ? meta("Inspection", metrics.inspection_source) : ""}
     </div>
     <div class="trace">
@@ -1511,7 +1575,48 @@ function renderLedger(ledger) {
 }
 
 function meta(label, value) {
-  return `<div class="meta"><span class="label">${escapeHtml(label)}</span>${escapeHtml(value)}</div>`;
+  return `<div class="meta"><span class="label">${escapeHtml(label)}</span><span class="meta-value" title="${escapeHtml(String(value))}">${escapeHtml(value)}</span></div>`;
+}
+
+function copyableMeta(label, value) {
+  return `
+    <div class="meta">
+      <span class="label">${escapeHtml(label)}</span>
+      <div class="meta-value-row">
+        <span class="meta-value truncate" title="${escapeHtml(String(value))}">${escapeHtml(value)}</span>
+        ${copyButton(value, `Copy ${label}`)}
+      </div>
+    </div>
+  `;
+}
+
+function copyableInline(label, value) {
+  return `
+    <span class="copy-inline">
+      <span class="trace truncate" title="${escapeHtml(String(value))}">${escapeHtml(label)}=${escapeHtml(value)}</span>
+      ${copyButton(value, `Copy ${label}`)}
+    </span>
+  `;
+}
+
+function copyButton(value, label) {
+  return `<button type="button" class="copy-button" data-copy-value="${escapeHtml(String(value || ""))}" aria-label="${escapeHtml(label)}"><span class="sr-only">${escapeHtml(label)}</span></button>`;
+}
+
+async function copyText(value) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(value);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
 }
 
 function valueOrDefault(value, fallback) {

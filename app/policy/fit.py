@@ -6,7 +6,6 @@ from app.models import (
     CandidateMarket,
     FitClass,
     MarketFit,
-    MarketPolarity,
     NormalizedClaim,
     RejectedMarket,
 )
@@ -590,9 +589,6 @@ def _deterministic_classify(
                 )
             ],
         )
-    inverse_direct = _direct_fit_from_inverted_binary_market(claim, markets)
-    if inverse_direct is not None:
-        return inverse_direct
     if "fiscal policy conduct limits" in claim_text:
         return MarketFit(
             recommended_market_id=None,
@@ -1033,6 +1029,32 @@ def _score_markets(
     return sorted(scored, key=lambda item: item[0], reverse=True)
 
 
+STOPWORDS = {
+    "a",
+    "an",
+    "and",
+    "at",
+    "be",
+    "before",
+    "by",
+    "for",
+    "if",
+    "in",
+    "is",
+    "it",
+    "make",
+    "of",
+    "on",
+    "or",
+    "the",
+    "this",
+    "to",
+    "will",
+    "with",
+    "year",
+}
+
+
 def _is_composite_iran_relief_package(claim_text: str) -> bool:
     return bool(
         "iran" in claim_text
@@ -1084,192 +1106,6 @@ def _find_market_by_terms(
     return None
 
 
-def _direct_fit_from_inverted_binary_market(
-    claim: NormalizedClaim, markets: list[CandidateMarket]
-) -> MarketFit | None:
-    claim_text = _claim_haystack(claim)
-    inverse_pattern = _inverse_claim_pattern(claim_text)
-    if inverse_pattern is None:
-        return None
-
-    scored: list[tuple[int, CandidateMarket]] = []
-    for market in markets:
-        if not _is_binary_yes_no_market(market):
-            continue
-        if not _market_matches_inverse_pattern(market, inverse_pattern):
-            continue
-        overlap = _term_overlap(claim_text, _market_haystack(market))
-        if overlap < 2:
-            continue
-        score = (
-            overlap
-            + _horizon_alignment_bonus(claim_text, market)
-            + _inverse_market_resolution_bonus(market)
-        )
-        scored.append((score, market))
-    if not scored:
-        return None
-
-    scored.sort(key=lambda item: item[0], reverse=True)
-    best_score, best_market = scored[0]
-    if best_score < 5:
-        return None
-
-    return MarketFit(
-        recommended_market_id=best_market.market_id,
-        semantic_fit_class=FitClass.DIRECT,
-        supporting_outcome="No",
-        polarity=MarketPolarity.INVERSE,
-        fit_reason=(
-            "Reductio ad absurdum policy check: the inverted version of this binary "
-            "market directly expresses the normalized thesis. The recommended market "
-            "resolves Yes for the opposite event, so the thesis-supporting outcome is No."
-        ),
-        captures=[
-            "Binary market with direct inverse expression of the thesis",
-            "Supporting outcome: No",
-            "Resolution target and horizon are closer than narrower alternative markets",
-        ],
-        misses=[
-            "The displayed market title is opposite-polarity, so the UI must show the "
-            "supporting outcome explicitly."
-        ],
-        rejected_markets=_inverse_binary_rejections(markets, best_market.market_id),
-    )
-
-
-def _inverse_claim_pattern(claim_text: str) -> str | None:
-    if _has_no_change_signal(claim_text):
-        return "no_change"
-    if re.search(r"\b(no|not|without|won't|will not|does not|did not)\b", claim_text):
-        return "negated_event"
-    return None
-
-
-def _has_no_change_signal(text: str) -> bool:
-    signals = (
-        "held",
-        "hold",
-        "steady",
-        "unchanged",
-        "no change",
-        "no cut",
-        "no cuts",
-        "not cut",
-        "pause",
-        "kept",
-    )
-    return any(signal in text for signal in signals)
-
-
-def _market_matches_inverse_pattern(market: CandidateMarket, pattern: str) -> bool:
-    haystack = _market_haystack(market)
-    if pattern == "no_change":
-        return any(term in haystack for term in CHANGE_EVENT_TERMS)
-    return bool(set(re.findall(r"[a-z0-9]+", haystack)) & INVERTIBLE_EVENT_TERMS)
-
-
-def _is_binary_yes_no_market(market: CandidateMarket) -> bool:
-    outcomes = {outcome.strip().lower() for outcome in market.outcomes}
-    return {"yes", "no"}.issubset(outcomes)
-
-
-def _term_overlap(left: str, right: str) -> int:
-    left_terms = set(re.findall(r"[a-z0-9]+", left)) - STOPWORDS
-    right_terms = set(re.findall(r"[a-z0-9]+", right)) - STOPWORDS
-    return len(left_terms & right_terms)
-
-
-def _horizon_alignment_bonus(claim_text: str, market: CandidateMarket) -> int:
-    haystack = _market_haystack(market)
-    score = 0
-    if "2026" in claim_text and "2026" in haystack:
-        score += 1
-    period_claim = any(
-        signal in claim_text
-        for signal in ("h2", "full year", "full-year", "through", "until", "path", "2026")
-    )
-    period_market = any(
-        signal in haystack
-        for signal in ("any point", "through", "until", "december", "end of", "end-of")
-    )
-    narrow_market = any(
-        signal in haystack
-        for signal in ("june meeting", "july meeting", "september meeting", "after the june")
-    )
-    if period_claim and period_market:
-        score += 4
-    if period_claim and narrow_market:
-        score -= 3
-    return score
-
-
-def _inverse_market_resolution_bonus(market: CandidateMarket) -> int:
-    haystack = _market_haystack(market)
-    score = 0
-    if "otherwise" in haystack and "resolve" in haystack and "no" in haystack:
-        score += 2
-    if "yes if" in haystack or "resolve to yes if" in haystack:
-        score += 1
-    return score
-
-
-def _inverse_binary_rejections(
-    markets: list[CandidateMarket], recommended_market_id: str
-) -> list[RejectedMarket]:
-    rejected: list[RejectedMarket] = []
-    for market in markets:
-        if market.market_id == recommended_market_id:
-            continue
-        if not _is_binary_yes_no_market(market):
-            continue
-        reason = (
-            "Rejected by inverse-market policy: this binary market is a weaker inverse "
-            "expression than the recommended market because its resolution target or horizon "
-            "is less aligned with the normalized thesis."
-        )
-        rejected.append(RejectedMarket(market_id=market.market_id, reason=reason))
-    return rejected
-
-
-CHANGE_EVENT_TERMS = frozenset(
-    {
-        "cut",
-        "cuts",
-        "decrease",
-        "decreased",
-        "decreases",
-        "lower",
-        "lowers",
-        "hike",
-        "hikes",
-        "raise",
-        "raises",
-        "increase",
-        "increases",
-    }
-)
-
-INVERTIBLE_EVENT_TERMS = CHANGE_EVENT_TERMS | frozenset(
-    {
-        "announce",
-        "announces",
-        "approve",
-        "approves",
-        "happen",
-        "happens",
-        "hit",
-        "launch",
-        "launches",
-        "meet",
-        "release",
-        "releases",
-        "win",
-        "wins",
-    }
-)
-
-
 def _market_haystack(market: CandidateMarket) -> str:
     return " ".join(
         [
@@ -1280,32 +1116,6 @@ def _market_haystack(market: CandidateMarket) -> str:
             *market.entity_tags,
         ]
     ).lower()
-
-
-STOPWORDS = {
-    "a",
-    "an",
-    "and",
-    "at",
-    "be",
-    "before",
-    "by",
-    "for",
-    "if",
-    "in",
-    "is",
-    "it",
-    "make",
-    "of",
-    "on",
-    "or",
-    "the",
-    "this",
-    "to",
-    "will",
-    "with",
-    "year",
-}
 
 
 def _claim_haystack(claim: NormalizedClaim) -> str:

@@ -1,0 +1,135 @@
+{
+  "claim": {
+    "claim_text": "OpenAI is preparing to file confidentially for an initial public offering in the coming weeks...",
+    "confidence": 0.48,
+    "entities": [
+      "OpenAI"
+    ],
+    "horizon": "unspecified",
+    "reasoning_summary": "Fallback extraction used because Gemini was not configured or returned invalid JSON.",
+    "stance": "needs interpretation"
+  },
+  "claim_id": "claim_bb0fd0d993da",
+  "eval": {
+    "eval_record_id": "eval_ca77f4ce5583",
+    "failure_summary": null,
+    "metrics": {
+      "causal_mechanism_mismatch": false,
+      "entity_mismatch": false,
+      "false_strong_recommendation": false,
+      "horizon_mismatch": false,
+      "human_verification_required": true,
+      "inspection_source": null,
+      "no_clean_expression_expected": false,
+      "phoenix_annotations_written": true,
+      "previous_failure_summary": null,
+      "previous_trace_id": null,
+      "resolution_target_mismatch": false,
+      "schema_valid": true,
+      "second_run_improvement": null,
+      "trace_repair_candidate": false,
+      "trace_repair_gate_applied": false,
+      "unsupported_implication": false,
+      "weak_proxy_detected": false
+    },
+    "phoenix_trace_id": "04018ff23d3a8531d83044ca126f9cc0"
+  },
+  "fit": {
+    "captures": [
+      "Some entity overlap"
+    ],
+    "fit_reason": "The market shares some entities with the claim but only partially expresses it.",
+    "misses": [
+      "Resolution rules do not directly encode the full thesis."
+    ],
+    "polarity": null,
+    "recommended_market_id": "656312",
+    "rejected_markets": [
+      {
+        "market_id": "2314379",
+        "reason": "Related terms are present, but the resolution rules do not cleanly express the normalized claim."
+      },
+      {
+        "market_id": "2314378",
+        "reason": "Related terms are present, but the resolution rules do not cleanly express the normalized claim."
+      }
+    ],
+    "semantic_fit_class": "indirect",
+    "supporting_outcome": null
+  },
+  "market_context_ids": [
+    "656312",
+    "2314379",
+    "2314378",
+    "2299990",
+    "2299992",
+    "2299988",
+    "2299989",
+    "2299986",
+    "2299987",
+    "2299991",
+    "2299985",
+    "2298771",
+    "2299995",
+    "2298768",
+    "2298770",
+    "2298775",
+    "2321571"
+  ],
+  "market_retrieval": {
+    "as_of_ts": "2026-06-06 09:00:00+00:00",
+    "excluded_summary": {
+      "after_provider_filters": 840,
+      "excluded_closed_or_inactive": 36,
+      "not_returned_after_ranking": 823,
+      "rules_status_summary": {
+        "present": 17
+      }
+    },
+    "market_ids_considered": [
+      "656312",
+      "2314379",
+      "2314378",
+      "2299990",
+      "2299992",
+      "2299988",
+      "2299989",
+      "2299986",
+      "2299987",
+      "2299991",
+      "2299985",
+      "2298771",
+      "2299995",
+      "2298768",
+      "2298770",
+      "2298775",
+      "2321571"
+    ],
+    "mode": "polydata",
+    "query_summary": {
+      "claim_text": "OpenAI is preparing to file confidentially for an initial public offering in the coming weeks...",
+      "entities": [
+        "OpenAI"
+      ],
+      "horizon": "unspecified",
+      "l1_allowlist": [],
+      "liquidity_metric": "total_volume_usd",
+      "min_taxonomy_confidence": 0.85,
+      "min_volume_usd": 5000,
+      "returned_count": 17,
+      "rules_status_summary": {
+        "present": 17
+      },
+      "top_k": 20,
+      "universe_count": 840
+    },
+    "retrieval_id": "retr_19aa7fe0b6260b12",
+    "snapshot_id": "polydata_polymarket_2026-06-06 09:00:00+00:00"
+  },
+  "model": "google-adk:gemini-3.5-flash",
+  "phoenix_trace_id": "04018ff23d3a8531d83044ca126f9cc0",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/04018ff23d3a8531d83044ca126f9cc0",
+  "prompt_version": "v1_lenient",
+  "run_id": "run_df1370c14034",
+  "source_id": "src_ece0154da6fc"
+}

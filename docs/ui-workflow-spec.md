@@ -20,8 +20,8 @@ It may show:
 - the bounded retrieved market context for that run, using strict golden
   fixture context when the source text exactly matches a promoted golden;
 - the deterministic market-fit decision;
-- supporting outcome and polarity when the recommended binary market is an
-  inverse expression of the thesis, e.g. `supporting_outcome=No`;
+- advisory inverse-market review cues when Gemini or candidate triage notices
+  that a binary market's opposite outcome may be worth human inspection;
 - the Phoenix trace link, run ID, prompt version, and deterministic eval result;
 - a run-level reviewer recommendation draft that is local/read-only and does
   not write ledger events, Dataset rows, candidate review files, or strict
@@ -136,6 +136,9 @@ prompt version, and fit class. Metric cards in that panel must be rendered from
 the current `/api/runs` or `/api/runs/{run_id}/improve` response, not from the
 candidate Dataset export.
 
+Long run and trace identifiers must be truncated within their cards and expose a
+copy button for the full value so IDs never overflow the eval/trace panel.
+
 ### AC-8: Dataset Totals Are Labeled Global
 
 The existing candidate queue may show Phoenix candidate Dataset totals, but the
@@ -235,9 +238,19 @@ POST to `/api/verdicts`, append `human_verdict_recorded`, create
 review happens only in the candidate review console after the explicit
 promotion-review gate.
 
-### AC-20: Inverse Direct Markets Show Supporting Outcome
+### AC-20: Inverse-Market Checks Stay Advisory
 
-If deterministic policy classifies an inverse binary market as `direct`, the UI
-must show the `supporting_outcome` and `polarity` next to the recommended
-market. A `No`-supports-thesis market must not be downgraded to `indirect`
-solely because its displayed Yes outcome is the opposite of the thesis.
+Inverse-market observations are review cues, not deterministic truth. Gemini or
+candidate triage may flag that a binary market's opposite outcome could support
+the thesis, but the current-run UI must present that as an advisory note only.
+It must not tell the user to write `semantic_fit_class=direct`, `polarity`, or
+`supporting_outcome` as canonical labels from the current-run surface. Only a
+human-reviewed candidate that is later promoted into a frozen fixture can make
+an inverse-market interpretation part of strict truth.
+
+### AC-21: Phoenix MCP Inspection Is Collapsible
+
+The trace-inspected rerun surface must show a one- or two-line Phoenix MCP
+inspection summary by default. The full raw inspection report may be available,
+but only behind an explicit expand/details control so it cannot dominate the
+thesis lifecycle panel.

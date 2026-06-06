@@ -1,0 +1,8 @@
+{
+  "candidate_dir": "/Users/rk/Desktop/rapid-epistemic-trace-agent-package/evals/retrieval_candidates/2026-06-06/ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1",
+  "case_id": "ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1",
+  "human_review_status": "promote",
+  "reviewed_at_utc": "2026-06-06T11:27:27.464436+00:00",
+  "reviewer": "local_reviewer",
+  "reviewer_note": "IPO completion market is relevant but not direct evidence of confidential filing/preparation. event_stage_mismatch: IPO filing/preparation is not the same as completed IPO by Sep 30; market 2314379 is indirect, not direct."
+}
