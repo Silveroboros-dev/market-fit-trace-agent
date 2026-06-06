@@ -45,10 +45,19 @@ The demo is deliberately ordered around the trust boundary:
 1. Trace repair: a TPU/Gemini case first overstates a weak proxy as `indirect`;
    Phoenix trace/eval context plus Phoenix MCP enables a deterministic downgrade
    to `weak_proxy`.
-2. Candidate review: Phoenix-backed candidate packets expose metadata, advisory
-   triage, and review status; humans decide what is eligible for later promotion.
-3. Explicit live mode: `make api-live` retrieves PolyData snapshots, normalizes
-   with Gemini, and evaluates real market candidates as evidence, not truth.
+2. Governance 50: the reviewed/candidate/strict cases are wrapped into a
+   Phoenix-visible governance Dataset. The OpenAI/Anthropic/SpaceX IPO cluster
+   shows why adjacent prediction markets must not be confused with clean thesis
+   expressions, and a Phoenix Experiment compares deterministic policy behavior
+   only on rows with usable expected labels.
+3. Policy comparison: the Phoenix Experiment runs only the governance rows that
+   have usable expected labels, while draft/review-only rows remain visible as
+   governance memory instead of polluting strict accuracy.
+4. Optional live/candidate extension: `make api-live` retrieves PolyData
+   snapshots, normalizes with Gemini, and evaluates real market candidates as
+   evidence, not truth. Phoenix-backed candidate packets expose metadata,
+   advisory triage, and review status; humans decide what is eligible for later
+   promotion.
 
 The seed demo starts with this thesis:
 
@@ -234,6 +243,7 @@ The Arize/Phoenix proof passes if:
   [latest checked trace](https://app.phoenix.arize.com/s/rukar570/traces/1bd413f984576d145b2dd41b32dc6507)
 - Phoenix candidate Dataset: `market_fit_candidate_cases`
 - Phoenix promoted-golden Dataset: `market_fit_promoted_goldens_v1`
+- Phoenix governance Dataset: `market_fit_governance_50`
 - Architecture loop visual:
   [Market Fit Trace Agent closes the loop](docs/assets/mfta-closes-the-loop.png)
 - PolyData provider contract:
@@ -242,6 +252,9 @@ The Arize/Phoenix proof passes if:
   [docs/golden-promotion.md](docs/golden-promotion.md)
 - Phoenix Experiment artifact:
   [market_fit_v1 experiment result](evals/market_fit_v1/phoenix_experiment_result.json)
+- Phoenix governance demo:
+  [market_fit_governance_50](evals/market_fit_governance_50)
+- Final demo runbook: [docs/final-demo-script.md](docs/final-demo-script.md)
 - Trace-repair eval pack: [evals/trace_repair_v1](evals/trace_repair_v1)
 - Trace-repair proof result:
   [trace_repair_result.json](evals/trace_repair_v1/run_results/trace_repair_result.json)
@@ -490,6 +503,9 @@ make smoke-polydata
 make export-retrieval-candidate
 make review-candidate CASE=live-iran-sanctions-relief-package STATUS=needs_more_rules NOTE="Rules missing; composite thesis."
 make phoenix-export-candidates
+make governance-50
+make phoenix-export-governance
+make phoenix-experiment-governance
 make phoenix-sync-goldens
 make phoenix-experiment-goldens
 ```
@@ -532,6 +548,17 @@ still have to be reviewed before promotion.
 current deterministic policy output against those expected labels with code
 evaluators. Repo fixtures remain canonical; Phoenix Datasets/Experiments are an
 inspection and comparison surface, not a replacement source of truth.
+
+`make governance-50` builds a single Phoenix-facing governance manifest at
+`evals/market_fit_governance_50`. It intentionally mixes strict goldens,
+failure-mode goldens, reviewed candidates, draft candidates, and trace-repair
+cases under explicit `truth_scope` metadata. `make phoenix-export-governance`
+publishes the 50-row review surface as `market_fit_governance_50`.
+`make phoenix-experiment-governance` runs a policy experiment only on rows with
+usable expected labels, while strict metrics exclude weak and draft rows. The
+hero cluster is `ai_startup_ipo_stage_mismatch`: OpenAI, Anthropic, and SpaceX
+cases where filing/preparation, valuation, and IPO-completion markets are easy
+to overmatch. Not all governance rows are strict goldens.
 
 ## MCP
 

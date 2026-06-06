@@ -1,0 +1,744 @@
+{
+  "status": "ready",
+  "dataset_name": "market_fit_governance_50",
+  "row_count": 50,
+  "hero_cluster": "ai_startup_ipo_stage_mismatch",
+  "hero_cluster_count": 12,
+  "truth_scope_counts": {
+    "draft_candidate": 16,
+    "failure_mode_golden": 7,
+    "reviewed_candidate": 7,
+    "strict_golden": 19,
+    "trace_repair_case": 1
+  },
+  "source_kind_counts": {
+    "eval_pack": 25,
+    "retrieval_candidate": 24,
+    "trace_repair_pack": 1
+  },
+  "experiment_eligible_count": 26,
+  "strict_metric_eligible_count": 19,
+  "failure_mode_counts": {
+    "weak_proxy_risk": 16,
+    "ai_startup_ipo": 13,
+    "wrong_market": 13,
+    "no_clean_expression": 13,
+    "ai_startup_ipo_stage_mismatch": 12,
+    "wrong_metric": 11,
+    "resolution_risk": 9,
+    "weak_proxy": 8,
+    "horizon_mismatch": 7,
+    "off_topic_market": 7,
+    "wrong_entity": 6,
+    "causal_proxy": 6,
+    "requires_securities_caution": 5,
+    "market_moving_statement": 5,
+    "compound_thesis": 5,
+    "ambiguous_source": 4,
+    "no_market_found": 3,
+    "ai_model_release": 3,
+    "missing_resolution_rules": 3,
+    "event_stage_mismatch": 2,
+    "ai_capex": 2,
+    "compound": 2,
+    "public_figure_signal": 2,
+    "overbroad": 2,
+    "wrong_horizon": 2,
+    "benchmark_proxy": 2,
+    "geopolitics": 2,
+    "duplicate": 1,
+    "ai_infrastructure": 1,
+    "trace_repair_candidate": 1,
+    "causal_mechanism_mismatch": 1,
+    "resolution_target_mismatch": 1,
+    "housing": 1,
+    "ambiguous": 1,
+    "macro": 1,
+    "wrong_platform": 1,
+    "ai_model_performance": 1,
+    "conditional_claim": 1,
+    "politics": 1,
+    "ai_strategy": 1
+  },
+  "strict_metrics_exclude_weak_or_draft_rows": true,
+  "governance_metrics_include_all_rows": true,
+  "rows": [
+    {
+      "governance_id": "gov_001_ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1",
+      "case_id": "ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "event_stage_mismatch",
+        "horizon_mismatch"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_002_eval-009",
+      "case_id": "eval_009",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "duplicate",
+        "requires_securities_caution",
+        "weak_proxy",
+        "wrong_market"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_003_eval-006",
+      "case_id": "eval_006",
+      "truth_scope": "strict_golden",
+      "fit_class": "direct",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "market_moving_statement",
+        "requires_securities_caution"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_004_eval-007",
+      "case_id": "eval_007",
+      "truth_scope": "strict_golden",
+      "fit_class": "direct",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "market_moving_statement",
+        "requires_securities_caution"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_005_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-c3f8f39d",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-c3f8f39d",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "event_stage_mismatch",
+        "weak_proxy_risk",
+        "wrong_metric"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_006_eval-v2-009",
+      "case_id": "eval_v2_009",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_infrastructure",
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "ambiguous_source",
+        "market_moving_statement",
+        "no_clean_expression",
+        "no_market_found"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_007_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-4c2b5df3",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-4c2b5df3",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "weak_proxy_risk",
+        "wrong_metric"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_008_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-517ce3b3",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-517ce3b3",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "weak_proxy_risk",
+        "wrong_metric"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_009_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-6f88f911",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-6f88f911",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "weak_proxy_risk",
+        "wrong_metric"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_010_ui-20260606-openai-is-preparing-to-file-confidentially-762dea3f",
+      "case_id": "ui-20260606-openai-is-preparing-to-file-confidentially-762dea3f",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "horizon_mismatch",
+        "weak_proxy_risk"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_011_ui-20260606-openai-is-preparing-to-file-confidentially-deab0d78",
+      "case_id": "ui-20260606-openai-is-preparing-to-file-confidentially-deab0d78",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "horizon_mismatch",
+        "weak_proxy_risk"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_012_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-249b67e3",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-249b67e3",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "failure_modes": [
+        "ai_startup_ipo",
+        "ai_startup_ipo_stage_mismatch",
+        "off_topic_market",
+        "wrong_entity"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_013_ui-20260604-openai-valued-at-852-billion-after-a-122-b-cf123ede",
+      "case_id": "ui-20260604-openai-valued-at-852-billion-after-a-122-b-cf123ede",
+      "truth_scope": "draft_candidate",
+      "fit_class": "direct",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ai_startup_ipo",
+        "off_topic_market",
+        "wrong_entity"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_014_trace-repair-tpu-frontier-gap-001",
+      "case_id": "trace_repair_tpu_frontier_gap_001",
+      "truth_scope": "trace_repair_case",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "failure_modes": [
+        "trace_repair_candidate",
+        "causal_mechanism_mismatch",
+        "resolution_target_mismatch",
+        "weak_proxy"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_015_eval-008",
+      "case_id": "eval_008",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "failure_modes": [
+        "requires_securities_caution",
+        "weak_proxy",
+        "wrong_market"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_016_eval-v2-010",
+      "case_id": "eval_v2_010",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ai_capex",
+        "causal_proxy",
+        "weak_proxy",
+        "wrong_metric"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_017_eval-v2-012",
+      "case_id": "eval_v2_012",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "failure_modes": [
+        "causal_proxy",
+        "housing",
+        "weak_proxy",
+        "wrong_metric"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_018_eval-v3-012",
+      "case_id": "eval_v3_012",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ai_capex",
+        "causal_proxy",
+        "weak_proxy",
+        "wrong_metric"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_019_live-iran-sanctions-relief-package",
+      "case_id": "live-iran-sanctions-relief-package",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "failure_modes": [
+        "compound",
+        "resolution_risk",
+        "weak_proxy",
+        "wrong_market"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_020_demo-hormuz-candidate",
+      "case_id": "demo-hormuz-candidate",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "compound",
+        "horizon_mismatch",
+        "resolution_risk",
+        "wrong_market"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_021_eval-001",
+      "case_id": "eval_001",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "no_clean_expression",
+        "public_figure_signal"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_022_eval-002",
+      "case_id": "eval_002",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "no_clean_expression",
+        "overbroad",
+        "resolution_risk"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_023_eval-003",
+      "case_id": "eval_003",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "no_clean_expression",
+        "public_figure_signal",
+        "wrong_market"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_024_eval-004",
+      "case_id": "eval_004",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ambiguous",
+        "no_clean_expression",
+        "overbroad",
+        "wrong_market"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_025_eval-005",
+      "case_id": "eval_005",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "market_moving_statement",
+        "requires_securities_caution",
+        "resolution_risk",
+        "wrong_market"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_026_eval-010",
+      "case_id": "eval_010",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "wrong_market"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_027_eval-v2-013",
+      "case_id": "eval_v2_013",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "horizon_mismatch",
+        "macro",
+        "wrong_horizon"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_028_eval-v3-004",
+      "case_id": "eval_v3_004",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ai_model_release",
+        "ambiguous_source",
+        "wrong_entity",
+        "wrong_platform"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_029_eval-v3-005",
+      "case_id": "eval_v3_005",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ai_model_performance",
+        "benchmark_proxy",
+        "no_clean_expression",
+        "no_market_found"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_030_eval-v3-009",
+      "case_id": "eval_v3_009",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "causal_proxy",
+        "conditional_claim",
+        "no_clean_expression",
+        "politics"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_031_demo-hormuz-candidate",
+      "case_id": "demo-hormuz-candidate",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "compound_thesis",
+        "weak_proxy_risk",
+        "wrong_market"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_032_eval-v2-001",
+      "case_id": "eval_v2_001",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "direct",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ai_model_release",
+        "ambiguous_source",
+        "market_moving_statement"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_033_eval-v2-002",
+      "case_id": "eval_v2_002",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ai_model_release",
+        "wrong_entity",
+        "wrong_horizon"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_034_eval-v2-003",
+      "case_id": "eval_v2_003",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ambiguous_source",
+        "causal_proxy",
+        "geopolitics"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_035_eval-v2-004",
+      "case_id": "eval_v2_004",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "causal_proxy",
+        "geopolitics",
+        "wrong_metric"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_036_eval-v2-005",
+      "case_id": "eval_v2_005",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "ai_strategy",
+        "benchmark_proxy",
+        "no_clean_expression",
+        "no_market_found"
+      ],
+      "experiment_eligible": true
+    },
+    {
+      "governance_id": "gov_037_live-iran-sanctions-relief-package",
+      "case_id": "live-iran-sanctions-relief-package",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "compound_thesis",
+        "resolution_risk",
+        "weak_proxy_risk",
+        "wrong_market"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_038_live-solana-fundamentals-price-proxy",
+      "case_id": "live-solana-fundamentals-price-proxy",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "compound_thesis",
+        "missing_resolution_rules",
+        "no_clean_expression",
+        "resolution_risk",
+        "weak_proxy_risk",
+        "wrong_market"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_039_ui-20260530-google-tpu-progress-means-gemini-closes-th-2079fe65",
+      "case_id": "ui-20260530-google-tpu-progress-means-gemini-closes-th-2079fe65",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "compound_thesis",
+        "weak_proxy_risk"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_040_ui-20260606-an-unusually-divided-federal-reserve-on-we-2c72b548",
+      "case_id": "ui-20260606-an-unusually-divided-federal-reserve-on-we-2c72b548",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "horizon_mismatch",
+        "weak_proxy_risk"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_041_live-agentic-ai-workflow-no-clean",
+      "case_id": "live-agentic-ai-workflow-no-clean",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "missing_resolution_rules",
+        "no_clean_expression",
+        "off_topic_market",
+        "wrong_market"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_042_live-ai-roi-capex-proxy",
+      "case_id": "live-ai-roi-capex-proxy",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "missing_resolution_rules",
+        "no_clean_expression",
+        "off_topic_market",
+        "resolution_risk",
+        "wrong_market"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_043_ui-20260530-ai-is-eating-80-of-global-vc-funding-but-h-166c29bf",
+      "case_id": "ui-20260530-ai-is-eating-80-of-global-vc-funding-but-h-166c29bf",
+      "truth_scope": "draft_candidate",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "failure_modes": [
+        "compound_thesis",
+        "resolution_risk",
+        "weak_proxy",
+        "weak_proxy_risk"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_044_ui-20260530-gpt-5-6-leaks-coming-in-june-openai-resear-2b46fcc5",
+      "case_id": "ui-20260530-gpt-5-6-leaks-coming-in-june-openai-resear-2b46fcc5",
+      "truth_scope": "draft_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "no_clean_expression",
+        "off_topic_market",
+        "weak_proxy_risk"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_045_ui-20260531-an-unusually-divided-federal-reserve-on-we-c2195008",
+      "case_id": "ui-20260531-an-unusually-divided-federal-reserve-on-we-c2195008",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "weak_proxy_risk",
+        "wrong_metric"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_046_ui-20260531-an-unusually-divided-federal-reserve-on-we-f1fb9410",
+      "case_id": "ui-20260531-an-unusually-divided-federal-reserve-on-we-f1fb9410",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [
+        "horizon_mismatch",
+        "weak_proxy_risk",
+        "wrong_metric"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_047_ui-20260604-google-tpu-progress-means-gemini-closes-th-ee031421",
+      "case_id": "ui-20260604-google-tpu-progress-means-gemini-closes-th-ee031421",
+      "truth_scope": "draft_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "failure_modes": [
+        "no_clean_expression",
+        "resolution_risk",
+        "weak_proxy_risk"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_048_ui-20260604-sec-today-issued-an-interpretation-clarify-eeccedba",
+      "case_id": "ui-20260604-sec-today-issued-an-interpretation-clarify-eeccedba",
+      "truth_scope": "draft_candidate",
+      "fit_class": "direct",
+      "hero_cluster": null,
+      "failure_modes": [
+        "off_topic_market",
+        "wrong_entity",
+        "wrong_metric"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_049_ui-20260604-will-kanye-west-visit-israel-this-june-de5e848f",
+      "case_id": "ui-20260604-will-kanye-west-visit-israel-this-june-de5e848f",
+      "truth_scope": "draft_candidate",
+      "fit_class": "direct",
+      "hero_cluster": null,
+      "failure_modes": [
+        "off_topic_market",
+        "wrong_entity"
+      ],
+      "experiment_eligible": false
+    },
+    {
+      "governance_id": "gov_050_ui-20260606-an-unusually-divided-federal-reserve-on-we-ad29d79b",
+      "case_id": "ui-20260606-an-unusually-divided-federal-reserve-on-we-ad29d79b",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "failure_modes": [],
+      "experiment_eligible": false
+    }
+  ]
+}

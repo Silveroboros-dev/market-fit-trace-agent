@@ -1,0 +1,424 @@
+{
+  "status": "ok",
+  "mode": "phoenix",
+  "dataset_name": "market_fit_governance_50",
+  "dataset_id": "RGF0YXNldDo1",
+  "dataset_version_id": "RGF0YXNldFZlcnNpb246MTM=",
+  "dataset_url": "https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo1",
+  "missing_config": [],
+  "phoenix_write_error": null,
+  "row_count": 50,
+  "example_count": 50,
+  "truth_scope_counts": {
+    "draft_candidate": 16,
+    "failure_mode_golden": 7,
+    "reviewed_candidate": 7,
+    "strict_golden": 19,
+    "trace_repair_case": 1
+  },
+  "hero_cluster": "ai_startup_ipo_stage_mismatch",
+  "hero_cluster_count": 12,
+  "strict_rows_are_not_conflated_with_candidates": true,
+  "rows": [
+    {
+      "governance_id": "gov_001_ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1",
+      "case_id": "ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/04018ff23d3a8531d83044ca126f9cc0"
+    },
+    {
+      "governance_id": "gov_002_eval-009",
+      "case_id": "eval_009",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/7a46d0545bfcef907495cb984fc3e890"
+    },
+    {
+      "governance_id": "gov_003_eval-006",
+      "case_id": "eval_006",
+      "truth_scope": "strict_golden",
+      "fit_class": "direct",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/545bd74b7775991d0e6eed49665ce7b2"
+    },
+    {
+      "governance_id": "gov_004_eval-007",
+      "case_id": "eval_007",
+      "truth_scope": "strict_golden",
+      "fit_class": "direct",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/56575074a1ea7a748662e7afd6975647"
+    },
+    {
+      "governance_id": "gov_005_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-c3f8f39d",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-c3f8f39d",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/507302283b3be5d9088cb74150c25b69"
+    },
+    {
+      "governance_id": "gov_006_eval-v2-009",
+      "case_id": "eval_v2_009",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_007_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-4c2b5df3",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-4c2b5df3",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/4425bc5e2ec75f664d18deaebd39fbd3"
+    },
+    {
+      "governance_id": "gov_008_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-517ce3b3",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-517ce3b3",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/436b1c5e5de156cec87936e76fccdd2e"
+    },
+    {
+      "governance_id": "gov_009_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-6f88f911",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-6f88f911",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/1e19d1689575e7a9a0d556fbcf029476"
+    },
+    {
+      "governance_id": "gov_010_ui-20260606-openai-is-preparing-to-file-confidentially-762dea3f",
+      "case_id": "ui-20260606-openai-is-preparing-to-file-confidentially-762dea3f",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/3ed8ef8a520303fa81caf8b3b4de012d"
+    },
+    {
+      "governance_id": "gov_011_ui-20260606-openai-is-preparing-to-file-confidentially-deab0d78",
+      "case_id": "ui-20260606-openai-is-preparing-to-file-confidentially-deab0d78",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/2581b0a484bef25c84fbae298750cf9b"
+    },
+    {
+      "governance_id": "gov_012_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-249b67e3",
+      "case_id": "ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-249b67e3",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": "ai_startup_ipo_stage_mismatch",
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/e1b2edba60a2431839def05ab3ddb3b9"
+    },
+    {
+      "governance_id": "gov_013_ui-20260604-openai-valued-at-852-billion-after-a-122-b-cf123ede",
+      "case_id": "ui-20260604-openai-valued-at-852-billion-after-a-122-b-cf123ede",
+      "truth_scope": "draft_candidate",
+      "fit_class": "direct",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/b66ada5031b2fccf7825eba1daf75170"
+    },
+    {
+      "governance_id": "gov_014_trace-repair-tpu-frontier-gap-001",
+      "case_id": "trace_repair_tpu_frontier_gap_001",
+      "truth_scope": "trace_repair_case",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/260163f4d3ef50786a6f11ae147c93fa"
+    },
+    {
+      "governance_id": "gov_015_eval-008",
+      "case_id": "eval_008",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/a202c9433c35097b54747b3cae109c54"
+    },
+    {
+      "governance_id": "gov_016_eval-v2-010",
+      "case_id": "eval_v2_010",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_017_eval-v2-012",
+      "case_id": "eval_v2_012",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_018_eval-v3-012",
+      "case_id": "eval_v3_012",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_019_live-iran-sanctions-relief-package",
+      "case_id": "live-iran-sanctions-relief-package",
+      "truth_scope": "strict_golden",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_020_demo-hormuz-candidate",
+      "case_id": "demo-hormuz-candidate",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_021_eval-001",
+      "case_id": "eval_001",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/74a5260e4a3c57c4b59d251431e599d2"
+    },
+    {
+      "governance_id": "gov_022_eval-002",
+      "case_id": "eval_002",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/378f8e937ee0bdea66dd65fd93e65858"
+    },
+    {
+      "governance_id": "gov_023_eval-003",
+      "case_id": "eval_003",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/c00ada2f3a7fc10bbf188cb5d489979b"
+    },
+    {
+      "governance_id": "gov_024_eval-004",
+      "case_id": "eval_004",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/c3bdfccefb7567a0af0f14087d738a83"
+    },
+    {
+      "governance_id": "gov_025_eval-005",
+      "case_id": "eval_005",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/1b44cf28196c5edad1bb5268adb2a87c"
+    },
+    {
+      "governance_id": "gov_026_eval-010",
+      "case_id": "eval_010",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/d174a12d6c774b99dfc2541f32b99890"
+    },
+    {
+      "governance_id": "gov_027_eval-v2-013",
+      "case_id": "eval_v2_013",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_028_eval-v3-004",
+      "case_id": "eval_v3_004",
+      "truth_scope": "strict_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_029_eval-v3-005",
+      "case_id": "eval_v3_005",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_030_eval-v3-009",
+      "case_id": "eval_v3_009",
+      "truth_scope": "strict_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_031_demo-hormuz-candidate",
+      "case_id": "demo-hormuz-candidate",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/0167041582febac71c4898d20c4902f4"
+    },
+    {
+      "governance_id": "gov_032_eval-v2-001",
+      "case_id": "eval_v2_001",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "direct",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_033_eval-v2-002",
+      "case_id": "eval_v2_002",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_034_eval-v2-003",
+      "case_id": "eval_v2_003",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_035_eval-v2-004",
+      "case_id": "eval_v2_004",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_036_eval-v2-005",
+      "case_id": "eval_v2_005",
+      "truth_scope": "failure_mode_golden",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": null
+    },
+    {
+      "governance_id": "gov_037_live-iran-sanctions-relief-package",
+      "case_id": "live-iran-sanctions-relief-package",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/16fc940b17cb56de6a5e3a5fa9fa7619"
+    },
+    {
+      "governance_id": "gov_038_live-solana-fundamentals-price-proxy",
+      "case_id": "live-solana-fundamentals-price-proxy",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/f1263a3e02e0e89d7c9bd34fd552174b"
+    },
+    {
+      "governance_id": "gov_039_ui-20260530-google-tpu-progress-means-gemini-closes-th-2079fe65",
+      "case_id": "ui-20260530-google-tpu-progress-means-gemini-closes-th-2079fe65",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/bc3dd16f026cab7bae694d6d88d2e6f6"
+    },
+    {
+      "governance_id": "gov_040_ui-20260606-an-unusually-divided-federal-reserve-on-we-2c72b548",
+      "case_id": "ui-20260606-an-unusually-divided-federal-reserve-on-we-2c72b548",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/81a59695638df31ec3bb65c22354f589"
+    },
+    {
+      "governance_id": "gov_041_live-agentic-ai-workflow-no-clean",
+      "case_id": "live-agentic-ai-workflow-no-clean",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/ea6dbc93ccc19bb3cf9314a58818d03d"
+    },
+    {
+      "governance_id": "gov_042_live-ai-roi-capex-proxy",
+      "case_id": "live-ai-roi-capex-proxy",
+      "truth_scope": "reviewed_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/4de1ef62e2b2bd400d1becd4f3583644"
+    },
+    {
+      "governance_id": "gov_043_ui-20260530-ai-is-eating-80-of-global-vc-funding-but-h-166c29bf",
+      "case_id": "ui-20260530-ai-is-eating-80-of-global-vc-funding-but-h-166c29bf",
+      "truth_scope": "draft_candidate",
+      "fit_class": "weak_proxy",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/c1c8492d5a869c03ee56ccd61b59d2df"
+    },
+    {
+      "governance_id": "gov_044_ui-20260530-gpt-5-6-leaks-coming-in-june-openai-resear-2b46fcc5",
+      "case_id": "ui-20260530-gpt-5-6-leaks-coming-in-june-openai-resear-2b46fcc5",
+      "truth_scope": "draft_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/9941a8967abe5d4d76a2705a9f017818"
+    },
+    {
+      "governance_id": "gov_045_ui-20260531-an-unusually-divided-federal-reserve-on-we-c2195008",
+      "case_id": "ui-20260531-an-unusually-divided-federal-reserve-on-we-c2195008",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/7809fa8590c51350ca07bfcb5129442c"
+    },
+    {
+      "governance_id": "gov_046_ui-20260531-an-unusually-divided-federal-reserve-on-we-f1fb9410",
+      "case_id": "ui-20260531-an-unusually-divided-federal-reserve-on-we-f1fb9410",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/ebcbe0b4b327c6c12b2f8fcba198e319"
+    },
+    {
+      "governance_id": "gov_047_ui-20260604-google-tpu-progress-means-gemini-closes-th-ee031421",
+      "case_id": "ui-20260604-google-tpu-progress-means-gemini-closes-th-ee031421",
+      "truth_scope": "draft_candidate",
+      "fit_class": "no_clean_expression",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/6185cd4ce02626b385a81fe9f484f3cb"
+    },
+    {
+      "governance_id": "gov_048_ui-20260604-sec-today-issued-an-interpretation-clarify-eeccedba",
+      "case_id": "ui-20260604-sec-today-issued-an-interpretation-clarify-eeccedba",
+      "truth_scope": "draft_candidate",
+      "fit_class": "direct",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/baad5ff7fe820c4f6a414d935b30b02c"
+    },
+    {
+      "governance_id": "gov_049_ui-20260604-will-kanye-west-visit-israel-this-june-de5e848f",
+      "case_id": "ui-20260604-will-kanye-west-visit-israel-this-june-de5e848f",
+      "truth_scope": "draft_candidate",
+      "fit_class": "direct",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/9abbc400dac7a9589efb5b68bd96c02d"
+    },
+    {
+      "governance_id": "gov_050_ui-20260606-an-unusually-divided-federal-reserve-on-we-ad29d79b",
+      "case_id": "ui-20260606-an-unusually-divided-federal-reserve-on-we-ad29d79b",
+      "truth_scope": "draft_candidate",
+      "fit_class": "indirect",
+      "hero_cluster": null,
+      "trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/1f48cbd53979eda49c5561c05c9c039e"
+    }
+  ]
+}
