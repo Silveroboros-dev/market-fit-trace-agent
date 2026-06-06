@@ -14,14 +14,14 @@
       "trace_repair_candidate": true,
       "phoenix_trace_id_nonlocal": true
     },
-    "run_id": "run_1fad093eae7f",
-    "trace_id": "091668e96c0a76c81da6c00fcee9f6b2",
+    "run_id": "run_15887b0152c4",
+    "trace_id": "260163f4d3ef50786a6f11ae147c93fa",
     "failure_summary": "Recommended market is only a weak proxy but the fit was classified too strongly. Explanation risks implying the market resolves the underlying causal thesis. causal_mechanism_mismatch=true: the market can resolve for reasons unrelated to the thesis mechanism. resolution_target_mismatch=true: the market resolves on an adjacent target rather than the normalized thesis. trace_repair_candidate=true: Phoenix trace inspection can cap this strong fit to weak_proxy on rerun."
   },
   "phoenix_trace": {
     "passed": true,
-    "trace_id": "091668e96c0a76c81da6c00fcee9f6b2",
-    "fit_eval_span_id": "3aacdd60d07c3e34",
+    "trace_id": "260163f4d3ef50786a6f11ae147c93fa",
+    "fit_eval_span_id": "2c572e00c3fc5fa9",
     "required_signals_found": [
       "false_strong_recommendation",
       "causal_mechanism_mismatch",
@@ -59,13 +59,13 @@
       "previous_trace_id_recorded": true,
       "ledger_gate_event": true
     },
-    "inspection_summary": "Phoenix MCP inspected the failed trace. trace_id=091668e96c0a76c81da6c00fcee9f6b2. Annotation names returned: fit_eval_run, false_strong_recommendation, weak_proxy_detected, unsupported_implication, causal_mechanism_mismatch, resolution_target_mismatch, horizon_mismatch, entity_mismatch, trace_repair_candidate, trace_repair_gate_applied, schema_valid. Prior eval values: false_strong_recommendation=true; unsupported_implication=true; causal_mechanism_mismatch=true; resolution_target_mismatch=true; horizon_mismatch=false; entity_mismatch=false; trace_repair_candidate=true; trace_repair_gate_applied=false. Recommended market is only a weak proxy but the fit was classified too strongly. Explanation risks implying the market resolves the underlying causal thesis. causal_mechanism_mismatch=true: the market can resolve for reasons unrelated to the thesis mechanism. resolution_target_mismatch=true: the market resolves on an adjacent target rather than the normalized thesis. trace_repair_candidate=true: Phoenix trace inspection can cap this strong fit to weak_proxy on rerun.. Compact trace excerpt: { \"traceId\": \"091668e96c0a76c81da6c00fcee9f6b2\", \"spans\": [ { \"id\": \"U3BhbjoxODA0Ng==\", \"name\": \"market_fit_trace_agent.run\", \"context\": { \"trace_id\": \"091668e96c0a76c81da6c00fcee9f6b2\", \"span_id\": \"9d90d4e46a8bbeef\" }, \"span_kind\": \"UNKNOWN\", \"parent_id\": null, \"start_time\": \"2026-05-30T12:59:21.530037+00:00\", \"end_time\": \"2026-05-30T12:59:44.438520+00:00\", \"status_code\": \"UNSET\", \"status_...[truncated]",
+    "inspection_summary": "Phoenix MCP inspected the failed trace. trace_id=260163f4d3ef50786a6f11ae147c93fa. Annotation names returned: fit_eval_run, false_strong_recommendation, weak_proxy_detected, unsupported_implication, causal_mechanism_mismatch, resolution_target_mismatch, horizon_mismatch, entity_mismatch, trace_repair_candidate, trace_repair_gate_applied, schema_valid. Prior eval values: false_strong_recommendation=true; unsupported_implication=true; causal_mechanism_mismatch=true; resolution_target_mismatch=true; horizon_mismatch=false; entity_mismatch=false; trace_repair_candidate=true; trace_repair_gate_applied=false. Recommended market is only a weak proxy but the fit was classified too strongly. Explanation risks implying the market resolves the underlying causal thesis. causal_mechanism_mismatch=true: the market can resolve for reasons unrelated to the thesis mechanism. resolution_target_mismatch=true: the market resolves on an adjacent target rather than the normalized thesis. trace_repair_candidate=true: Phoenix trace inspection can cap this strong fit to weak_proxy on rerun.. Compact trace excerpt: { \"traceId\": \"260163f4d3ef50786a6f11ae147c93fa\", \"spans\": [ { \"id\": \"U3BhbjoyNTg4Mw==\", \"name\": \"market_fit_trace_agent.run\", \"context\": { \"trace_id\": \"260163f4d3ef50786a6f11ae147c93fa\", \"span_id\": \"6c2ef40f1065e074\" }, \"span_kind\": \"UNKNOWN\", \"parent_id\": null, \"start_time\": \"2026-06-06T12:38:24.039113+00:00\", \"end_time\": \"2026-06-06T12:38:46.249471+00:00\", \"status_code\": \"UNSET\", \"status_...[truncated]",
     "after_fit_reason": "The leaderboard market is the best retrieved adjacent signal, but not a clean expression of the thesis. Trace-informed cap: Phoenix MCP retrieved the prior failed trace/eval context, which showed a false-strong recommendation with an explicit mismatch signal. This market remains useful only as a weak proxy unless its resolution directly expresses the thesis mechanism."
   },
-  "before_run_id": "run_1fad093eae7f",
-  "after_run_id": "run_308d46eacdd0",
-  "before_trace_id": "091668e96c0a76c81da6c00fcee9f6b2",
-  "after_trace_id": "6bc1dfb4cdf7ff5b73cf131d024642dd",
+  "before_run_id": "run_15887b0152c4",
+  "after_run_id": "run_4300f56f3ed6",
+  "before_trace_id": "260163f4d3ef50786a6f11ae147c93fa",
+  "after_trace_id": "6c83bd4e39ace8e631ac22f927b502c4",
   "inspection_source": "phoenix_mcp",
   "fallback_used": false,
   "result_path": "evals/trace_repair_v1/run_results/trace_repair_result.json"
