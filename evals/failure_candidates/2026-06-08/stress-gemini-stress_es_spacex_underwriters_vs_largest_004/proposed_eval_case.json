@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_es_spacex_underwriters_vs_largest_004",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves to SpaceX if it achieves the highest first-day closing market capitalization among 2026 IPOs. Resolution uses the official exchange listing.",
+    "entity_tags": [
+      "SpaceX",
+      "IPO",
+      "market cap"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_spacex_largest_ipo_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves to SpaceX if it achieves the highest first-day closing market capitalization among 2026 IPOs. Resolution uses the official exchange listing.",
+    "title": "Will SpaceX have the largest IPO by market cap in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The market is a weak proxy and its inverse outcome (No) does not directly support the thesis of SpaceX hiring underwriters.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"SpaceX IPO activity\"], \"fit_reason\": \"The claim reports that SpaceX has hired underwriters for an IPO, indicating preparation for going public. The candidate market asks if SpaceX will have the largest IPO by market cap in 2026. This is a weak proxy because hiring underwriters is an early-stage rumor and does not guarantee an IPO will occur in 2026, nor does it ensure it will be the largest by market cap.\", \"misses\": [\"The specific timing of 2026\", \"The condition of being the largest IPO by market cap\", \"The actual occurrence of the IPO vs. just hiring underwriters\"], \"recommended_market_id\": \"synth_spacex_largest_ipo_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "SpaceX has reportedly hired Goldman Sachs and Morgan Stanley as lead IPO underwriters.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

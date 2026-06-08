@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_cm_vc_funding_vs_capex_002",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "expected_fit_class": "weak_proxy",
+  "mismatch_family": "causal_mechanism",
+  "observed_gemini_fit_class": "no_clean_expression",
+  "observed_recommended_market_id": null,
+  "phoenix_trace_id": "604a99b52abac250ceb4bce8d50cfd49",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/604a99b52abac250ceb4bce8d50cfd49",
+  "run_id": "run_0fa9a0c6d3c0",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "VC funding share and ROI concerns are about the entire AI ecosystem, not one company's capex.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

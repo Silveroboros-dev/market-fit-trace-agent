@@ -1,0 +1,10 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress_em_claude_48_vs_claude_5_001",
+  "created_at_utc": "2026-06-08T22:14:46.777355+00:00",
+  "expected_label_source": "constructed_template",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_text": "Claude 4.8 Opus is now available in Google Vertex AI and showing strong benchmark results.",
+  "source_type": "synthetic_stress_case",
+  "truth_scope": "synthetic_expected_label"
+}

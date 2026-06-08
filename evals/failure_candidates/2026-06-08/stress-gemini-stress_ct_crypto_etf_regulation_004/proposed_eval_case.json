@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_ct_crypto_etf_regulation_004",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if the SEC approves at least one spot Solana ETF for trading on a US exchange on or before December 31, 2026.",
+    "entity_tags": [
+      "Solana",
+      "ETF",
+      "SEC"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_solana_etf_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if the SEC approves at least one spot Solana ETF for trading on a US exchange on or before December 31, 2026.",
+    "title": "Will a Solana spot ETF be approved by end of 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The claim is a conjunctive positive thesis. An inverse market check on the ETF approval does not help capture the missing custody rules condition.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"SEC approval of a Solana spot ETF by the end of 2026\"], \"fit_reason\": \"The candidate market only addresses the Solana spot ETF approval. It completely misses the second conjunctive requirement of the claim, which is the implementation of comprehensive crypto custody rules by the SEC by the end of 2026.\", \"misses\": [\"SEC implementation of comprehensive crypto custody rules by the end of 2026\"], \"recommended_market_id\": \"synth_solana_etf_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "The SEC will approve a Solana spot ETF AND implement comprehensive crypto custody rules by end of 2026.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

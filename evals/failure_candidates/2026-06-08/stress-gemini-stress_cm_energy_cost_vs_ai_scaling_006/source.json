@@ -1,0 +1,10 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress_cm_energy_cost_vs_ai_scaling_006",
+  "created_at_utc": "2026-06-08T22:17:41.636478+00:00",
+  "expected_label_source": "constructed_template",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_text": "Declining energy costs will make training 100T-parameter models economically viable by 2027.",
+  "source_type": "synthetic_stress_case",
+  "truth_scope": "synthetic_expected_label"
+}

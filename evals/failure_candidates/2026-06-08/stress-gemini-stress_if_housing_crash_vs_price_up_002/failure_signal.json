@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_if_housing_crash_vs_price_up_002",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "expected_fit_class": "indirect",
+  "mismatch_family": "inverse_framing",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": null,
+  "phoenix_trace_id": "5ddad0765058cdf52ea3c30ac791997d",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/5ddad0765058cdf52ea3c30ac791997d",
+  "run_id": "run_38c655596445",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Bearish thesis vs bullish market framing. The No outcome would support the thesis, but the market doesn't directly resolve overpricing.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

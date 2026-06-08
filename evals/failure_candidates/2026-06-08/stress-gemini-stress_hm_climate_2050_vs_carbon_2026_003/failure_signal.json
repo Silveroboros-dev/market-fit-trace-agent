@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_hm_climate_2050_vs_carbon_2026_003",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": true,
+  "expected_fit_class": "no_clean_expression",
+  "mismatch_family": "horizon_mismatch",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": null,
+  "phoenix_trace_id": "79439a909b61fe11278a289e8b97b250",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/79439a909b61fe11278a289e8b97b250",
+  "run_id": "run_c57b3669bc8f",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "2050 emissions target vs 2026 policy action. Extreme horizon mismatch plus different metric.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

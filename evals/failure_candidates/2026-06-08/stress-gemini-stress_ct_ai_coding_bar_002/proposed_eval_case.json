@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_ct_ai_coding_bar_002",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if an AI system achieves a score at or above the 90th percentile on a US state bar exam during 2026.",
+    "entity_tags": [
+      "AI",
+      "bar exam"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_ai_bar_exam_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if an AI system achieves a score at or above the 90th percentile on a US state bar exam during 2026.",
+    "title": "Will an AI system score in the top 10% on the bar exam in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The thesis is a conjunctive positive claim, so the Yes outcome of the bar exam market would be needed to support that part of the thesis, not the No outcome.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"AI system scoring in the top 10% on the bar exam\"], \"fit_reason\": \"The candidate market only addresses the bar exam component of the conjunctive claim and completely misses the entry-level coding jobs replacement component. Additionally, the market timeline is 2026, whereas the claim specifies 2027.\", \"misses\": [\"Replacement of 40% of entry-level coding jobs\", \"The year 2027 timeline (market is 2026)\"], \"recommended_market_id\": \"synth_ai_bar_exam_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "AI systems will replace 40% of entry-level coding jobs AND pass the bar exam with a top-10% score by 2027.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

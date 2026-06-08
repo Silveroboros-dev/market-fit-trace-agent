@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_mm_anthropic_revenue_vs_valuation_001",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if Anthropic achieves a public or private valuation of at least $500 billion by December 31, 2026.",
+    "entity_tags": [
+      "Anthropic",
+      "valuation"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_anthropic_500b_val_mm",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if Anthropic achieves a public or private valuation of at least $500 billion by December 31, 2026.",
+    "title": "Anthropic $500B+ valuation in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The thesis is positive on Anthropic's revenue growth. The Yes outcome of the valuation market aligns with growth, but remains a weak proxy.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"Anthropic's high-growth financial trajectory\"], \"fit_reason\": \"The claim asserts Anthropic's annualized revenue run rate has passed $30 billion. The candidate market tracks a $500B+ valuation by late 2026. Valuation is a weak proxy for a specific revenue run rate milestone, as multiples can vary widely and the timeline is significantly extended.\", \"misses\": [\"Direct tracking of the $30 billion annualized revenue run rate milestone\", \"The specific current timeline, as the market resolves in late 2026\"], \"recommended_market_id\": \"synth_anthropic_500b_val_mm\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Anthropic's annualized revenue run rate just passed $30 billion, tripling in 6 months.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

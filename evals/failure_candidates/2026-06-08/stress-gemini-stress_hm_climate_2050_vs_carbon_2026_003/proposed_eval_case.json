@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_hm_climate_2050_vs_carbon_2026_003",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "no_clean_expression",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if the US Congress passes and the President signs a law establishing a federal carbon tax on or before December 31, 2026.",
+    "entity_tags": [
+      "carbon",
+      "climate",
+      "US policy"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_us_carbon_tax_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if the US Congress passes and the President signs a law establishing a federal carbon tax on or before December 31, 2026.",
+    "title": "Will the US implement a federal carbon tax by end of 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The market is a weak proxy and does not have an inverse outcome that better aligns with the global 2050 emissions thesis.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"US carbon policy action\"], \"fit_reason\": \"The candidate market measures US federal carbon tax implementation by 2026, which is a policy proxy but does not directly measure global carbon emissions or the 2050 Paris Agreement targets.\", \"misses\": [\"Global emissions data\", \"2050 timeline\", \"Paris Agreement target verification\"], \"recommended_market_id\": \"synth_us_carbon_tax_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Global carbon emissions will need to drop 50% by 2050 to meet Paris Agreement targets.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

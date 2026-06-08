@@ -1,0 +1,10 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress_ct_crypto_etf_regulation_004",
+  "created_at_utc": "2026-06-08T22:18:46.543908+00:00",
+  "expected_label_source": "constructed_template",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_text": "The SEC will approve a Solana spot ETF AND implement comprehensive crypto custody rules by end of 2026.",
+  "source_type": "synthetic_stress_case",
+  "truth_scope": "synthetic_expected_label"
+}

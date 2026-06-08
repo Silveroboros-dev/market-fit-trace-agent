@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_if_anthropic_ipo_momentum_vs_no_ipo_001",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "expected_fit_class": "weak_proxy",
+  "mismatch_family": "inverse_framing",
+  "observed_gemini_fit_class": "indirect",
+  "observed_recommended_market_id": null,
+  "phoenix_trace_id": "1cb22bb86d474309efd70d1c8cc52579",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/1cb22bb86d474309efd70d1c8cc52579",
+  "run_id": "run_68cbb836e5b8",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "The market is framed as the ABSENCE of the event. Valuation momentum does not directly resolve IPO timing.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

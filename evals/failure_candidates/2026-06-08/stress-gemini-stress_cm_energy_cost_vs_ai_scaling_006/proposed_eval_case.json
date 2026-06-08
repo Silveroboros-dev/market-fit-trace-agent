@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_cm_energy_cost_vs_ai_scaling_006",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "no_clean_expression",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if a Google-branded model holds the #1 Chatbot Arena position on June 30, 2026.",
+    "entity_tags": [
+      "Google",
+      "AI model"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_google_best_model_cm2",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if a Google-branded model holds the #1 Chatbot Arena position on June 30, 2026.",
+    "title": "Will Google have the best AI model by end of June 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"No inverse outcome directly supports the thesis.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"AI model development and competitiveness\"], \"fit_reason\": \"The candidate market focuses on Google's AI model ranking by mid-2026, which is a weak proxy for the broader economic viability of training 100T-parameter models due to declining energy costs by 2027.\", \"misses\": [\"Declining energy costs\", \"100T-parameter model scale\", \"Economic viability\", \"2027 timeline\"], \"recommended_market_id\": \"synth_google_best_model_cm2\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Declining energy costs will make training 100T-parameter models economically viable by 2027.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

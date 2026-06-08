@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_ct_ai_coding_bar_002",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "expected_fit_class": "indirect",
+  "mismatch_family": "composite_thesis",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": "synth_ai_bar_exam_2026",
+  "phoenix_trace_id": "a07ea87787fc2178f0901dc4bf89eeda",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/a07ea87787fc2178f0901dc4bf89eeda",
+  "run_id": "run_6d72918e5011",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "The market resolves only the bar exam half. The coding jobs half is unaddressed. Partial coverage of a compound thesis.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

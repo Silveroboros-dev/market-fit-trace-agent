@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_em_claude_48_vs_claude_5_001",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "expected_fit_class": "indirect",
+  "mismatch_family": "entity_mismatch",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": null,
+  "phoenix_trace_id": "f928b75b9d2a22c6697c79d31fbe1c9e",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/f928b75b9d2a22c6697c79d31fbe1c9e",
+  "run_id": "run_ddfd644227bc",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Same product family but different version. Claude 4.8 availability does not resolve Claude 5 release.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

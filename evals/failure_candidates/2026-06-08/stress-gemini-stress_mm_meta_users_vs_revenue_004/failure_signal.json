@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_mm_meta_users_vs_revenue_004",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "expected_fit_class": "indirect",
+  "mismatch_family": "metric_mismatch",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": "synth_meta_ai_revenue_10b",
+  "phoenix_trace_id": "b39452d9c60807b7345d6ae4b77979ec",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/b39452d9c60807b7345d6ae4b77979ec",
+  "run_id": "run_360d8a07f22c",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "User count is evidence for revenue potential, but users \u2260 revenue. Monetization is uncertain.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

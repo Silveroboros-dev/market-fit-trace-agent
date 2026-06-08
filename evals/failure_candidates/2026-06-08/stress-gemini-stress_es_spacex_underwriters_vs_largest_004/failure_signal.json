@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_es_spacex_underwriters_vs_largest_004",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "expected_fit_class": "indirect",
+  "mismatch_family": "event_stage_mismatch",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": "synth_spacex_largest_ipo_2026",
+  "phoenix_trace_id": "4c9ed979c88721d6e77190abf64608b1",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/4c9ed979c88721d6e77190abf64608b1",
+  "run_id": "run_a9606b65eb58",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Hiring underwriters is strong preparation evidence, but does not guarantee completion or largest-IPO ranking.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

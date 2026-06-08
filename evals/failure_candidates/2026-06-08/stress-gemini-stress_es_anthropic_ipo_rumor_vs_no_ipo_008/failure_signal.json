@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_es_anthropic_ipo_rumor_vs_no_ipo_008",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "expected_fit_class": "no_clean_expression",
+  "mismatch_family": "event_stage_mismatch",
+  "observed_gemini_fit_class": "indirect",
+  "observed_recommended_market_id": "synth_anthropic_no_ipo_june_2026",
+  "phoenix_trace_id": "ea2b6c7c3643c69d5a49ee6c94d9563f",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/ea2b6c7c3643c69d5a49ee6c94d9563f",
+  "run_id": "run_06d761056b6d",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "18-month plan extends well beyond June 2026. The market's horizon does not match the thesis timeline.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

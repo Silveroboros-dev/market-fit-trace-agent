@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_mm_anthropic_revenue_vs_valuation_001",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "expected_fit_class": "indirect",
+  "mismatch_family": "metric_mismatch",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": "synth_anthropic_500b_val_mm",
+  "phoenix_trace_id": "315e82dde8c35b341a649f24a25a570f",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/315e82dde8c35b341a649f24a25a570f",
+  "run_id": "run_fee26b31352e",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Revenue growth is strong evidence for valuation, but revenue \u2260 valuation. Different metric.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}
