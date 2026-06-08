@@ -9,6 +9,29 @@ from app.ledger import LedgerStore
 from app.models import PhoenixInspection
 
 MAX_TRACE_SUMMARY_CHARS = 1500
+TRACE_EVAL_SIGNAL_NAMES = (
+    "fit_eval_run",
+    "false_strong_recommendation",
+    "weak_proxy_detected",
+    "unsupported_implication",
+    "causal_mechanism_mismatch",
+    "resolution_target_mismatch",
+    "horizon_mismatch",
+    "entity_mismatch",
+    "trace_repair_candidate",
+    "trace_repair_gate_applied",
+    "schema_valid",
+)
+TRACE_REPAIR_FAILURE_SIGNALS = (
+    "false_strong_recommendation",
+    "unsupported_implication",
+)
+TRACE_REPAIR_MISMATCH_SIGNALS = (
+    "causal_mechanism_mismatch",
+    "resolution_target_mismatch",
+    "horizon_mismatch",
+    "entity_mismatch",
+)
 
 
 class PhoenixMCPInspector:
@@ -115,25 +138,15 @@ def _summarize_phoenix_mcp_result(
         return ""
     lower = raw_text.lower()
     annotation_names = [
-        name
-        for name in [
-            "fit_eval_run",
-            "false_strong_recommendation",
-            "weak_proxy_detected",
-            "unsupported_implication",
-            "causal_mechanism_mismatch",
-            "resolution_target_mismatch",
-            "horizon_mismatch",
-            "entity_mismatch",
-            "trace_repair_candidate",
-            "trace_repair_gate_applied",
-            "schema_valid",
-        ]
-        if name in lower
+        name for name in TRACE_EVAL_SIGNAL_NAMES if name in lower
     ]
-    annotation_text = (
-        ", ".join(annotation_names) if annotation_names else "trace data returned"
-    )
+    if not annotation_names:
+        return ""
+    if not any(name in annotation_names for name in TRACE_REPAIR_FAILURE_SIGNALS):
+        return ""
+    if not any(name in annotation_names for name in TRACE_REPAIR_MISMATCH_SIGNALS):
+        return ""
+    annotation_text = ", ".join(annotation_names)
     excerpt = _compact(raw_text, max_chars=800)
     summary = (
         "Phoenix MCP inspected the failed trace. "

@@ -102,6 +102,11 @@ Draft eval packs run with `--allow-failures`. They are not formal goldens until
 source provenance, frozen market snapshots, frozen rules, and expected labels are
 reviewed.
 
+These evals score deterministic market-fit policy behavior. Gemini extraction and
+interpretation quality is captured in traces but is not the pass/fail authority
+for the current strict suites; it should be evaluated separately when the next
+stage focuses on model proposal quality.
+
 ## Frozen Fixtures
 
 Formal eval rows need four things:

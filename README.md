@@ -20,6 +20,11 @@ is the product-mode evidence source and candidate-golden acquisition path: it
 brings current market context into the harness without letting live retrieval mutate
 strict eval truth.
 
+The current scored evals measure deterministic market-fit policy behavior, not
+whether Gemini's proposal is always correct. Gemini proposal quality is captured
+in traces and can become a separate eval target; the public trust claim here is
+that final market-fit decisions and repairs are policy-owned and reproducible.
+
 The Arize/Phoenix integration is not just logging. Phoenix/OpenInference traces expose
 why a market-fit judgment failed, and the improve step uses Phoenix MCP trace context
 to rerun the agent with that failure in context. A deterministic
@@ -132,7 +137,7 @@ absent, records optional human review, and uses Phoenix traces to improve the ne
    market's opposite outcome may be worth human inspection.
 7. Records optional human verdicts in a public-safe Ledger MCP lifecycle store.
 8. Sends ADK/Gemini and product-level OpenInference spans to Phoenix.
-9. Runs trace-linked deterministic evals for false strong recommendations and weak proxies.
+9. Runs trace-linked deterministic policy evals for false strong recommendations and weak proxies.
 10. Uses Phoenix MCP trace inspection to activate a deterministic repair gate on a second run.
 
 ## Why This Is An Agent Harness, Not A Classifier

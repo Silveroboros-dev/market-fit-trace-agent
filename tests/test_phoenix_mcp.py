@@ -30,3 +30,25 @@ def test_phoenix_mcp_summary_rejects_error_payload():
     )
 
     assert summary == ""
+
+
+def test_phoenix_mcp_summary_rejects_payload_without_eval_signals():
+    summary = _summarize_phoenix_mcp_result(
+        "Trace payload returned only generic span content without eval annotations.",
+        phoenix_trace_id="trace_123",
+        fallback_summary="false_strong_recommendation=true",
+    )
+
+    assert summary == ""
+
+
+def test_phoenix_mcp_summary_rejects_payload_without_repair_signals():
+    summary = _summarize_phoenix_mcp_result(
+        "fit_eval_run schema_valid trace_repair_candidate",
+        phoenix_trace_id="trace_123",
+        fallback_summary=(
+            "false_strong_recommendation=true; causal_mechanism_mismatch=true"
+        ),
+    )
+
+    assert summary == ""

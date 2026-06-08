@@ -4,7 +4,7 @@ This is the recommended 3-minute hackathon video script. The goal is to show one
 loop:
 
 ```text
-observability -> eval -> policy -> execution -> governed eval memory
+trace -> failure signal -> Phoenix MCP inspection -> deterministic repair -> governed eval memory
 ```
 
 Target timing:
@@ -21,14 +21,15 @@ Target timing:
 Say:
 
 ```text
-Prediction markets help develop epistemic rationality because they force claims
-into resolvable form. But they become dangerous when a related market is mistaken
-for a clean expression of the thesis.
+Prediction markets are unit tests for beliefs: they force claims about the world
+into resolvable form. Epistemic Ledger asks whether a claim has a good test, and
+Market Fit Trace Agent catches the dangerous failure: using the wrong test
+because it looks related.
 
-Market Fit Trace Agent is the Epistemic Ledger harness that audits that boundary.
-Gemini can normalize and propose. Phoenix makes failures observable. Humans
-review candidate evidence. Deterministic policy owns the final market-fit class.
-The north star is keeping false positives close to zero.
+Phoenix made that failure observable. Failed traces expose policy blind spots we
+had not encoded yet, Phoenix MCP turns them into repair context, and
+deterministic policy corrects the next run. The north star is keeping
+prediction-market false positives close to zero.
 ```
 
 ## 1. Trace Repair Proof
@@ -191,3 +192,7 @@ Do not say live PolyData retrieval mutates strict eval truth.
 Do not say Phoenix automatically discovered the IPO cluster through embeddings in
 this version. The current demo exposes a repo-governed cluster through Phoenix
 Dataset search and Experiment comparison.
+
+Do not say the current evals prove Gemini extraction quality. They prove
+deterministic market-fit policy behavior and trace-backed repair; Gemini proposal
+quality is trace-visible and a separate future eval target.
