@@ -5,17 +5,19 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from app.candidate_review import (  # noqa: E402
+    REVIEW_STATUSES,
+    build_review_decision,
+    find_candidate_dir,
+)
 
 DEFAULT_CANDIDATES_DIR = Path("evals/retrieval_candidates")
-REVIEW_STATUSES = ("promote", "reject", "needs_more_rules", "candidate_only")
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,7 +35,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     candidates_dir = Path(args.candidates_dir)
-    candidate_dir = find_candidate_dir(candidates_dir, args.case_id)
+    candidate_dir = find_candidate_dir(args.case_id, candidates_dir)
     if candidate_dir is None:
         print(
             json.dumps(
@@ -73,39 +75,6 @@ def main() -> int:
         )
     )
     return 0
-
-
-def find_candidate_dir(root: Path, case_id: str) -> Path | None:
-    if not root.exists():
-        return None
-    matches = [
-        path.parent
-        for path in root.glob(f"*/{case_id}/source.json")
-        if (path.parent / "retrieval_result.json").exists()
-    ]
-    if not matches:
-        return None
-    return sorted(matches)[-1]
-
-
-def build_review_decision(
-    *,
-    case_id: str,
-    candidate_dir: Path,
-    status: str,
-    note: str,
-    reviewer: str,
-) -> dict[str, Any]:
-    if status not in REVIEW_STATUSES:
-        raise ValueError(f"Unsupported review status: {status}")
-    return {
-        "case_id": case_id,
-        "candidate_dir": str(candidate_dir),
-        "human_review_status": status,
-        "reviewer_note": note,
-        "reviewed_at_utc": datetime.now(UTC).isoformat(),
-        "reviewer": reviewer,
-    }
 
 
 if __name__ == "__main__":

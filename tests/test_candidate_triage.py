@@ -1,7 +1,7 @@
 import asyncio
 import json
 
-from scripts.triage_candidates import triage_candidate_dir
+from app.candidate_triage import triage_candidate_dir
 
 
 class StaticRuntime:

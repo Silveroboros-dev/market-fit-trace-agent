@@ -1,5 +1,6 @@
 import json
 
+from app.candidate_review import build_review_decision, find_candidate_dir
 from scripts.export_candidate_review_dataset import (
     _candidate_dirs,
     _candidate_example,
@@ -7,7 +8,6 @@ from scripts.export_candidate_review_dataset import (
     _rules_status_summary,
     _summary,
 )
-from scripts.review_candidate import build_review_decision, find_candidate_dir
 
 
 def test_candidate_example_preserves_run_trace_and_review_metadata(tmp_path):
@@ -238,10 +238,10 @@ def test_review_candidate_finds_latest_packet_and_builds_decision(tmp_path):
     older.mkdir(parents=True)
     newer.mkdir(parents=True)
     for path in (older, newer):
-        (path / "source.json").write_text("{}", encoding="utf-8")
+        _write_json(path / "source.json", {"case_id": "case-1"})
         (path / "retrieval_result.json").write_text("{}", encoding="utf-8")
 
-    assert find_candidate_dir(tmp_path, "case-1") == newer
+    assert find_candidate_dir("case-1", tmp_path) == newer
 
     decision = build_review_decision(
         case_id="case-1",

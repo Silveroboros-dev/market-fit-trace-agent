@@ -12,9 +12,12 @@ from fastapi.staticfiles import StaticFiles
 from app.agent import MarketFitTraceAgent, TraceInspectionUnavailableError
 from app.candidate_review import (
     DEFAULT_CANDIDATES_DIR,
+    build_review_decision,
+    find_candidate_dir,
     load_candidate_review_detail,
     load_candidate_review_summary,
 )
+from app.candidate_triage import OUTPUT_NAME, triage_candidate_dir
 from app.config import settings
 from app.golden_replay import list_strict_golden_options, resolve_strict_golden_provider
 from app.ledger import LedgerStore
@@ -31,8 +34,6 @@ from app.models import (
 )
 from app.run_candidates import export_current_run_candidate
 from app.source_candidates import list_source_candidate_rows
-from scripts.review_candidate import build_review_decision, find_candidate_dir
-from scripts.triage_candidates import OUTPUT_NAME, triage_candidate_dir
 
 store = LedgerStore()
 agent = MarketFitTraceAgent(
@@ -182,7 +183,7 @@ def create_current_run_candidate(payload: CurrentRunCandidateInput) -> dict[str,
 
 @app.post("/api/retrieval-candidates/{case_id}/triage")
 async def triage_retrieval_candidate(case_id: str) -> dict[str, object]:
-    candidate_dir = find_candidate_dir(DEFAULT_CANDIDATES_DIR, case_id)
+    candidate_dir = find_candidate_dir(case_id, DEFAULT_CANDIDATES_DIR)
     if candidate_dir is None:
         raise HTTPException(status_code=404, detail=f"Unknown candidate: {case_id}")
     suggestion = await triage_candidate_dir(candidate_dir)
@@ -197,7 +198,7 @@ async def triage_retrieval_candidate(case_id: str) -> dict[str, object]:
 def review_retrieval_candidate(
     case_id: str, payload: CandidateReviewInput
 ) -> dict[str, object]:
-    candidate_dir = find_candidate_dir(DEFAULT_CANDIDATES_DIR, case_id)
+    candidate_dir = find_candidate_dir(case_id, DEFAULT_CANDIDATES_DIR)
     if candidate_dir is None:
         raise HTTPException(status_code=404, detail=f"Unknown candidate: {case_id}")
     try:

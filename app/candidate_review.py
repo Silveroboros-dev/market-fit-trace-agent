@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -9,6 +10,7 @@ DEFAULT_CANDIDATES_DIR = ROOT / "evals" / "retrieval_candidates"
 DEFAULT_DATASET_EXPORT = (
     DEFAULT_CANDIDATES_DIR / "phoenix_candidate_review_dataset_result.json"
 )
+REVIEW_STATUSES = ("promote", "reject", "needs_more_rules", "candidate_only")
 
 
 def load_candidate_review_summary(
@@ -102,14 +104,37 @@ def load_candidate_review_detail(
     }
 
 
-def find_candidate_dir(case_id: str, candidates_dir: Path = DEFAULT_CANDIDATES_DIR) -> Path | None:
+def find_candidate_dir(
+    case_id: str, candidates_dir: Path = DEFAULT_CANDIDATES_DIR
+) -> Path | None:
     if not candidates_dir.exists():
         return None
+    matches = []
     for source_path in sorted(candidates_dir.glob("*/*/source.json")):
         source = _read_json(source_path)
         if source.get("case_id") == case_id:
-            return source_path.parent
-    return None
+            matches.append(source_path.parent)
+    return sorted(matches)[-1] if matches else None
+
+
+def build_review_decision(
+    *,
+    case_id: str,
+    candidate_dir: Path,
+    status: str,
+    note: str,
+    reviewer: str,
+) -> dict[str, Any]:
+    if status not in REVIEW_STATUSES:
+        raise ValueError(f"Unsupported review status: {status}")
+    return {
+        "case_id": case_id,
+        "candidate_dir": str(candidate_dir),
+        "human_review_status": status,
+        "reviewer_note": note,
+        "reviewed_at_utc": datetime.now(UTC).isoformat(),
+        "reviewer": reviewer,
+    }
 
 
 def _candidate_sort_key(row: dict[str, Any]) -> tuple[int, str]:

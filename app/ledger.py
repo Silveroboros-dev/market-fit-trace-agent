@@ -70,22 +70,28 @@ class LedgerStore:
             return dict(run)
 
     def get_run(self, run_id: str) -> dict[str, Any]:
-        data = self._read()
-        return dict(self._find(data, "agent_runs", run_id))
+        with self._lock:
+            data = self._read()
+            return dict(self._find(data, "agent_runs", run_id))
 
     def get_source(self, source_id: str) -> dict[str, Any]:
-        data = self._read()
-        return dict(self._find(data, "sources", source_id))
+        with self._lock:
+            data = self._read()
+            return dict(self._find(data, "sources", source_id))
 
     def get_latest_fit(self, claim_id: str) -> dict[str, Any] | None:
-        data = self._read()
-        fits = [fit for fit in data["market_fit_records"] if fit["claim_id"] == claim_id]
-        return dict(fits[-1]) if fits else None
+        with self._lock:
+            data = self._read()
+            fits = [
+                fit for fit in data["market_fit_records"] if fit["claim_id"] == claim_id
+            ]
+            return dict(fits[-1]) if fits else None
 
     def get_latest_eval_for_run(self, run_id: str) -> dict[str, Any] | None:
-        data = self._read()
-        evals = [item for item in data["eval_results"] if item["run_id"] == run_id]
-        return dict(evals[-1]) if evals else None
+        with self._lock:
+            data = self._read()
+            evals = [item for item in data["eval_results"] if item["run_id"] == run_id]
+            return dict(evals[-1]) if evals else None
 
     def propose_claim(
         self,
@@ -383,6 +389,8 @@ class LockedStore:
         return self.data
 
     def __exit__(self, exc_type: object, exc: object, tb: object) -> None:
-        if exc_type is None and self.data is not None:
-            self.store._write(self.data)
-        self.store._lock.release()
+        try:
+            if exc_type is None and self.data is not None:
+                self.store._write(self.data)
+        finally:
+            self.store._lock.release()
