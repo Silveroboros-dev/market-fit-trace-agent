@@ -1,0 +1,69 @@
+{
+  "adk_configured": true,
+  "by_family": {
+    "causal_mechanism": {
+      "deterministic_mismatch": 4,
+      "error": 0,
+      "gemini_match": 5,
+      "gemini_mismatch": 1,
+      "missing_gemini_proposal": 0
+    },
+    "composite_thesis": {
+      "deterministic_mismatch": 3,
+      "error": 0,
+      "gemini_match": 2,
+      "gemini_mismatch": 3,
+      "missing_gemini_proposal": 0
+    },
+    "entity_mismatch": {
+      "deterministic_mismatch": 3,
+      "error": 0,
+      "gemini_match": 3,
+      "gemini_mismatch": 2,
+      "missing_gemini_proposal": 0
+    },
+    "event_stage_mismatch": {
+      "deterministic_mismatch": 5,
+      "error": 0,
+      "gemini_match": 3,
+      "gemini_mismatch": 5,
+      "missing_gemini_proposal": 0
+    },
+    "horizon_mismatch": {
+      "deterministic_mismatch": 3,
+      "error": 0,
+      "gemini_match": 2,
+      "gemini_mismatch": 3,
+      "missing_gemini_proposal": 0
+    },
+    "inverse_framing": {
+      "deterministic_mismatch": 4,
+      "error": 0,
+      "gemini_match": 2,
+      "gemini_mismatch": 3,
+      "missing_gemini_proposal": 0
+    },
+    "metric_mismatch": {
+      "deterministic_mismatch": 3,
+      "error": 0,
+      "gemini_match": 2,
+      "gemini_mismatch": 4,
+      "missing_gemini_proposal": 0
+    }
+  },
+  "deterministic_match": 15,
+  "deterministic_mismatch": 25,
+  "deterministic_mismatch_rate": 0.625,
+  "errors": 0,
+  "failure_candidates_exported": 21,
+  "gemini_match": 19,
+  "gemini_mismatch": 21,
+  "gemini_mismatch_rate": 0.525,
+  "match": 19,
+  "mismatch": 21,
+  "mismatch_rate": 0.525,
+  "missing_gemini_proposal": 0,
+  "primary_evaluation_target": "gemini_advisory_proposal",
+  "run_at_utc": "2026-06-09T07:36:37.722815+00:00",
+  "total": 40
+}

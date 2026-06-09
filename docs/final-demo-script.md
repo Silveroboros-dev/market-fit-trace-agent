@@ -164,6 +164,10 @@ Say:
 The product claim is simple: trace failures become reviewed eval memory, and eval
 memory becomes deterministic policy pressure. That is how this agent keeps
 prediction-market false positives close to zero.
+
+We do not let the agent silently rewrite truth. It turns failures into
+reviewable artifacts, proposes a patch, reruns stress, and shows whether the
+patch helped.
 ```
 
 Show the generated policy-review batch if there is enough screen time:
@@ -178,11 +182,12 @@ Say:
 ```text
 The baseline stress run produced 19 Gemini advisory failures across 7 families.
 The batch review step clusters those Phoenix-linked traces into a reviewable
-policy proposal. After human approval, a prompt-only guardrail patch reduced the
-next two stress runs to 17 advisory failures, while the family movement showed
-which cases still need deterministic guard review. Nothing is promoted
-automatically: a reviewer decides whether each cluster needs more rules, remains
-candidate-only, becomes a strict golden candidate, or gets disregarded.
+policy proposal. We then tested a human-approved prompt guardrail over repeated
+stress runs. The result is the important part: the harness does not hide Gemini
+variance. It shows which families respond to prompt guidance and which need
+deterministic guard review. Nothing is promoted automatically: a reviewer decides
+whether each cluster needs more rules, remains candidate-only, becomes a strict
+golden candidate, or gets disregarded.
 ```
 
 ## What To Use In The Final Demo
