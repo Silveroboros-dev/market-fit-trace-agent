@@ -31,3 +31,18 @@ def test_failure_eval_candidate_command_is_candidate_only():
     assert "scripts/export_failure_eval_candidate.py" in body
     assert "--run-id \"$(RUN_ID)\"" in body
     assert "expected_outputs.jsonl" not in body
+
+
+def test_policy_review_batch_command_is_read_only_over_failure_candidates():
+    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+    target = re.search(
+        r"^policy-review-batch:\n(?P<body>(?:\t.*\n)+)",
+        makefile,
+        re.MULTILINE,
+    )
+
+    assert target is not None
+    body = target.group("body")
+    assert "scripts/build_policy_review_batch.py" in body
+    assert "expected_outputs.jsonl" not in body
+    assert "app/workflow.py" not in body

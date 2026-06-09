@@ -13,7 +13,7 @@ Target timing:
 0:00-0:20 opening claim
 0:20-1:05 trace repair proof
 1:05-2:35 Governance 50 + Experiment proof
-2:35-3:00 close
+2:35-3:00 stress-to-policy-review close
 ```
 
 ## 0. Opening Frame
@@ -166,14 +166,37 @@ memory becomes deterministic policy pressure. That is how this agent keeps
 prediction-market false positives close to zero.
 ```
 
+Show the generated policy-review batch if there is enough screen time:
+
+```text
+evals/policy_review_batches/2026-06-08/POLICY_REVIEW.md
+```
+
+Say:
+
+```text
+The stress run produced 19 candidate failures across 7 families. The batch
+review step clusters those Phoenix-linked traces into a human-reviewable policy
+proposal. Nothing is promoted automatically: a reviewer decides whether each
+cluster needs more rules, remains candidate-only, becomes a strict golden
+candidate, or gets disregarded.
+```
+
 ## What To Use In The Final Demo
 
-Use these three surfaces only:
+Use these three main surfaces:
 
 ```text
 1. Product/API trace-repair run for the single failure-to-repair loop.
 2. Phoenix Dataset market_fit_governance_50 for governed eval memory.
 3. Phoenix Experiment for deterministic policy comparison on eligible rows.
+```
+
+Use this local artifact only as the closing proof of the failure-to-policy-review
+loop:
+
+```text
+4. evals/policy_review_batches/2026-06-08/POLICY_REVIEW.md
 ```
 
 Do not show `make api-live` in the 3-minute video. Refer to live PolyData as the
@@ -192,6 +215,9 @@ Do not say live PolyData retrieval mutates strict eval truth.
 Do not say Phoenix automatically discovered the IPO cluster through embeddings in
 this version. The current demo exposes a repo-governed cluster through Phoenix
 Dataset search and Experiment comparison.
+
+Do not say the policy-review batch mutates policy code or promotes strict
+goldens. It is a candidate-only human review artifact.
 
 Do not say the current evals prove Gemini extraction quality. They prove
 deterministic market-fit policy behavior and trace-backed repair; Gemini proposal

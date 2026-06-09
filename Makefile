@@ -1,4 +1,4 @@
-.PHONY: dev test lint format evals evals-v2 evals-v4-live-promoted evals-live trace-repair evals-candidates evals-candidates-v3 intake-goldens governance-50 export-retrieval-candidate export-failure-eval-candidate backfill-candidate-rules triage-candidates export-candidate-dataset review-candidate phoenix-export-candidates phoenix-export-governance phoenix-experiment-governance phoenix-sync-goldens phoenix-experiment-goldens build-stress-40 run-stress-40 api api-live ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
+.PHONY: dev test lint format evals evals-v2 evals-v4-live-promoted evals-live trace-repair evals-candidates evals-candidates-v3 intake-goldens governance-50 export-retrieval-candidate export-failure-eval-candidate policy-review-batch backfill-candidate-rules triage-candidates export-candidate-dataset review-candidate phoenix-export-candidates phoenix-export-governance phoenix-experiment-governance phoenix-sync-goldens phoenix-experiment-goldens build-stress-40 run-stress-40 api api-live ui adk-run adk-web smoke-adk smoke-adk-live smoke-polydata phoenix-ensure phoenix-check phoenix-experiment deploy-adk
 
 api:
 	PHOENIX_MCP_ENABLED=true uv run --python 3.11 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
@@ -64,6 +64,9 @@ export-retrieval-candidate:
 
 export-failure-eval-candidate:
 	uv run --python 3.11 python scripts/export_failure_eval_candidate.py --run-id "$(RUN_ID)"
+
+policy-review-batch:
+	uv run --python 3.11 python scripts/build_policy_review_batch.py
 
 build-stress-40:
 	uv run --python 3.11 python scripts/build_stress_dataset.py
