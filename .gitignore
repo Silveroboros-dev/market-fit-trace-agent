@@ -27,3 +27,6 @@ scripts/render_*thumbnail*.py
 docs/assets/*thumbnail*.png
 evals/market_fit_*_candidates/*NOTES.md
 evals/market_fit_*_candidates/dropped_*.md
+
+# Live Cloud Run deploy kit (bakes private poly-data-client; keep out of public repo)
+deploy/
