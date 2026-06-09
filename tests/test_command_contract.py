@@ -46,3 +46,19 @@ def test_policy_review_batch_command_is_read_only_over_failure_candidates():
     assert "scripts/build_policy_review_batch.py" in body
     assert "expected_outputs.jsonl" not in body
     assert "app/workflow.py" not in body
+
+
+def test_policy_change_proposal_command_does_not_apply_policy_changes():
+    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+    target = re.search(
+        r"^policy-change-proposal:\n(?P<body>(?:\t.*\n)+)",
+        makefile,
+        re.MULTILINE,
+    )
+
+    assert target is not None
+    body = target.group("body")
+    assert "scripts/build_policy_change_proposal.py" in body
+    assert "app/policy/fit.py" not in body
+    assert "app/prompts.py" not in body
+    assert "expected_outputs.jsonl" not in body

@@ -170,16 +170,19 @@ Show the generated policy-review batch if there is enough screen time:
 
 ```text
 evals/policy_review_batches/2026-06-08/POLICY_REVIEW.md
+evals/policy_review_batches/2026-06-08/POLICY_CHANGE_PROPOSAL.md
 ```
 
 Say:
 
 ```text
-The stress run produced 19 candidate failures across 7 families. The batch
-review step clusters those Phoenix-linked traces into a human-reviewable policy
-proposal. Nothing is promoted automatically: a reviewer decides whether each
-cluster needs more rules, remains candidate-only, becomes a strict golden
-candidate, or gets disregarded.
+The baseline stress run produced 19 Gemini advisory failures across 7 families.
+The batch review step clusters those Phoenix-linked traces into a reviewable
+policy proposal. After human approval, a prompt-only guardrail patch reduced the
+next two stress runs to 17 advisory failures, while the family movement showed
+which cases still need deterministic guard review. Nothing is promoted
+automatically: a reviewer decides whether each cluster needs more rules, remains
+candidate-only, becomes a strict golden candidate, or gets disregarded.
 ```
 
 ## What To Use In The Final Demo
@@ -197,6 +200,7 @@ loop:
 
 ```text
 4. evals/policy_review_batches/2026-06-08/POLICY_REVIEW.md
+5. evals/policy_review_batches/2026-06-08/POLICY_CHANGE_PROPOSAL.md
 ```
 
 Do not show `make api-live` in the 3-minute video. Refer to live PolyData as the
