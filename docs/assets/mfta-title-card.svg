@@ -1,0 +1,19 @@
+<!-- Title overlay for the demo intro. TRANSPARENT background so it sits on top of
+     the Veo clip's empty top third. Ink text suits the cream clip; if you place it
+     over dark footage, change the title fill to #F2ECE0 (cream). 1920x1080, 16:9. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <style>
+    .ttl { font-family: Georgia,'Times New Roman','Newsreader',serif; }
+    .kick { font-family: 'SF Mono','JetBrains Mono','Roboto Mono',Menlo,monospace; }
+  </style>
+
+  <!-- no background rect = transparent -->
+
+  <text class="ttl" x="960" y="232" text-anchor="middle" font-size="68"
+        letter-spacing="7" fill="#1E1B16">MARKET FIT TRACE AGENT</text>
+
+  <line x1="852" y1="272" x2="1068" y2="272" stroke="#C8861E" stroke-width="2.5"/>
+
+  <text class="kick" x="960" y="312" text-anchor="middle" font-size="21"
+        letter-spacing="5" fill="#8A8175">AN EPISTEMIC LEDGER PROJECT</text>
+</svg>

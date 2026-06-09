@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'SF Mono','JetBrains Mono','Fira Code',Menlo,Consolas,monospace">
+  <defs>
+    <marker id="arrInk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1E1B16"/>
+    </marker>
+    <style>
+      .ttl { font-family: Georgia,'Times New Roman',serif; }
+      text { fill:#1E1B16; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="900" fill="#F2ECE0"/>
+
+  <!-- Title -->
+  <text class="ttl" x="800" y="150" text-anchor="middle" font-size="40">Propose &#8594; decide &#8594; observe</text>
+  <text x="800" y="196" text-anchor="middle" font-size="16.5" fill="#8A8175">Gemini proposes &#183; deterministic policy decides &#183; Arize Phoenix observes every step</text>
+
+  <!-- Arrows -->
+  <g stroke="#1E1B16" stroke-width="2" fill="none">
+    <line x1="492" y1="460" x2="600" y2="460" marker-end="url(#arrInk)"/>
+    <line x1="992" y1="460" x2="1100" y2="460" marker-end="url(#arrInk)"/>
+  </g>
+
+  <!-- Box 1: Gemini proposes -->
+  <rect x="110" y="370" width="380" height="180" rx="9" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.6"/>
+  <text x="300" y="416" text-anchor="middle" font-size="12.5" fill="#8A8175" letter-spacing="2.5">PROPOSE</text>
+  <text x="300" y="460" text-anchor="middle" font-size="21" font-weight="bold">Gemini / ADK</text>
+  <text x="300" y="498" text-anchor="middle" font-size="13.5" fill="#5A5347">proposes a structured claim</text>
+
+  <!-- Box 2: deterministic policy decides (emphasis) -->
+  <rect x="610" y="370" width="380" height="180" rx="9" fill="#FBF7EE" stroke="#1E1B16" stroke-width="2.8"/>
+  <text x="800" y="416" text-anchor="middle" font-size="12.5" fill="#8A8175" letter-spacing="2.5">DECIDE</text>
+  <text x="800" y="460" text-anchor="middle" font-size="21" font-weight="bold">Deterministic policy</text>
+  <text x="800" y="498" text-anchor="middle" font-size="13.5" fill="#5A5347">decides the final fit class</text>
+  <text x="800" y="585" text-anchor="middle" font-size="12.5" fill="#8A8175">the model proposes; policy decides</text>
+
+  <!-- Box 3: Arize Phoenix observes (accent) -->
+  <rect x="1110" y="370" width="380" height="180" rx="9" fill="#FBF7EE" stroke="#C8861E" stroke-width="2.4"/>
+  <text x="1300" y="416" text-anchor="middle" font-size="12.5" fill="#C8861E" letter-spacing="2.5">OBSERVE</text>
+  <text x="1300" y="460" text-anchor="middle" font-size="21" font-weight="bold" fill="#C8861E">Arize Phoenix</text>
+  <text x="1300" y="498" text-anchor="middle" font-size="13.5" fill="#5A5347">traces + evaluates every step</text>
+
+  <!-- Bottom caption -->
+  <text x="800" y="690" text-anchor="middle" font-size="15" fill="#8A8175" letter-spacing="0.5">When it is wrong, the Phoenix trace shows exactly where.</text>
+</svg>

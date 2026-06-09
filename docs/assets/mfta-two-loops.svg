@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'SF Mono','JetBrains Mono','Fira Code',Menlo,Consolas,monospace">
+  <defs>
+    <marker id="arrPhx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#C8861E"/>
+    </marker>
+    <marker id="arrInk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1E1B16"/>
+    </marker>
+    <style>
+      .ttl   { font-family: Georgia,'Times New Roman',serif; }
+      text   { fill:#1E1B16; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="900" fill="#F2ECE0"/>
+
+  <!-- Title -->
+  <text class="ttl" x="800" y="64" text-anchor="middle" font-size="40">Market Fit Trace Agent — two loops</text>
+  <text x="800" y="100" text-anchor="middle" font-size="16.5" fill="#8A8175">An inner loop repairs in seconds (Phoenix MCP → deterministic gate → rerun);</text>
+  <text x="800" y="124" text-anchor="middle" font-size="16.5" fill="#8A8175">an outer loop lets humans decide what becomes golden truth.</text>
+
+  <!-- ============ HARNESS connectors (drawn first, behind) ============ -->
+  <g stroke="#1E1B16" stroke-width="1" opacity="0.11">
+    <line x1="600" y1="500" x2="430" y2="312"/>
+    <line x1="1000" y1="500" x2="1170" y2="312"/>
+    <line x1="1000" y1="610" x2="1170" y2="688"/>
+    <line x1="600" y1="610" x2="430" y2="688"/>
+  </g>
+
+  <!-- ============ OUTER LOOP (human governance) ============ -->
+  <g stroke="#1E1B16" stroke-width="1.7" fill="none">
+    <!-- 02 -> 03 -->
+    <line x1="1450" y1="352" x2="1450" y2="648" marker-end="url(#arrInk)"/>
+    <!-- 03 -> 04 -->
+    <line x1="1168" y1="722" x2="432" y2="722" marker-end="url(#arrInk)"/>
+    <!-- 04 -> 01 (dashed: future runs) -->
+    <line x1="250" y1="648" x2="250" y2="354" stroke-dasharray="7 6" marker-end="url(#arrInk)"/>
+  </g>
+  <text x="1474" y="500" text-anchor="middle" font-size="12.5" fill="#8A8175" transform="rotate(-90 1474 500)">candidate packet for review</text>
+  <text x="800" y="744" text-anchor="middle" font-size="12.5" fill="#8A8175">promote / reject · needs_more_rules / candidate_only</text>
+  <text x="132" y="500" text-anchor="middle" font-size="12.5" fill="#8A8175" transform="rotate(-90 132 500)">future runs create new evidence</text>
+
+  <!-- ============ INNER LOOP band (subtle group behind pills) ============ -->
+  <rect x="356" y="378" width="900" height="74" rx="37" fill="#C8861E" opacity="0.09"/>
+  <rect x="356" y="378" width="900" height="74" rx="37" fill="none" stroke="#C8861E" stroke-width="1.3" stroke-dasharray="4 5" opacity="0.55"/>
+
+  <!-- ============ INNER LOOP arrows (phoenix, bold) ============ -->
+  <g stroke="#C8861E" stroke-width="3" fill="none">
+    <!-- first run: 01 -> 02 (top) -->
+    <line x1="432" y1="246" x2="1168" y2="246" marker-end="url(#arrPhx)"/>
+    <!-- 02 -> failed-context pill (down-left) -->
+    <path d="M1300,352 Q1230,372 1182,392" marker-end="url(#arrPhx)"/>
+    <!-- P1 failed-context -> P2 Phoenix MCP (right to left) -->
+    <line x1="1006" y1="415" x2="906" y2="415" marker-end="url(#arrPhx)"/>
+    <!-- P2 -> P3 repair gate -->
+    <line x1="694" y1="415" x2="628" y2="415" marker-end="url(#arrPhx)"/>
+    <!-- P3 -> 01 corrected rerun (up-left) -->
+    <path d="M404,392 Q300,372 252,354" marker-end="url(#arrPhx)"/>
+  </g>
+  <text x="800" y="234" text-anchor="middle" font-size="13.5" fill="#C8861E">first run</text>
+  <text x="332" y="376" text-anchor="middle" font-size="12.5" fill="#C8861E">corrected rerun</text>
+  <text x="800" y="196" text-anchor="middle" font-size="14" fill="#C8861E" letter-spacing="1.5">INNER LOOP · automatic repair · machine-owned · seconds</text>
+
+  <!-- Inner-loop pills -->
+  <!-- P1 failed context -->
+  <rect x="1010" y="393" width="232" height="44" rx="22" fill="#FBF7EE" stroke="#C8861E" stroke-width="1.4"/>
+  <text x="1126" y="419" text-anchor="middle" font-size="12.5">failed trace / eval context</text>
+  <!-- P2 Phoenix MCP (filled accent) -->
+  <rect x="700" y="393" width="200" height="44" rx="22" fill="#C8861E"/>
+  <text x="800" y="419" text-anchor="middle" font-size="13" fill="#FBF7EE" letter-spacing="0.5">Phoenix MCP</text>
+  <!-- P3 repair gate -->
+  <rect x="392" y="393" width="240" height="44" rx="22" fill="#FBF7EE" stroke="#C8861E" stroke-width="1.4"/>
+  <text x="512" y="419" text-anchor="middle" font-size="12.5">deterministic repair gate</text>
+
+  <!-- ============ NODE 01 ============ -->
+  <rect x="70" y="210" width="360" height="140" rx="7" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.6"/>
+  <rect x="86" y="196" width="42" height="28" rx="4" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.4"/>
+  <text x="107" y="215" text-anchor="middle" font-size="14" font-weight="bold">01</text>
+  <rect x="338" y="220" width="80" height="23" rx="4" fill="none" stroke="#C8861E" stroke-width="1.2"/>
+  <text x="378" y="236" text-anchor="middle" font-size="11" fill="#C8861E">Phoenix</text>
+  <text x="102" y="266" font-size="15" font-weight="bold">OBSERVED RUN TRACE</text>
+  <text x="102" y="292" font-size="12.5" fill="#5A5347">source text · retrieval ·</text>
+  <text x="102" y="311" font-size="12.5" fill="#5A5347">Gemini proposal ·</text>
+  <text x="102" y="330" font-size="12.5" fill="#5A5347">deterministic policy outcome</text>
+
+  <!-- ============ NODE 02 ============ -->
+  <rect x="1170" y="210" width="360" height="140" rx="7" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.6"/>
+  <rect x="1186" y="196" width="42" height="28" rx="4" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.4"/>
+  <text x="1207" y="215" text-anchor="middle" font-size="14" font-weight="bold">02</text>
+  <rect x="1438" y="220" width="80" height="23" rx="4" fill="none" stroke="#C8861E" stroke-width="1.2"/>
+  <text x="1478" y="236" text-anchor="middle" font-size="11" fill="#C8861E">Phoenix</text>
+  <text x="1202" y="266" font-size="15" font-weight="bold">EVALS + FAILURE SIGNALS</text>
+  <text x="1202" y="292" font-size="12.5" fill="#5A5347">false-strong · causal mismatch ·</text>
+  <text x="1202" y="311" font-size="12.5" fill="#5A5347">missing resolution rules ·</text>
+  <text x="1202" y="330" font-size="12.5" fill="#5A5347">weak-proxy risk</text>
+
+  <!-- ============ NODE 03 ============ -->
+  <rect x="1170" y="650" width="360" height="140" rx="7" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.6"/>
+  <rect x="1186" y="636" width="42" height="28" rx="4" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.4"/>
+  <text x="1207" y="655" text-anchor="middle" font-size="14" font-weight="bold">03</text>
+  <text x="1202" y="706" font-size="15" font-weight="bold">HUMAN REVIEW + DECISION</text>
+  <text x="1202" y="732" font-size="12.5" fill="#5A5347">promote / reject ·</text>
+  <text x="1202" y="751" font-size="12.5" fill="#5A5347">needs_more_rules / candidate_only</text>
+  <text x="1202" y="772" font-size="11.5" fill="#C8861E">human-owned</text>
+
+  <!-- ============ NODE 04 ============ -->
+  <rect x="70" y="650" width="360" height="140" rx="7" fill="#E8D27A" stroke="#1E1B16" stroke-width="1.6"/>
+  <rect x="86" y="636" width="42" height="28" rx="4" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.4"/>
+  <text x="107" y="655" text-anchor="middle" font-size="14" font-weight="bold">04</text>
+  <text x="102" y="706" font-size="15" font-weight="bold">PRODUCT / POLICY CHANGE</text>
+  <text x="102" y="732" font-size="12.5" fill="#4A4536">deterministic rule update</text>
+  <text x="102" y="751" font-size="12.5" fill="#4A4536">or frozen golden fixture</text>
+
+  <!-- ============ HARNESS ============ -->
+  <rect x="560" y="480" width="480" height="150" rx="8" fill="#FBF7EE" stroke="#1E1B16" stroke-width="1.2" stroke-dasharray="3 4"/>
+  <text x="800" y="512" text-anchor="middle" font-size="14" font-weight="bold" letter-spacing="1">MARKET FIT TRACE HARNESS</text>
+  <text x="800" y="548" text-anchor="middle" font-size="12.5" fill="#5A5347">Gemini/ADK · PolyData (live candidate) · deterministic policy+evals</text>
+  <text x="800" y="572" text-anchor="middle" font-size="12.5" fill="#5A5347"><tspan fill="#C8861E">Phoenix MCP</tspan> · Ledger MCP</text>
+
+  <!-- ============ OUTER LOOP label ============ -->
+  <text x="800" y="838" text-anchor="middle" font-size="14" fill="#8A8175" letter-spacing="1.5">OUTER LOOP · human governance · review → policy → new evidence</text>
+</svg>
