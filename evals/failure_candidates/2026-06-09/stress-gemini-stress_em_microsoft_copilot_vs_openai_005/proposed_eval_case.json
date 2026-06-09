@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_em_microsoft_copilot_vs_openai_005",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "weak_proxy",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if OpenAI reports or credible sources confirm at least $20 billion in annualized revenue during 2026.",
+    "entity_tags": [
+      "OpenAI",
+      "revenue"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_openai_revenue_20b",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if OpenAI reports or credible sources confirm at least $20 billion in annualized revenue during 2026.",
+    "title": "Will OpenAI reach $20B annual revenue in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The market is too conceptually distinct for an inverse outcome to provide a useful signal for this thesis.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"General market momentum for OpenAI-backed technologies\"], \"fit_reason\": \"The candidate market measures OpenAI's total revenue rather than Microsoft Copilot's specific enterprise adoption rate within the Fortune 500. While OpenAI is a key partner, its revenue is driven by multiple other streams and does not cleanly resolve Microsoft's product penetration.\", \"misses\": [\"Microsoft Copilot enterprise adoption metrics\", \"Fortune 500 specific penetration statistics\"], \"recommended_market_id\": null, \"rejected_markets\": [\"synth_openai_revenue_20b\"], \"semantic_fit_class\": \"no_clean_expression\"}",
+  "observed_gemini_fit_class": "no_clean_expression",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Microsoft Copilot enterprise adoption has reached 60% of Fortune 500 companies.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

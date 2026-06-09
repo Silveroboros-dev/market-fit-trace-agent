@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_hm_fed_2028_vs_2026_cuts_001",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves to the number of 25bp-equivalent rate cuts the Federal Reserve makes during calendar year 2026.",
+    "entity_tags": [
+      "Federal Reserve",
+      "rates",
+      "2026"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_fed_cuts_2026_count",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves to the number of 25bp-equivalent rate cuts the Federal Reserve makes during calendar year 2026.",
+    "title": "How many Fed rate cuts in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [\"synth_fed_cuts_2026_count\"], \"could_be_useful\": true, \"rationale\": \"A 'No' or zero-cut outcome in 2026 supports the thesis of no cuts, whereas any cuts in 2026 would invalidate it.\", \"supporting_outcome\": \"No\"}, \"captures\": [\"Federal Reserve rate cut activity in 2026\"], \"fit_reason\": \"The market measures actual rate cuts in 2026, which serves as a weak proxy for the 2028 dot plot expectations. While actual cuts in 2026 would disprove the thesis, a lack of cuts in 2026 does not guarantee no cuts through 2027 or 2028.\", \"misses\": [\"Dot plot expectations metric\", \"Timeline extending through 2027 and 2028\"], \"recommended_market_id\": \"synth_fed_cuts_2026_count\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "The Fed is not expected to cut interest rates until at least 2028 according to the latest dot plot.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

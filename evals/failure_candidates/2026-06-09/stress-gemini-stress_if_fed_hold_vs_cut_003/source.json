@@ -1,0 +1,10 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress_if_fed_hold_vs_cut_003",
+  "created_at_utc": "2026-06-09T07:35:48.332493+00:00",
+  "expected_label_source": "constructed_template",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_text": "The Fed will hold rates steady through all of 2026 due to persistent inflation.",
+  "source_type": "synthetic_stress_case",
+  "truth_scope": "synthetic_expected_label"
+}

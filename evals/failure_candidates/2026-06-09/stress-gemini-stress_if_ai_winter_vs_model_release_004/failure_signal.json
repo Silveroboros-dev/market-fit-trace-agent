@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_if_ai_winter_vs_model_release_004",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "expected_fit_class": "weak_proxy",
+  "mismatch_family": "inverse_framing",
+  "observed_gemini_fit_class": "no_clean_expression",
+  "observed_recommended_market_id": null,
+  "phoenix_trace_id": "3b9c4ac642b1ccee024ec22d2bbfb66d",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/3b9c4ac642b1ccee024ec22d2bbfb66d",
+  "run_id": "run_f1192387dd71",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "The thesis is about H2 2026 AI winter. The market resolves in June (H1). Even a Yes resolution doesn't address the H2 claim.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

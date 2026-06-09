@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_cm_tpu_progress_vs_leaderboard_001",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "expected_fit_class": "weak_proxy",
+  "mismatch_family": "causal_mechanism",
+  "observed_gemini_fit_class": "indirect",
+  "observed_recommended_market_id": null,
+  "phoenix_trace_id": "9065c5ede1f8b5e712e92502c6757e67",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/9065c5ede1f8b5e712e92502c6757e67",
+  "run_id": "run_564aa063ec56",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "The thesis is about TPU-caused model improvement. The market resolves on leaderboard rank, which can move for many unrelated reasons.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

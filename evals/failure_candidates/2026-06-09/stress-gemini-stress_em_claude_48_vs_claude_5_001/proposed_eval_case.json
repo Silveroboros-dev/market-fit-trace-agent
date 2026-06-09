@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_em_claude_48_vs_claude_5_001",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if Anthropic publicly releases a model branded Claude 5 on or before September 30, 2026.",
+    "entity_tags": [
+      "Anthropic",
+      "Claude 5"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_claude_5_release",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if Anthropic publicly releases a model branded Claude 5 on or before September 30, 2026.",
+    "title": "Will Claude 5 be publicly released by September 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"No candidate market is close enough to warrant an inverse outcome check.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [], \"fit_reason\": \"The candidate market focuses on the release of Claude 5 by late 2026, which does not track the current availability of Claude 4.8 Opus on Google Vertex AI or its benchmark performance.\", \"misses\": [\"Specific model version (Claude 4.8 Opus vs Claude 5)\", \"Platform availability (Google Vertex AI)\", \"Benchmark performance metrics\"], \"recommended_market_id\": null, \"rejected_markets\": [\"synth_claude_5_release\"], \"semantic_fit_class\": \"no_clean_expression\"}",
+  "observed_gemini_fit_class": "no_clean_expression",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Claude 4.8 Opus is now available in Google Vertex AI and showing strong benchmark results.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_es_openai_roadshow_vs_timing_002",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "expected_fit_class": "indirect",
+  "mismatch_family": "event_stage_mismatch",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": "synth_openai_ipo_by_sept_2026",
+  "phoenix_trace_id": "9fdf550eeaa35dd13aa946872e7669f9",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/9fdf550eeaa35dd13aa946872e7669f9",
+  "run_id": "run_16084d24f67d",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Roadshow is strong directional evidence for IPO completion, but not the same event. Indirect, not direct.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

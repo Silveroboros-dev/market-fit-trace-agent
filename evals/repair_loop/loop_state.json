@@ -1,0 +1,300 @@
+{
+  "applies_changes": false,
+  "core_improvement_proof": "tpu_phoenix_mcp_trace_repair",
+  "deterministic_direct_false_positives_total": 0,
+  "deterministic_run_invariant": true,
+  "deterministic_unstable_cases": 0,
+  "explorer": {
+    "ranked_candidates": [
+      {
+        "dangerousness": 4,
+        "demo_value": 6,
+        "direct_false_positives": 0,
+        "family": "event_stage_mismatch",
+        "hero_cluster_overlap": true,
+        "members": [
+          "stress_es_anthropic_ipo_rumor_vs_no_ipo_008",
+          "stress_es_openai_board_vs_ipo_007",
+          "stress_es_openai_filing_vs_completion_001",
+          "stress_es_stripe_s1_vs_ipo_005"
+        ],
+        "rank": 1,
+        "review_candidate_count": 4,
+        "score": 7.5,
+        "stability": 1.0,
+        "testability": 1.0
+      },
+      {
+        "dangerousness": 2,
+        "demo_value": 2,
+        "direct_false_positives": 0,
+        "family": "composite_thesis",
+        "hero_cluster_overlap": false,
+        "members": [
+          "stress_ct_green_energy_storage_003",
+          "stress_ct_us_china_ai_trade_005"
+        ],
+        "rank": 2,
+        "review_candidate_count": 2,
+        "score": 3.5,
+        "stability": 1.0,
+        "testability": 1.0
+      },
+      {
+        "dangerousness": 2,
+        "demo_value": 2,
+        "direct_false_positives": 0,
+        "family": "horizon_mismatch",
+        "hero_cluster_overlap": false,
+        "members": [
+          "stress_hm_av_2030_vs_waymo_2026_002",
+          "stress_hm_openai_q4_release_vs_june_market_004"
+        ],
+        "rank": 3,
+        "review_candidate_count": 2,
+        "score": 3.5,
+        "stability": 1.0,
+        "testability": 1.0
+      },
+      {
+        "dangerousness": 2,
+        "demo_value": 2,
+        "direct_false_positives": 0,
+        "family": "metric_mismatch",
+        "hero_cluster_overlap": false,
+        "members": [
+          "stress_mm_anthropic_headcount_vs_valuation_006",
+          "stress_mm_nvidia_margin_vs_share_price_005"
+        ],
+        "rank": 4,
+        "review_candidate_count": 2,
+        "score": 3.5,
+        "stability": 1.0,
+        "testability": 1.0
+      },
+      {
+        "dangerousness": 1,
+        "demo_value": 1,
+        "direct_false_positives": 0,
+        "family": "causal_mechanism",
+        "hero_cluster_overlap": false,
+        "members": [
+          "stress_cm_interest_rates_vs_housing_005"
+        ],
+        "rank": 5,
+        "review_candidate_count": 1,
+        "score": 2.0,
+        "stability": 1.0,
+        "testability": 1.0
+      }
+    ],
+    "top_candidate": "event_stage_mismatch"
+  },
+  "implementer": {
+    "patch_plan": {
+      "applied": false,
+      "candidate_family": "event_stage_mismatch",
+      "deterministic_guard": {
+        "behavior": "Detect mismatched IPO/startup stages in claim and resolution rules. If the claim is about filing/preparation and the market resolves completion or valuation, cap fit at `weak_proxy` or `no_clean_expression` depending on horizon.",
+        "name": "event_stage_alignment_guard",
+        "target": "app/policy/fit.py"
+      },
+      "policy_direction": "Strengthen stage-awareness checks. Distinguish preparation, filing, roadshow, pricing, completion, and post-event valuation before assigning indirect or stronger fit.",
+      "predicted_affected_case_ids": [
+        "stress_es_anthropic_ipo_rumor_vs_no_ipo_008",
+        "stress_es_databricks_pricing_vs_cap_006",
+        "stress_es_openai_board_vs_ipo_007",
+        "stress_es_openai_filing_vs_completion_001",
+        "stress_es_openai_roadshow_vs_timing_002",
+        "stress_es_spacex_underwriters_vs_largest_004",
+        "stress_es_stripe_s1_vs_ipo_005"
+      ],
+      "predicted_relabel": {
+        "family": "event_stage_mismatch",
+        "from_class": "indirect",
+        "scope": "Cap event-stage IPO mismatches (filing, S-1, board approval, roadshow, pricing) below 'indirect' when the market resolves completion or post-IPO valuation.",
+        "to_class": "weak_proxy"
+      },
+      "prompt_guardrail": "Before assigning `indirect` or stronger, verify that the market resolves the same event stage as the thesis. Preparation, confidential filing, roadshow, pricing, IPO completion, and post-IPO valuation are different stages. If stage differs materially, downgrade to `weak_proxy` or `no_clean_expression`.",
+      "prompt_target": "app/prompts.py",
+      "writes_policy_code": false,
+      "writes_prompts": false,
+      "writes_strict_expected_labels": false
+    }
+  },
+  "inputs": {
+    "appendix_json": "evals/stress_test_v1/stress_40_appendix.json",
+    "failure_candidate_packets": 44,
+    "governance_examples": "evals/market_fit_governance_50/governance_examples.jsonl",
+    "policy_directions_loaded": [
+      "causal_mechanism",
+      "composite_thesis",
+      "entity_mismatch",
+      "event_stage_mismatch",
+      "horizon_mismatch",
+      "inverse_framing",
+      "metric_mismatch"
+    ],
+    "run_files": [
+      "post_patch_run_1_results.jsonl",
+      "post_patch_run_2_results.jsonl",
+      "post_patch_run_3_results.jsonl",
+      "post_patch_run_4_results.jsonl"
+    ]
+  },
+  "loop_role": "bounded_repair_discovery",
+  "ranking_weights": {
+    "dangerousness": 1.0,
+    "demo_value": 0.5,
+    "stability": 0.25,
+    "testability": 0.25
+  },
+  "runs_new_gemini_calls": false,
+  "runs_new_stress_loops": false,
+  "schema_version": "repair_loop_v0",
+  "ship_decision": "candidate_only",
+  "stages": [
+    "explorer",
+    "implementer",
+    "verifier"
+  ],
+  "stress_role": "appendix_evidence",
+  "supporting_governance_evidence": "governance_50_review_memory_and_truth_scope",
+  "top_candidate": "event_stage_mismatch",
+  "verdict": "no_go",
+  "verifier": {
+    "blocking_gates": [
+      "direct_false_positive_reduction",
+      "gov_001_invariant",
+      "no_gemini_owned_final_class",
+      "twin_safety"
+    ],
+    "gates": [
+      {
+        "after": 0,
+        "before": 0,
+        "detail": "Deterministic direct false positives: 0 -> 0 (reduction 0). The guard reduces no direct false positives; there are none to reduce.",
+        "gate": "direct_false_positive_reduction",
+        "reduction": 0,
+        "status": "fail"
+      },
+      {
+        "detail": "3 correctly classified 'good twin' case(s) would be downgraded as collateral; the guard cannot separate them from the bad twins by claim text.",
+        "gate": "twin_safety",
+        "good_twins_damaged": [
+          {
+            "after": "weak_proxy",
+            "before": "indirect",
+            "case_id": "stress_es_databricks_pricing_vs_cap_006",
+            "expected_fit_class": "indirect"
+          },
+          {
+            "after": "weak_proxy",
+            "before": "indirect",
+            "case_id": "stress_es_openai_roadshow_vs_timing_002",
+            "expected_fit_class": "indirect"
+          },
+          {
+            "after": "weak_proxy",
+            "before": "indirect",
+            "case_id": "stress_es_spacex_underwriters_vs_largest_004",
+            "expected_fit_class": "indirect"
+          }
+        ],
+        "status": "fail"
+      },
+      {
+        "detail": "The guard scope is IPO event-stage; it touches no TPU governance anchor or TPU stress case, so the TPU hero is preserved.",
+        "gate": "tpu_hero_invariant",
+        "status": "pass",
+        "touched_tpu_cases": [],
+        "tpu_governance_anchors": [
+          "gov_014_trace-repair-tpu-frontier-gap-001",
+          "gov_015_eval-008",
+          "gov_025_eval-005",
+          "gov_036_eval-v2-005",
+          "gov_039_ui-20260530-google-tpu-progress-means-gemini-closes-th-2079fe65",
+          "gov_047_ui-20260604-google-tpu-progress-means-gemini-closes-th-ee031421"
+        ],
+        "tpu_stress_cases": [
+          "stress_cm_tpu_progress_vs_leaderboard_001",
+          "stress_mm_google_tpu_throughput_vs_ranking_002"
+        ]
+      },
+      {
+        "conflicting_indirect_goldens": [
+          "gov_001_ui-20260606-openai-is-preparing-to-file-confidentially-df1370c1",
+          "gov_005_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-c3f8f39d",
+          "gov_007_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-4c2b5df3",
+          "gov_008_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-517ce3b3",
+          "gov_009_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-6f88f911",
+          "gov_010_ui-20260606-openai-is-preparing-to-file-confidentially-762dea3f",
+          "gov_011_ui-20260606-openai-is-preparing-to-file-confidentially-deab0d78",
+          "gov_012_ui-20260531-openai-the-maker-of-the-chatgpt-chatbot-is-249b67e3"
+        ],
+        "detail": "gov_001 golden-labels the filing-vs-completion thesis 'indirect'. The guard would downgrade 'indirect' -> 'weak_proxy', regressing gov_001 and 8 hero-cluster 'indirect' golden(s).",
+        "gate": "gov_001_invariant",
+        "gov_001_fit_class": "indirect",
+        "hero_cluster": "ai_startup_ipo_stage_mismatch",
+        "status": "fail"
+      },
+      {
+        "detail": "The plan is unapplied and every output stays under evals/repair_loop/; nothing is promoted to strict goldens.",
+        "gate": "no_auto_promotion",
+        "outputs_outside_repair_loop": [],
+        "plan_applied": false,
+        "status": "pass",
+        "wrote_protected_paths": []
+      },
+      {
+        "detail": "On 4 case(s) the guard makes the deterministic class adopt Gemini's advisory label; that lets the model own the final class.",
+        "gate": "no_gemini_owned_final_class",
+        "gemini_adopted_cases": [
+          {
+            "after": "weak_proxy",
+            "before": "indirect",
+            "case_id": "stress_es_openai_board_vs_ipo_007",
+            "gemini_fit_class": "weak_proxy"
+          },
+          {
+            "after": "weak_proxy",
+            "before": "indirect",
+            "case_id": "stress_es_openai_filing_vs_completion_001",
+            "gemini_fit_class": "weak_proxy"
+          },
+          {
+            "after": "weak_proxy",
+            "before": "indirect",
+            "case_id": "stress_es_spacex_underwriters_vs_largest_004",
+            "gemini_fit_class": "weak_proxy"
+          },
+          {
+            "after": "weak_proxy",
+            "before": "indirect",
+            "case_id": "stress_es_stripe_s1_vs_ipo_005",
+            "gemini_fit_class": "weak_proxy"
+          }
+        ],
+        "status": "fail"
+      },
+      {
+        "detail": "Confirmed direct-band overclaims: 0 -> 0. The guard introduces none; there are none to retire, so this is no shipping justification. The debatable strong-over-weak/no band is review evidence, not a confirmed overclaim.",
+        "gate": "overclaim",
+        "overclaims_after": 0,
+        "overclaims_before": 0,
+        "overclaims_introduced": 0,
+        "overclaims_reduced": 0,
+        "status": "pass"
+      }
+    ],
+    "human_label": "candidate_only / no_go_for_shipping",
+    "rationale": "NO-GO for shipping. The top guard reduces no direct false positives (no real danger to remove) and violates safety invariants (gov_001_invariant, no_gemini_owned_final_class, twin_safety). It only nudges deterministic classes toward a debatable synthetic stress label that matches Gemini's advisory call, contradicting the gov_001 hero golden and damaging correctly classified twins. Keep candidate-only.",
+    "reduces_real_danger": false,
+    "safety_invariants_hold": false,
+    "ship_decision": "candidate_only",
+    "verdict": "no_go"
+  },
+  "writes_policy_code": false,
+  "writes_prompts": false,
+  "writes_strict_expected_labels": false
+}

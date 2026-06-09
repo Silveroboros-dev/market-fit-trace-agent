@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_if_fed_hold_vs_cut_003",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if the Federal Reserve lowers the target federal funds rate range at the July 2026 FOMC meeting.",
+    "entity_tags": [
+      "Federal Reserve",
+      "rates",
+      "FOMC"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_fed_cut_july_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if the Federal Reserve lowers the target federal funds rate range at the July 2026 FOMC meeting.",
+    "title": "Will the Fed cut rates at the July 2026 FOMC meeting?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [\"synth_fed_cut_july_2026\"], \"could_be_useful\": true, \"rationale\": \"The thesis claims the Fed will hold rates steady. A 'No' outcome (no rate cut in July) is consistent with the thesis, whereas a 'Yes' outcome (a rate cut) directly disproves it.\", \"supporting_outcome\": \"No\"}, \"captures\": [\"July 2026 FOMC rate decision direction\"], \"fit_reason\": \"The market only resolves the July 2026 FOMC meeting, which is a single event in the 2026 rate cycle. While a rate cut in July would disprove the thesis of holding rates steady through all of 2026, a 'No' outcome does not guarantee rates are held steady for the rest of the year.\", \"misses\": [\"Rate decisions for all other FOMC meetings in 2026\", \"Full-year 2026 horizon coverage\"], \"recommended_market_id\": \"synth_fed_cut_july_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "The Fed will hold rates steady through all of 2026 due to persistent inflation.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

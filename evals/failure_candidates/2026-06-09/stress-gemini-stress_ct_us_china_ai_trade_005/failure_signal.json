@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_ct_us_china_ai_trade_005",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "expected_fit_class": "no_clean_expression",
+  "mismatch_family": "composite_thesis",
+  "observed_gemini_fit_class": "indirect",
+  "observed_recommended_market_id": "synth_us_china_ai_export_ban",
+  "phoenix_trace_id": "9408c40458b28b579e764517544a15a3",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/9408c40458b28b579e764517544a15a3",
+  "run_id": "run_2744a176a9ad",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Market resolves only the US action. The thesis requires both US restriction AND Chinese retaliation. Neither alone is the full claim.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

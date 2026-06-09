@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_es_openai_board_vs_ipo_007",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "expected_fit_class": "weak_proxy",
+  "mismatch_family": "event_stage_mismatch",
+  "observed_gemini_fit_class": "indirect",
+  "observed_recommended_market_id": "synth_openai_ipo_by_dec_2026",
+  "phoenix_trace_id": "8bcbf9984efeb2f22baca7d355aa166e",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/8bcbf9984efeb2f22baca7d355aa166e",
+  "run_id": "run_b787cb13d2a8",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Board approval without timeline is too early-stage to treat as evidence for a dated IPO completion market.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

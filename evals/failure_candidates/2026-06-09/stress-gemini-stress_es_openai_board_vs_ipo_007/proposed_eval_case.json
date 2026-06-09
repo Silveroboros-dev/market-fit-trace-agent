@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_es_openai_board_vs_ipo_007",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "weak_proxy",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if OpenAI common shares begin trading on a public exchange on or before December 31, 2026.",
+    "entity_tags": [
+      "OpenAI",
+      "IPO"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_openai_ipo_by_dec_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if OpenAI common shares begin trading on a public exchange on or before December 31, 2026.",
+    "title": "Will OpenAI complete its IPO by December 31, 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The thesis is supportive of an IPO proceeding, so the Yes outcome of the IPO completion market is the primary direction of interest, not the No outcome.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"OpenAI entity\", \"IPO event family\", \"Proceeding with IPO milestone\"], \"fit_reason\": \"The market resolves the completion of the OpenAI IPO by December 31, 2026. While the claim focuses on the board's approval to proceed without a set timeline, the actual completion of the IPO is the central milestone of this process. However, because the claim specifies that no timeline has been set and the market imposes a strict December 2026 deadline, it does not fully resolve the claim's lack of timeline.\", \"misses\": [\"Board approval event stage\", \"Lack of timeline / unspecified horizon\"], \"recommended_market_id\": \"synth_openai_ipo_by_dec_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"indirect\"}",
+  "observed_gemini_fit_class": "indirect",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "OpenAI's board has approved proceeding with an IPO but no timeline has been set.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

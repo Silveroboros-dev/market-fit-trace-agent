@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_if_dollar_weakening_vs_rate_cut_005",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "weak_proxy",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if the Federal Reserve lowers the target federal funds rate range on or before the September 2026 FOMC meeting.",
+    "entity_tags": [
+      "Federal Reserve",
+      "rates",
+      "USD"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_fed_cut_sept_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if the Federal Reserve lowers the target federal funds rate range on or before the September 2026 FOMC meeting.",
+    "title": "Will the Fed cut rates by September 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"Interest rate decisions do not serve as a clean or inverse proxy for swap line expansions or global dollar funding stress.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"Federal Reserve as the central actor\"], \"fit_reason\": \"The candidate market focuses on Federal Reserve interest rate cuts, which is a domestic monetary policy tool, whereas the thesis concerns the expansion of USD swap lines to allies and its impact on global dollar funding stress and the dollar's safe-haven status. These are distinct policy mechanisms and metrics, making rate cuts an indefensible test for the thesis.\", \"misses\": [\"Does not track USD swap lines expansion\", \"Does not measure global dollar funding stress\", \"Does not measure the dollar safe-haven bid or exchange rate strength\", \"The horizon of September 2026 does not align with the long-term macro thesis\"], \"recommended_market_id\": null, \"rejected_markets\": [\"synth_fed_cut_sept_2026\"], \"semantic_fit_class\": \"no_clean_expression\"}",
+  "observed_gemini_fit_class": "no_clean_expression",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "The US dollar will lose its safe-haven status as expanded swap lines reduce global funding stress.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

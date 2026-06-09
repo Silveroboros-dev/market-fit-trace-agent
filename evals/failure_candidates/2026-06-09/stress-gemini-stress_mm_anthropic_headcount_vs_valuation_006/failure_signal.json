@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_mm_anthropic_headcount_vs_valuation_006",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "expected_fit_class": "no_clean_expression",
+  "mismatch_family": "metric_mismatch",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": "synth_anthropic_500b_val_mm2",
+  "phoenix_trace_id": "dd4518a75a025f5202295deacdf6e1fc",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/dd4518a75a025f5202295deacdf6e1fc",
+  "run_id": "run_9add49602561",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Headcount growth does not resolve valuation. Many companies grow headcount without reaching valuation thresholds.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

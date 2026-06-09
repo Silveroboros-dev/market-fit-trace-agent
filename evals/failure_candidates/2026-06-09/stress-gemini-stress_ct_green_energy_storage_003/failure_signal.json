@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_ct_green_energy_storage_003",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "expected_fit_class": "weak_proxy",
+  "mismatch_family": "composite_thesis",
+  "observed_gemini_fit_class": "indirect",
+  "observed_recommended_market_id": "synth_solar_cheapest_2026",
+  "phoenix_trace_id": "9c32bcd3263add4db3046864962ee29c",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/9c32bcd3263add4db3046864962ee29c",
+  "run_id": "run_a4321d7af90e",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Only resolves the solar cost half. The battery storage cost threshold is a separate material condition.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

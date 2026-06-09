@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_hm_fed_2028_vs_2026_cuts_001",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "expected_fit_class": "indirect",
+  "mismatch_family": "horizon_mismatch",
+  "observed_gemini_fit_class": "weak_proxy",
+  "observed_recommended_market_id": "synth_fed_cuts_2026_count",
+  "phoenix_trace_id": "b689c7264ff669abfb1b16eadbf9abf4",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/b689c7264ff669abfb1b16eadbf9abf4",
+  "run_id": "run_ab209c97ae61",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "Same institution, same action, but the thesis is about 2028. The 2026 market tests only part of the claim.",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}

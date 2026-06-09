@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_ct_iran_ceasefire_package_001",
+  "deterministic_fit_class": "weak_proxy",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "weak_proxy",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if the Iranian government or an international body officially announces the lifting of the Strait of Hormuz blockade on or before June 30, 2026.",
+    "entity_tags": [
+      "Iran",
+      "Hormuz",
+      "blockade"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_hormuz_blockade_lifted",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if the Iranian government or an international body officially announces the lifting of the Strait of Hormuz blockade on or before June 30, 2026.",
+    "title": "Will the Strait of Hormuz blockade be officially lifted by June 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The thesis supports the reopening of the Strait, which aligns directly with the Yes outcome of the blockade being officially lifted. No inverse check is required.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"Official lifting or reopening of the Strait of Hormuz\"], \"fit_reason\": \"The market resolves the official lifting of the Strait of Hormuz blockade, which represents a central milestone and material component of the claim's condition to partially reopen the Strait. However, it is classified as indirect because it misses the other compound conditions of the claim, such as the 60-day ceasefire extension, unfreezing of assets, and easing of sanctions.\", \"misses\": [\"60-day ceasefire extension between the US and Iran\", \"Unfreezing of assets\", \"Easing of some sanctions\", \"The distinction between a partial reopening and an official lifting of the blockade\"], \"recommended_market_id\": \"synth_hormuz_blockade_lifted\", \"rejected_markets\": [], \"semantic_fit_class\": \"indirect\"}",
+  "observed_gemini_fit_class": "indirect",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "The US and Iran will extend the ceasefire for 60 more days, partially reopen the Strait of Hormuz, begin unfreezing assets, and ease some sanctions.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

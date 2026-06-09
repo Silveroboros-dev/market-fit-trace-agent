@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_es_openai_roadshow_vs_timing_002",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if OpenAI common shares begin trading on a public exchange on or before September 30, 2026. Resolution uses the official exchange listing.",
+    "entity_tags": [
+      "OpenAI",
+      "IPO"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_openai_ipo_by_sept_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if OpenAI common shares begin trading on a public exchange on or before September 30, 2026. Resolution uses the official exchange listing.",
+    "title": "Will OpenAI complete its IPO by September 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The thesis is pro-IPO and the market is framed as Yes for IPO completion, so there is no inverse polarity to check.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"Entity (OpenAI)\", \"General IPO event family\"], \"fit_reason\": \"The market resolves the final completion of OpenAI's IPO by September 2026, which is a weak proxy for a claim specifically about an IPO roadshow and institutional meetings occurring 'this week'. The massive horizon mismatch and different event stages mean the market can resolve Yes even if no roadshow occurred this week, or No even if meetings did happen this week.\", \"misses\": [\"Specific roadshow event stage\", \"Immediate 'this week' horizon\", \"Institutional investor meetings\"], \"recommended_market_id\": \"synth_openai_ipo_by_sept_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "OpenAI has begun its IPO roadshow and is meeting with institutional investors this week.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

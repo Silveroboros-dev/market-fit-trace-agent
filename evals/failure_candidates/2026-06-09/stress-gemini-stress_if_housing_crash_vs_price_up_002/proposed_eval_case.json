@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_if_housing_crash_vs_price_up_002",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if the S&P Case-Shiller US National Home Price Index shows a year-over-year increase of at least 5% for any month in 2026.",
+    "entity_tags": [
+      "housing",
+      "home prices"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_home_prices_up_5",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if the S&P Case-Shiller US National Home Price Index shows a year-over-year increase of at least 5% for any month in 2026.",
+    "title": "Will US home prices increase 5%+ YoY in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [\"synth_home_prices_up_5\"], \"could_be_useful\": true, \"rationale\": \"The thesis predicts a major correction (price drop). A 'No' outcome on a market predicting a 5%+ price increase is consistent with a correction, whereas a 'Yes' outcome would refute the thesis.\", \"supporting_outcome\": \"No\"}, \"captures\": [\"US housing market trend direction in 2026\", \"Exclusion of positive growth above 5%\"], \"fit_reason\": \"The market measures whether US home prices will increase by 5% or more in 2026. While a major correction would result in a 'No' outcome, a 'No' outcome could also occur with flat or slightly positive growth, meaning it does not directly measure a major correction.\", \"misses\": [\"Direct measurement of a price drop or correction\", \"The 40% magnitude of overpricing specified in the claim\"], \"recommended_market_id\": \"synth_home_prices_up_5\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "US housing prices are 40% overpriced and a major correction is inevitable within 2 years.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

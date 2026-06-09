@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_if_anthropic_ipo_momentum_vs_no_ipo_001",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "weak_proxy",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if Anthropic does not complete an IPO on or before June 30, 2026. Resolves No if an IPO occurs.",
+    "entity_tags": [
+      "Anthropic",
+      "IPO"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_anthropic_no_ipo_june",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if Anthropic does not complete an IPO on or before June 30, 2026. Resolves No if an IPO occurs.",
+    "title": "No Anthropic IPO by June 30, 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [\"synth_anthropic_no_ipo_june\"], \"could_be_useful\": true, \"rationale\": \"The market is framed as 'No Anthropic IPO...', so the 'No' outcome (meaning an IPO does occur) supports the thesis of a near-term IPO.\", \"supporting_outcome\": \"No\"}, \"captures\": [\"Anthropic IPO occurrence by June 30, 2026\"], \"fit_reason\": \"The market resolves whether an IPO actually occurs by June 30, 2026, which is a central milestone that would strongly update the thesis of near-term IPO momentum, though it does not directly measure private valuation or momentum metrics.\", \"misses\": [\"Private valuation surge metrics\", \"IPO momentum indicators\"], \"recommended_market_id\": \"synth_anthropic_no_ipo_june\", \"rejected_markets\": [], \"semantic_fit_class\": \"indirect\"}",
+  "observed_gemini_fit_class": "indirect",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Anthropic's valuation is exploding past $1T \u2014 this feels like IPO momentum and an IPO is coming soon.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

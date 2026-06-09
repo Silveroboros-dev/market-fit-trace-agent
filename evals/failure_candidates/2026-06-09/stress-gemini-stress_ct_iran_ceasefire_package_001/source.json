@@ -1,0 +1,10 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress_ct_iran_ceasefire_package_001",
+  "created_at_utc": "2026-06-09T07:33:22.435723+00:00",
+  "expected_label_source": "constructed_template",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_text": "The US and Iran will extend the ceasefire for 60 more days, partially reopen the Strait of Hormuz, begin unfreezing assets, and ease some sanctions.",
+  "source_type": "synthetic_stress_case",
+  "truth_scope": "synthetic_expected_label"
+}

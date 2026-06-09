@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_cm_tpu_progress_vs_leaderboard_001",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "weak_proxy",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if a Gemini-branded model is ranked first on the public Chatbot Arena leaderboard at market close on December 31, 2026.",
+    "entity_tags": [
+      "Google",
+      "Gemini",
+      "leaderboard"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_gemini_arena_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if a Gemini-branded model is ranked first on the public Chatbot Arena leaderboard at market close on December 31, 2026.",
+    "title": "Will Gemini hold the #1 Chatbot Arena spot on Dec 31, 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The Yes outcome of the market aligns with the positive stance of the thesis (Gemini improving/succeeding), so an inverse check is not necessary.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"Gemini's performance relative to frontier models in 2026\", \"Leaderboard ranking comparison\"], \"fit_reason\": \"The market resolves Gemini's relative performance ranking on a major leaderboard (Chatbot Arena) at the end of 2026, which is a central milestone for assessing whether Gemini has closed the performance gap with frontier models. However, it is indirect because holding the #1 spot is a much stricter condition than simply closing the gap, and the market does not capture or verify the causal role of Google's TPU progress.\", \"misses\": [\"The causal link to Google TPU progress\", \"Scenarios where Gemini significantly closes the gap but remains ranked below #1\"], \"recommended_market_id\": \"synth_gemini_arena_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"indirect\"}",
+  "observed_gemini_fit_class": "indirect",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Google's TPU v8 infrastructure means Gemini can train 3x faster, closing the frontier model gap.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

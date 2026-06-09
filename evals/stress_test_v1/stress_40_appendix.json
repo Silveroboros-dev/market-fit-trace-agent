@@ -1,0 +1,208 @@
+{
+  "cases_per_run": [
+    40,
+    40,
+    40,
+    40
+  ],
+  "core_improvement_proof": "tpu_phoenix_mcp_trace_repair",
+  "deterministic_direct_false_positives_per_run": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "deterministic_direct_false_positives_total": 0,
+  "deterministic_stability": {
+    "distinct_cases": 40,
+    "identical_across_runs": 40,
+    "present_in_all_runs": 40,
+    "unstable_cases": []
+  },
+  "deterministic_strong_over_weak_no_per_run": [
+    11,
+    11,
+    11,
+    11
+  ],
+  "direct_false_positive_cases": [],
+  "gemini_advisory_mismatch_rate_per_run": [
+    0.425,
+    0.4359,
+    0.4,
+    0.525
+  ],
+  "gemini_advisory_mismatches_per_run": [
+    17,
+    17,
+    16,
+    21
+  ],
+  "gemini_missing_proposals_per_run": [
+    0,
+    1,
+    0,
+    0
+  ],
+  "per_run": [
+    {
+      "deterministic_counts": {
+        "direct_false_positive": 0,
+        "match": 15,
+        "strong_over_weak_no": 11,
+        "under_call": 14
+      },
+      "gemini_advisory": {
+        "advisory_mismatch_rate": 0.425,
+        "advisory_mismatches": 17,
+        "missing_proposals": 0,
+        "proposals_present": 40,
+        "total": 40
+      },
+      "label": "run_1",
+      "results_file": "post_patch_run_1_results.jsonl",
+      "run_id": "run_9a4b6f86aeb4"
+    },
+    {
+      "deterministic_counts": {
+        "direct_false_positive": 0,
+        "match": 15,
+        "strong_over_weak_no": 11,
+        "under_call": 14
+      },
+      "gemini_advisory": {
+        "advisory_mismatch_rate": 0.4359,
+        "advisory_mismatches": 17,
+        "missing_proposals": 1,
+        "proposals_present": 39,
+        "total": 40
+      },
+      "label": "run_2",
+      "results_file": "post_patch_run_2_results.jsonl",
+      "run_id": "run_01bdbe8f28bf"
+    },
+    {
+      "deterministic_counts": {
+        "direct_false_positive": 0,
+        "match": 15,
+        "strong_over_weak_no": 11,
+        "under_call": 14
+      },
+      "gemini_advisory": {
+        "advisory_mismatch_rate": 0.4,
+        "advisory_mismatches": 16,
+        "missing_proposals": 0,
+        "proposals_present": 40,
+        "total": 40
+      },
+      "label": "run_3",
+      "results_file": "post_patch_run_3_results.jsonl",
+      "run_id": "run_d20b1317612f"
+    },
+    {
+      "deterministic_counts": {
+        "direct_false_positive": 0,
+        "match": 15,
+        "strong_over_weak_no": 11,
+        "under_call": 14
+      },
+      "gemini_advisory": {
+        "advisory_mismatch_rate": 0.525,
+        "advisory_mismatches": 21,
+        "missing_proposals": 0,
+        "proposals_present": 40,
+        "total": 40
+      },
+      "label": "run_4",
+      "results_file": "post_patch_run_4_results.jsonl",
+      "run_id": "run_d5c387c65b48"
+    }
+  ],
+  "review_candidates": [
+    {
+      "case_id": "stress_es_openai_filing_vs_completion_001",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "weak_proxy",
+      "family": "event_stage_mismatch",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/98c6785a6b7dfd5abcbce0fc969be913"
+    },
+    {
+      "case_id": "stress_es_stripe_s1_vs_ipo_005",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "weak_proxy",
+      "family": "event_stage_mismatch",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/ae5468d636da8664847d922365f51a94"
+    },
+    {
+      "case_id": "stress_es_openai_board_vs_ipo_007",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "weak_proxy",
+      "family": "event_stage_mismatch",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/86ada84aded3c9829cf916cae8ddc47c"
+    },
+    {
+      "case_id": "stress_es_anthropic_ipo_rumor_vs_no_ipo_008",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "no_clean_expression",
+      "family": "event_stage_mismatch",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/66409a69c2992d6d26e1dedcfa2b780f"
+    },
+    {
+      "case_id": "stress_mm_nvidia_margin_vs_share_price_005",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "weak_proxy",
+      "family": "metric_mismatch",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/26a104b1cef8e785985a2c7fadd3c3c7"
+    },
+    {
+      "case_id": "stress_mm_anthropic_headcount_vs_valuation_006",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "no_clean_expression",
+      "family": "metric_mismatch",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/6b8f152af3b49bb97f31364d10ea5a5f"
+    },
+    {
+      "case_id": "stress_hm_av_2030_vs_waymo_2026_002",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "weak_proxy",
+      "family": "horizon_mismatch",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/3d76543762846e856a36e9aa47c2f73c"
+    },
+    {
+      "case_id": "stress_hm_openai_q4_release_vs_june_market_004",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "weak_proxy",
+      "family": "horizon_mismatch",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/ff1615abc6f48a53eb61e0e13c76770e"
+    },
+    {
+      "case_id": "stress_cm_interest_rates_vs_housing_005",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "weak_proxy",
+      "family": "causal_mechanism",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/33172ddc302b90504db5e972427259d0"
+    },
+    {
+      "case_id": "stress_ct_green_energy_storage_003",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "weak_proxy",
+      "family": "composite_thesis",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/7606b5ee846d494e858b444775fc9dde"
+    },
+    {
+      "case_id": "stress_ct_us_china_ai_trade_005",
+      "deterministic_fit_class": "indirect",
+      "expected_fit_class": "no_clean_expression",
+      "family": "composite_thesis",
+      "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/fa4cffdded7f483b601af247b85571ab"
+    }
+  ],
+  "runs_new_gemini_calls": false,
+  "runs_summarized": 4,
+  "schema_version": "stress_40_appendix_v0",
+  "stress_role": "appendix_evidence",
+  "supporting_governance_evidence": "governance_50_review_memory_and_truth_scope",
+  "writes_policy_code": false,
+  "writes_prompts": false,
+  "writes_strict_expected_labels": false
+}

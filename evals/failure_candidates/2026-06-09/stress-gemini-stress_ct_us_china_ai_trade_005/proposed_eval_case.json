@@ -1,0 +1,53 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_ct_us_china_ai_trade_005",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "no_clean_expression",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if the US government issues an executive order or legislation prohibiting the export of frontier AI models to China during 2026.",
+    "entity_tags": [
+      "US",
+      "China",
+      "AI",
+      "export ban"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_us_china_ai_export_ban",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if the US government issues an executive order or legislation prohibiting the export of frontier AI models to China during 2026.",
+    "title": "Will the US ban AI model exports to China in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The Yes outcome of the market directly aligns with the first part of the thesis, so an inverse check is not necessary.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"US restriction of AI model exports to China\"], \"fit_reason\": \"The market resolves the first condition of the compound claim (US AI model export restrictions to China) but misses the second condition regarding China's retaliation via rare earth export bans.\", \"misses\": [\"China's retaliation by banning rare earth exports to the US\"], \"recommended_market_id\": \"synth_us_china_ai_export_ban\", \"rejected_markets\": [], \"semantic_fit_class\": \"indirect\"}",
+  "observed_gemini_fit_class": "indirect",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "The US will restrict AI model exports to China AND China will retaliate by banning rare earth exports to the US.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

@@ -1,0 +1,52 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_mm_meta_users_vs_revenue_004",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": true,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "indirect",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if Meta reports or credible sources confirm that Meta AI products generated at least $10 billion in revenue during 2026.",
+    "entity_tags": [
+      "Meta",
+      "AI",
+      "revenue"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_meta_ai_revenue_10b",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if Meta reports or credible sources confirm that Meta AI products generated at least $10 billion in revenue during 2026.",
+    "title": "Will Meta AI generate $10B+ revenue in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The market is not framed inversely; it is simply a weak proxy based on a different metric and horizon.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"Entity: Meta AI\"], \"fit_reason\": \"The candidate market focuses on Meta AI's 2026 revenue, which serves as a weak proxy for current user adoption. While a high monthly active user count (800 million MAU) supports future monetization potential, revenue is a distinct metric influenced by pricing, ad load, and enterprise adoption, making it an indirect and weak proxy for current user metrics.\", \"misses\": [\"Metric: Monthly Active Users (MAU) is replaced by Revenue ($10B+)\", \"Horizon: The claim is about current/immediate MAU, whereas the market resolves at the end of 2026\"], \"recommended_market_id\": \"synth_meta_ai_revenue_10b\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Meta AI assistant now has 800 million monthly active users across Instagram and WhatsApp.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

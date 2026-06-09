@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_if_ai_winter_vs_model_release_004",
+  "deterministic_fit_class": "no_clean_expression",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "weak_proxy",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if OpenAI publicly releases GPT-5.6 by June 30, 2026.",
+    "entity_tags": [
+      "OpenAI",
+      "GPT-5.6"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_gpt56_release_june_if",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if OpenAI publicly releases GPT-5.6 by June 30, 2026.",
+    "title": "Will GPT-5.6 be publicly released by June 30, 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [\"synth_gpt56_release_june_if\"], \"could_be_useful\": true, \"rationale\": \"If GPT-5.6 is not released by June 30, 2026, it might suggest a slowdown, but it could also mean a launch in H2 2026, which would contradict the thesis. Thus, the No outcome requires careful interpretation.\", \"supporting_outcome\": \"No\"}, \"captures\": [\"The general concept of a major AI model release (GPT-5.6) as a signal of AI progress or stagnation.\"], \"fit_reason\": \"The candidate market has a severe horizon mismatch (resolving on H1 2026 instead of H2 2026) and a polarity conflict where a 'No' outcome could actually mean a launch in H2 2026, which directly contradicts the thesis.\", \"misses\": [\"Horizon mismatch: The market resolves on H1 2026 (by June 30, 2026), while the claim specifies H2 2026.\", \"Entity/Scope mismatch: The claim is about broad AI investment drying up and no major models launching, whereas the market is restricted to a single specific model (GPT-5.6).\", \"Outcome polarity mismatch: A 'No' outcome on the market does not confirm an AI winter; it could mean the model was delayed to H2 2026, which would disprove the claim.\"], \"recommended_market_id\": \"synth_gpt56_release_june_if\", \"rejected_markets\": [], \"semantic_fit_class\": \"no_clean_expression\"}",
+  "observed_gemini_fit_class": "no_clean_expression",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "We are entering an AI winter \u2014 investment will dry up and no major new model will launch in H2 2026.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

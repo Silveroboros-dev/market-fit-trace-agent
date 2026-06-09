@@ -12,9 +12,21 @@ Target timing:
 ```text
 0:00-0:20 opening claim
 0:20-1:05 trace repair proof
-1:05-2:35 Governance 50 + Experiment proof
+1:05-2:35 Governance 50 + Experiment evidence
 2:35-3:00 stress-to-policy-review close
 ```
+
+## Framing
+
+The core improvement proof is the live trace-repair loop in Section 1: Phoenix MCP
+exposes a false-strong recommendation and deterministic policy repairs it.
+Governance 50 in Section 2 is supporting governance and review-memory evidence:
+it shows the same truth-boundary discipline holding on curated rows.
+
+Stress-40 is appendix evidence that the same Phoenix-traced harness holds the
+boundary across many adversarial cases. It is not the core improvement proof, and
+its Gemini advisory numbers are shown as variance, not as a win. See
+`evals/stress_test_v1/STRESS_40_APPENDIX.md`.
 
 ## 0. Opening Frame
 
@@ -71,7 +83,7 @@ This is the runtime loop: a trace exposes the failure, Phoenix MCP retrieves the
 context, and deterministic policy repairs the next run.
 ```
 
-## 2. Governance 50 + Experiment Proof
+## 2. Governance 50 + Experiment Evidence
 
 Open the Governance Dataset:
 
@@ -82,9 +94,9 @@ https://app.phoenix.arize.com/s/rukar570/datasets/RGF0YXNldDo1
 Say:
 
 ```text
-The same loop is now scaled into Governance 50: a Phoenix-visible eval-memory
-surface with strict goldens, failure-mode goldens, reviewed candidates, draft
-candidates, and a trace-repair case.
+Governance 50 is the review-memory surface behind that boundary: a
+Phoenix-visible dataset with strict goldens, failure-mode goldens, reviewed
+candidates, draft candidates, and a trace-repair case.
 ```
 
 In the `Examples` tab, search:
@@ -180,14 +192,18 @@ evals/policy_review_batches/2026-06-08/POLICY_CHANGE_PROPOSAL.md
 Say:
 
 ```text
-The baseline stress run produced 19 Gemini advisory failures across 7 families.
-The batch review step clusters those Phoenix-linked traces into a reviewable
-policy proposal. We then tested a human-approved prompt guardrail over repeated
-stress runs. The result is the important part: the harness does not hide Gemini
-variance. It shows which families respond to prompt guidance and which need
-deterministic guard review. Nothing is promoted automatically: a reviewer decides
-whether each cluster needs more rules, remains candidate-only, becomes a strict
-golden candidate, or gets disregarded.
+The core improvement proof is the trace-repair loop you just saw: Phoenix MCP
+exposed a false-strong and deterministic policy repaired it. Stress-40 is appendix
+evidence that the same harness holds that boundary at scale.
+
+Across four committed post-patch runs, with no new model calls in this demo, the
+deterministic class is identical on all 40 cases in every run, and deterministic
+direct false positives stay at zero. Gemini advisory mismatches swing run to run
+(17, 17, 16, 21 of 40) because the model is only the proposer. Eleven cases per
+run are deterministic strong-over-weak/no review candidates, not false positives,
+and none are promoted automatically. A reviewer decides whether each cluster needs
+more rules, stays candidate-only, becomes a strict golden candidate, or is
+disregarded. See evals/stress_test_v1/STRESS_40_APPENDIX.md.
 ```
 
 ## What To Use In The Final Demo
@@ -206,6 +222,7 @@ loop:
 ```text
 4. evals/policy_review_batches/2026-06-08/POLICY_REVIEW.md
 5. evals/policy_review_batches/2026-06-08/POLICY_CHANGE_PROPOSAL.md
+6. evals/stress_test_v1/STRESS_40_APPENDIX.md (deterministic stability + advisory variance)
 ```
 
 Do not show `make api-live` in the 3-minute video. Refer to live PolyData as the

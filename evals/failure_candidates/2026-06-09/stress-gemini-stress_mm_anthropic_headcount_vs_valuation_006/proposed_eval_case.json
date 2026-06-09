@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_mm_anthropic_headcount_vs_valuation_006",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "no_clean_expression",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if Anthropic achieves a public or private valuation of at least $500 billion by December 31, 2026.",
+    "entity_tags": [
+      "Anthropic",
+      "valuation"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_anthropic_500b_val_mm2",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if Anthropic achieves a public or private valuation of at least $500 billion by December 31, 2026.",
+    "title": "Anthropic $500B+ valuation in 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [], \"could_be_useful\": false, \"rationale\": \"The market is not framed inversely; a higher valuation would align with positive growth/headcount, but the metric mismatch is too large for an inverse check to be useful.\", \"supporting_outcome\": \"n/a\"}, \"captures\": [\"Entity: Anthropic\", \"Timeframe: 2026\"], \"fit_reason\": \"The candidate market tracks Anthropic's valuation, which is an adjacent financial metric that may loosely reflect organizational growth, but it does not measure headcount or research-specific hiring milestones.\", \"misses\": [\"Metric: Headcount (2,400 employees) is completely different from valuation ($500B+)\", \"Event stage: Q1 2026 headcount vs. end of year 2026 valuation\"], \"recommended_market_id\": \"synth_anthropic_500b_val_mm2\", \"rejected_markets\": [], \"semantic_fit_class\": \"weak_proxy\"}",
+  "observed_gemini_fit_class": "weak_proxy",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Anthropic doubled its research headcount to 2,400 employees in Q1 2026.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

@@ -1,0 +1,51 @@
+{
+  "canonical_truth": false,
+  "case_id": "stress-gemini-failure-stress_es_anthropic_ipo_rumor_vs_no_ipo_008",
+  "deterministic_fit_class": "indirect",
+  "deterministic_match": false,
+  "disregard_when": [
+    "the synthetic trap is unrealistic or too leading",
+    "the constructed expected label is not defensible",
+    "the Gemini output is missing or malformed",
+    "the deterministic policy already handles the class and no new rule is needed"
+  ],
+  "expected_fit_class": "no_clean_expression",
+  "human_review_options": [
+    "promote_to_strict_golden_candidate",
+    "needs_more_rules",
+    "candidate_only",
+    "disregard"
+  ],
+  "human_review_required": true,
+  "market": {
+    "close_date": "2026-12-31",
+    "current_probability": null,
+    "description": "Resolves Yes if Anthropic does not complete an IPO on or before June 30, 2026. Resolves No if an IPO occurs before the deadline.",
+    "entity_tags": [
+      "Anthropic",
+      "IPO"
+    ],
+    "known_fit_risks": [
+      "synthetic_stress_case"
+    ],
+    "market_id": "synth_anthropic_no_ipo_june_2026",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "resolution_rules": "Resolves Yes if Anthropic does not complete an IPO on or before June 30, 2026. Resolves No if an IPO occurs before the deadline.",
+    "title": "No Anthropic IPO by June 30, 2026?",
+    "venue": "SyntheticStress"
+  },
+  "model_fit_proposal_json": "{\"advisory_inverse_market_check\": {\"candidate_market_ids\": [\"synth_anthropic_no_ipo_june_2026\"], \"could_be_useful\": true, \"rationale\": \"The market is framed as 'No Anthropic IPO by June 30, 2026?'. Therefore, the 'No' outcome resolves in favor of an IPO occurring, which supports the pro-IPO thesis.\", \"supporting_outcome\": \"No\"}, \"captures\": [\"Anthropic IPO event\", \"Timeframe alignment (June 30, 2026 is within the 18-month horizon)\"], \"fit_reason\": \"The market covers the correct entity (Anthropic) and event (IPO) within the 18-month horizon (June 30, 2026). However, because the market is framed inversely ('No Anthropic IPO...'), the 'No' outcome supports the thesis, which prevents a 'direct' classification.\", \"misses\": [\"Direct outcome polarity (requires tracking the 'No' outcome to support the pro-IPO thesis)\"], \"recommended_market_id\": \"synth_anthropic_no_ipo_june_2026\", \"rejected_markets\": [], \"semantic_fit_class\": \"indirect\"}",
+  "observed_gemini_fit_class": "indirect",
+  "policy_gap_summary": "Gemini advisory classification disagreed with a synthetic expected label. Human review should decide whether this is a real policy blind spot, a prompt issue, or synthetic noise to disregard.",
+  "policy_proposal_version": "policy_pr_candidate_v0",
+  "recommended_default_review": "needs_more_rules",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "source_kind": "synthetic_stress_gemini_failure",
+  "source_text": "Anthropic executives have privately told investors they plan to IPO within 18 months.",
+  "truth_scope": "synthetic_expected_label",
+  "writes_policy_code": false,
+  "writes_strict_expected_labels": false
+}

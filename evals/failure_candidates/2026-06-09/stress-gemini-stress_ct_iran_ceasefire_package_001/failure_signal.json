@@ -1,0 +1,18 @@
+{
+  "candidate_only": true,
+  "case_id": "stress_ct_iran_ceasefire_package_001",
+  "deterministic_fit_class": "weak_proxy",
+  "deterministic_match": true,
+  "expected_fit_class": "weak_proxy",
+  "mismatch_family": "composite_thesis",
+  "observed_gemini_fit_class": "indirect",
+  "observed_recommended_market_id": "synth_hormuz_blockade_lifted",
+  "phoenix_trace_id": "f6c8b6e6a19daf0fa29164905e002da9",
+  "phoenix_trace_url": "https://app.phoenix.arize.com/s/rukar570/traces/f6c8b6e6a19daf0fa29164905e002da9",
+  "run_id": "run_4ce1ff663d97",
+  "schema_version": "stress_gemini_failure_candidate_v0",
+  "trap_description": "The market resolves only one component (Hormuz) of a four-part package (ceasefire + Hormuz + assets + sanctions).",
+  "triggered_metrics": [
+    "gemini_advisory_mismatch"
+  ]
+}
