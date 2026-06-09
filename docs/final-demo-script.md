@@ -204,6 +204,11 @@ run are deterministic strong-over-weak/no review candidates, not false positives
 and none are promoted automatically. A reviewer decides whether each cluster needs
 more rules, stays candidate-only, becomes a strict golden candidate, or is
 disregarded. See evals/stress_test_v1/STRESS_40_APPENDIX.md.
+
+The bounded repair loop makes that governance concrete: it ranked event-stage
+mismatch as the top repair candidate, drafted an unapplied guard, and then emitted
+NO-GO because the guard would reduce zero direct false positives and regress the
+gov_001 golden. The agent can propose a repair; the verifier can reject it.
 ```
 
 ## What To Use In The Final Demo
@@ -223,6 +228,7 @@ loop:
 4. evals/policy_review_batches/2026-06-08/POLICY_REVIEW.md
 5. evals/policy_review_batches/2026-06-08/POLICY_CHANGE_PROPOSAL.md
 6. evals/stress_test_v1/STRESS_40_APPENDIX.md (deterministic stability + advisory variance)
+7. evals/repair_loop/LOOP_STATE.md (bounded repair loop NO-GO verdict)
 ```
 
 Do not show `make api-live` in the 3-minute video. Refer to live PolyData as the
