@@ -8,7 +8,8 @@ markets and keep an auditable trail of claims, traces, candidate reviews, and
 promoted goldens. The harness's north star is keeping false positives close to
 zero: a related market must not be mistaken for clean thesis evidence.
 
-Gemini, running through Google ADK, drafts a normalized claim: entities, horizon,
+Gemini 3, running on Google Cloud Agent Builder (code-first via the Agent
+Development Kit, ADK), drafts a normalized claim: entities, horizon,
 stance, and target outcome. The fixture-backed proof path retrieves bounded
 replay markets for deterministic evaluation. The explicit live path retrieves
 PolyData market snapshots as candidate evidence. In both modes, deterministic
@@ -284,7 +285,8 @@ thesis / source text
   -> improved second run
 ```
 
-There is one deployable ADK agent. The FastAPI app is the audited workflow controller
+There is one deployable Google Cloud Agent Builder agent, authored code-first with
+the Agent Development Kit (ADK). The FastAPI app is the audited workflow controller
 around that agent: it validates schemas, applies deterministic market-fit policy,
 writes ledger records, runs evals, and handles optional human verdicts.
 
