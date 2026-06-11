@@ -84,6 +84,29 @@ def test_polydata_provider_ranks_cached_universe_without_live_client():
     assert "Maritime chokepoint closure" in markets[0].entity_tags
 
 
+def test_polydata_provider_redacts_upstream_model_metadata_from_raw_markets():
+    provider = PolyDataMarketProvider(
+        settings_obj=Settings(
+            market_provider="polydata",
+            poly_data_top_k=1,
+            poly_data_max_k=50,
+        )
+    )
+    provider._universe = [
+        {
+            "market_id": "hormuz",
+            "question": "Will the Strait of Hormuz reopen by June 30?",
+            "model": "gpt-5-mini-2025-08-07",
+            "volume_usd": 12000,
+        }
+    ]
+
+    retrieval = provider.retrieve()
+
+    assert retrieval.raw_markets[0]["market_id"] == "hormuz"
+    assert "model" not in retrieval.raw_markets[0]
+
+
 def test_polydata_provider_does_not_fill_claim_results_with_unrelated_volume():
     provider = PolyDataMarketProvider(
         settings_obj=Settings(

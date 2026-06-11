@@ -477,6 +477,7 @@ def _row_to_candidate_market(row: dict[str, object]) -> CandidateMarket:
 def _with_rules_status(row: dict[str, object]) -> dict[str, object]:
     annotated = dict(row)
     annotated["rules_status"] = _rules_status(row)
+    annotated.pop("model", None)
     return annotated
 
 
